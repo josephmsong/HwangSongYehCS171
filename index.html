@@ -1,0 +1,67 @@
+<!DOCTYPE html> 
+<html>
+<head>
+  <title>Ball Is Life</title>
+
+  <style> 
+
+    ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    li {
+      float: left;
+    }
+
+    a {
+      display: block;
+      width: 170px;
+      background-color: #dddddd;
+    }
+
+  </style>
+
+  <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+  <script src="http://d3js.org/queue.v1.min.js"></script>
+
+</head>
+
+<body>
+
+  <ul id = "teamlist">
+
+
+  </ul>
+
+</body>
+
+<script>
+
+  // array that stores team names
+  var teamNamesList = ["Boston Celtics", "Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors", "Dallas Mavericks", "Houston Rockets", "Memphis Grizzlies", "New Orleans Pelicans", "San Antonio Spurs", "Chicago Bulls", "Cleveland Cavaliers", "Detroit Pistons", "Indiana Pacers", "Milwaukee Bucks", "Denver Nuggets", "Minnesota Timberwolves", "Oklahoma City Thunder", "Portland Trail Blazers", "Utah Jazz", "Atlanta Hawks", "Charlotte Hornets", "Miami Heat", "Orlando Magic", "Washington Wizards", "Golden State Warriors", "Los Angeles Clippers", "Los Angeles Lakers", "Phoenix Suns", "Sacramento Kings"];
+
+  var teamLinksList = ["google.com", "wikipedia.org"]
+  
+  // function to create the team navigation bar
+  function loadTeamNavBar(){
+
+    teamList = d3.select("#teamlist");
+
+    console.log("sup boys")
+
+    var teamLinks = teamList.selectAll("li")
+                        .data(teamNamesList)
+                        .enter().append("li")
+                        .html(function(d, i){return "<a href =" + teamLinksList[i] +">" + teamNamesList[i] + "</a>";})
+
+  }
+
+  loadTeamNavBar();
+
+</script> 
+</html>>  
