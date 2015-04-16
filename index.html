@@ -33,10 +33,11 @@
 
 <body>
 
-  <ul id = "teamlist">
+  <ul id = "teamlist"></ul>
 
+  <br>
 
-  </ul>
+  <ul id = "playerlist"></ul>
 
 </body>
 
@@ -46,6 +47,8 @@
   var teamNamesList = ["Boston Celtics", "Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors", "Dallas Mavericks", "Houston Rockets", "Memphis Grizzlies", "New Orleans Pelicans", "San Antonio Spurs", "Chicago Bulls", "Cleveland Cavaliers", "Detroit Pistons", "Indiana Pacers", "Milwaukee Bucks", "Denver Nuggets", "Minnesota Timberwolves", "Oklahoma City Thunder", "Portland Trail Blazers", "Utah Jazz", "Atlanta Hawks", "Charlotte Hornets", "Miami Heat", "Orlando Magic", "Washington Wizards", "Golden State Warriors", "Los Angeles Clippers", "Los Angeles Lakers", "Phoenix Suns", "Sacramento Kings"];
 
   var teamLinksList = ["google.com", "wikipedia.org"]
+
+  var teamPlayersList = ["Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre"];
   
   // function to create the team navigation bar
   function loadTeamNavBar(){
@@ -57,7 +60,25 @@
     var teamLinks = teamList.selectAll("li")
                         .data(teamNamesList)
                         .enter().append("li")
-                        .html(function(d, i){return "<a href =" + teamLinksList[i] +">" + teamNamesList[i] + "</a>";})
+                        .html(function(d, i){return "<a href = '#' onclick =showPlayers("+i+")>" + teamNamesList[i] + "</a>";})
+
+  }
+
+  // showPlayers takes in the index of the team that was clicked and shows the players of that team
+  function showPlayers(teamIndex){
+
+    console.log(teamIndex);
+
+    // remove whatever list there was previously
+    d3.selectAll(".playerList").remove();
+
+    playerList = d3.select("#playerlist");
+
+    var teamPlayers = playerList.selectAll("li")
+                                .data(teamPlayersList)
+                                .enter().append("li")
+                                .attr("class", "playerList")
+                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[i] + "</a>";})
 
   }
 
