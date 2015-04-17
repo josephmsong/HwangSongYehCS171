@@ -22,6 +22,11 @@
       background-color: #dddddd;
     }
 
+    img{
+      width:3%;
+      height:3%;
+    }
+
   </style>
 
   <script src="libs/d3/d3.min.js" charset="utf-8"></script>
@@ -33,7 +38,7 @@
 
 <body>
 
-  <ul id = "teamlist"></ul>
+  <div id = "teamlist"></div>
 
   <br>
 
@@ -62,10 +67,50 @@
 
     teamList = d3.select("#teamlist");
 
-    var teamLinks = teamList.selectAll("li")
-                        .data(teamNamesList)
-                        .enter().append("li")
-                        .html(function(d, i){return "<a href = '#' onclick =showPlayers("+i+")>" + teamNamesList[i] + "</a>";})
+    // var teamLinks = teamList.selectAll("li")
+    //                     .data(teamNamesList)
+    //                     .enter().append("li")
+    //                     .html(function(d, i){return "<a href = '#' onclick =showPlayers("+i+")>" + teamNamesList[i] + "</a>";})
+
+    var teamLinks = teamList.selectAll("img")
+                            .data(teamNamesList)
+                            .enter().append("img")
+                            .attr("src", function(d, i){
+
+                              // teamAbbrev will be used to determine the link
+                              var teamAbbrev;
+
+                              // make adjustments for exceptions
+                              switch(i){
+
+                                case 9: 
+                                  teamAbbrev = "GSW";
+                                  break;
+
+                                case 18:
+                                  teamAbbrev = "NOP";
+                                  break;
+
+                                case 19:
+                                  teamAbbrev = "NYK";
+                                  break;
+
+                                case 23:
+                                  teamAbbrev = "PHX";
+                                  break;
+
+                                case 26: 
+                                  teamAbbrev = "SAS";
+                                  break;
+
+                                default:
+                                  teamAbbrev = reverseLookup(i);
+                                  break;
+                              }
+
+                              return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
+                            })
+                            .attr("onclick", function(d, i){return "showPlayers("+i+")"});
 
   }
 
@@ -154,6 +199,16 @@
       && array != null
       && array.length != null
       && array.length > 0
+  }
+
+  function reverseLookup(value){
+
+    for (iter in teamLookup){
+      if (teamLookup.hasOwnProperty(iter)){
+        if(teamLookup[iter] == value)
+          return iter;
+      }
+    }
   }
 
 
