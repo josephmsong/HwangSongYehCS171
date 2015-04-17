@@ -58,9 +58,7 @@
   // function to create the team navigation bar
   function loadTeamNavBar(_data){
 
-    playerData = _data;
-
-    console.log(_data);
+    // playerData = _data;
 
     console.log(playerData);
 
@@ -88,7 +86,7 @@
                                 .data(teamPlayersList[teamIndex])
                                 .enter().append("li")
                                 .attr("class", "playerList")
-                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i] + "</a>";})
+                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
 
   }
 
@@ -123,11 +121,19 @@
     // initialize the teamPlayersList
     teamPlayersList = get2DArray(30);  
 
-    queue()
-      .defer(d3.json, 'data/nba.json')
-      .await(loadTeamNavBar);
-  }
+    d3.json('data/nba.json', function(error, data){
+      playerData = data;
 
+    })
+
+    loadTeamNavBar();
+
+  // this wasn't working
+  //   queue()
+  //     .defer(d3.json, 'data/nba.json')
+  //     .await(loadTeamNavBar);
+  // }
+  }
   /* 
   * HELPER FUNCTIONS BELOW
   */
