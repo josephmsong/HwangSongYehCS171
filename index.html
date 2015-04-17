@@ -60,8 +60,6 @@
 
     // playerData = _data;
 
-    console.log(playerData);
-
     teamList = d3.select("#teamlist");
 
     var teamLinks = teamList.selectAll("li")
@@ -96,15 +94,11 @@
     // first check to see if we've already created the list for this team
     if(isEmpty(teamPlayersList[teamIndex])){
 
-      console.log("already found");
-
       return teamPlayersList[teamIndex];
     }
 
     // if we haven't already clicked on this team, round up the players
     else{
-
-      console.log("new team");
 
       return playerData.filter(function(d, i, array){
 
@@ -154,7 +148,7 @@
 
   // isEmpty checks to see if an array is empty
   // source: http://stackoverflow.com/questions/11743392/check-if-array-is-empty-or-exists
-  function isEmpty(testArray){
+  function isEmpty(array){
 
     return typeof array != "undefined"
       && array != null
