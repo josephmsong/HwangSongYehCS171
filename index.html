@@ -157,7 +157,7 @@
 
       return playerData.filter(function(d, i, array){
 
-        return teamLookup[d.team] == teamIndex;
+        return teamLookup[d.team] == teamIndex && d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
 
       })
     }
