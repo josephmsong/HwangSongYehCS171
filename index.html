@@ -34,6 +34,7 @@
       margin: 12px;
       width: 50px;
       height: 50px;
+      background-color: #d3d3d3;
     }
 
   </style>
@@ -119,7 +120,12 @@
 
                               return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
                             })
-                            .attr("onclick", function(d, i){return "showPlayers("+i+")"});
+                            .attr("id", function(d, i){return reverseLookup[i];})
+                            .attr("onclick", function(d, i){
+                              d3.select("#"+reverseLookup[i])
+                                .style("background-color", "#d3d3d3");
+                              return "showPlayers("+i+")";
+                            });
 
   }
 
