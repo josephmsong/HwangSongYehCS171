@@ -23,8 +23,17 @@
     }
 
     img{
-      width:3%;
-      height:3%;
+      width:3.2%;
+      height:3.2%;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
+    }
+
+    .playerList {
+      margin: 12px;
+      width: 50px;
+      height: 50px;
     }
 
   </style>
@@ -125,11 +134,12 @@
 
     playerList = d3.select("#playerlist");
 
-    var teamPlayers = playerList.selectAll("li")
+    var teamPlayers = playerList.selectAll("img")
                                 .data(teamPlayersList[teamIndex])
-                                .enter().append("li")
+                                .enter().append("img")
                                 .attr("class", "playerList")
-                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
+                                .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;});
+                                // .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
 
   }
 
@@ -201,6 +211,7 @@
       && array.length > 0
   }
 
+  // used to generate team image links
   function reverseLookup(value){
 
     for (iter in teamLookup){
@@ -210,6 +221,15 @@
       }
     }
   }
+
+  // used to find player images
+  // function playerImageLookup(name){
+
+  //   for(iter in playerData){
+  //     if iter.name == name;
+  //       return iter.photo;
+  //   }
+  // }
 
 
   initVis();
