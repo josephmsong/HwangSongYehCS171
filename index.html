@@ -44,18 +44,27 @@
 <script>
 
   // array that stores team names
-  var teamNamesList = ["Boston Celtics", "Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors", "Dallas Mavericks", "Houston Rockets", "Memphis Grizzlies", "New Orleans Pelicans", "San Antonio Spurs", "Chicago Bulls", "Cleveland Cavaliers", "Detroit Pistons", "Indiana Pacers", "Milwaukee Bucks", "Denver Nuggets", "Minnesota Timberwolves", "Oklahoma City Thunder", "Portland Trail Blazers", "Utah Jazz", "Atlanta Hawks", "Charlotte Hornets", "Miami Heat", "Orlando Magic", "Washington Wizards", "Golden State Warriors", "Los Angeles Clippers", "Los Angeles Lakers", "Phoenix Suns", "Sacramento Kings"];
+  var teamNamesList = ["Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"];
 
-  var teamLinksList = ["google.com", "wikipedia.org"]
+  // teamPlayersList will contain the list of players for the team selected from the first navbar
+  var teamPlayersList;
 
-  var teamPlayersList = ["Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre","Jeremy Lin", "Robert Sacre"];
+  // playerData contains the data that'll be loaded from the JSON
+  var playerData;
+
+  // teamLookup is an object used to wrangle together the players from a selected team
+  var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
   
   // function to create the team navigation bar
-  function loadTeamNavBar(){
+  function loadTeamNavBar(_data){
+
+    playerData = _data;
+
+    console.log(_data);
+
+    console.log(playerData);
 
     teamList = d3.select("#teamlist");
-
-    console.log("sup boys")
 
     var teamLinks = teamList.selectAll("li")
                         .data(teamNamesList)
@@ -67,22 +76,88 @@
   // showPlayers takes in the index of the team that was clicked and shows the players of that team
   function showPlayers(teamIndex){
 
-    console.log(teamIndex);
-
     // remove whatever list there was previously
     d3.selectAll(".playerList").remove();
+
+    // get a list of the players on that team
+    teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
 
     playerList = d3.select("#playerlist");
 
     var teamPlayers = playerList.selectAll("li")
-                                .data(teamPlayersList)
+                                .data(teamPlayersList[teamIndex])
                                 .enter().append("li")
                                 .attr("class", "playerList")
-                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[i] + "</a>";})
+                                .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i] + "</a>";})
 
   }
 
-  loadTeamNavBar();
+  // aggregatePlayers is used to get the list of players for a selected team
+  function aggregatePlayers(teamIndex){
+
+    // first check to see if we've already created the list for this team
+    if(isEmpty(teamPlayersList[teamIndex])){
+
+      console.log("already found");
+
+      return teamPlayersList[teamIndex];
+    }
+
+    // if we haven't already clicked on this team, round up the players
+    else{
+
+      console.log("new team");
+
+      return playerData.filter(function(d, i, array){
+
+        return teamLookup[d.team] == teamIndex;
+
+      })
+    }
+
+  }
+
+    // initVis loads the data
+  function initVis(){
+
+    // initialize the teamPlayersList
+    teamPlayersList = get2DArray(30);  
+
+    queue()
+      .defer(d3.json, 'data/nba.json')
+      .await(loadTeamNavBar);
+  }
+
+  /* 
+  * HELPER FUNCTIONS BELOW
+  */
+
+  // function to create an empty 2D-array. We'll use this to setup memoization 
+  //for team players so we don't need to iterate too much over the large JSON file that we have
+  // source: http://stackoverflow.com/questions/6495187/best-way-to-generate-empty-2d-array
+  function get2DArray(size) {
+    size = size > 0 ? size : 0;
+    var arr = [];
+
+    while(size--) {
+        arr.push([]);
+    }
+
+    return arr;
+  }
+
+  // isEmpty checks to see if an array is empty
+  // source: http://stackoverflow.com/questions/11743392/check-if-array-is-empty-or-exists
+  function isEmpty(testArray){
+
+    return typeof array != "undefined"
+      && array != null
+      && array.length != null
+      && array.length > 0
+  }
+
+
+  initVis();
 
 </script> 
 </html>
