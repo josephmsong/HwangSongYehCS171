@@ -2,51 +2,65 @@
 <html lang="en">
 <head>
 <style type="text/css">
-   img{
+  
+    img {
       width:20%;
       height:20%;
       background-repeat: no-repeat;
       background-position: 50%;
      }
 
-  rect {
-      fill-opacity:.5;
-  }
-  .text {
-    padding-left: 70px;
-  }
-  
-  td{
-    border: 1px solid #888888;
-  }
-  
-  th,td,caption {
-    padding: 3px;
-  }
+    div#averageBarDiv {
+      float:left;
+      width:40%;
+      height:300px;
+    }
 
-  tr:nth-child(even) {background: #d3d3d3}
-  tr:nth-child(odd) {background: white}
-  .arrow-down {
-    width: 0; 
-    height: 0; 
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #f00;
-  }
+    .text {
+      padding-left: 70px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: lightgray;
+    }
+    tr:nth-child(odd) {
+      background-color: white;
+    }
+    table {
+        margin-left: 20px;
+        border-collapse: collapse;
+    }
+    table, th, td, caption {
+        border: 1px solid #888888;
+    }
+
+    th, td, caption {
+      padding: 3px;
+    }
+
+    .playerimg {
+      float:left;
+      margin: 20px;
+    }
+
+    .teamimg {
+      float:left;
+      margin-left: 50px;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
+    }
+
 </style>
 
 </head>
-<body>
-
-  <div id = "playerimg"></div>
-  <div id="teamimg"></div>
-<div id = "playerdetails"></div>
-
-  <ul id = "playerimg"></ul>
-
-</body>
 <meta charset="utf-8">
   <body>
+
+    <div id="container">
+    <div id="playerimg" style="height:85%;width:85%"></div>
+    <div id="teamimg"></div>
+    <div id="playerdetails"></div>
     <div class= "text">
    
   </div>
@@ -125,7 +139,8 @@
 
         var avgDiv = d3.select("#averageBarDiv")
 
-        this.svg = avgDiv.append("svg")
+        this.svg = avgDiv
+          .append("svg")
           .attr("width", this.width + this.margin.left + this.margin.right)
           .attr("height", this.height + this.margin.top + this.margin.bottom)
         .append("g")
@@ -237,7 +252,6 @@
                 .data([77])
                 .enter().append("img")
                 .attr("class","playerimg")
-
                 .attr("src", data[78]["photo"])
               
 
@@ -290,36 +304,36 @@
             .text(function(d) { return d; })
 
 			
-				var table = d3.select("body").append("table"),
-          thead = table.append("thead")
-                       .attr("class", "thead");
-          tbody = table.append("tbody");
+		// 		var table = d3.select("body").append("table"),
+  //         thead = table.append("thead")
+  //                      .attr("class", "thead");
+  //         tbody = table.append("tbody");
 
-          table.append("caption")
-            .html("NBA Individual Stats");
+  //         table.append("caption")
+  //           .html("NBA Individual Stats");
 
-          // add header names
-          var cols = thead.append("tr").selectAll("th")
-           .data([data[78]])
-           .enter()
-           .append("th")
-           
+  //         // add header names
+  //         var cols = thead.append("tr").selectAll("th")
+  //          .data([data[78]])
+  //          .enter()
+  //          .append("th")
+  //          
 
-          var rows = tbody.selectAll("tr.row")
-            .data(agecol)
-            .enter()
-            .append("tr").attr("class", "row")
-  					.text(function(d) { return d; })
-          //populates each cell using JSON file
-          var cells = cols.selectAll("td")
-            .data(function(row) {	
-  						 return desireindex.map(function(col, i) {
-                  return row[Object.keys(row)[desireindex[i]]]	;
-              });
-            })
-            .enter()
-            .append("td")
-            .text(function(d) { return d; })
+  //         var rows = tbody.selectAll("tr.row")
+  //           .data(agecol)
+  //           .enter()
+  //           .append("tr").attr("class", "row")
+  // 					.text(function(d) { return d; })
+  //         //populates each cell using JSON file
+  //         var cells = cols.selectAll("td")
+  //           .data(function(row) {	
+  // 						 return desireindex.map(function(col, i) {
+  //                 return row[Object.keys(row)[desireindex[i]]]	;
+  //             });
+  //           })
+  //           .enter()
+  //           .append("td")
+  //           .text(function(d) { return d; })
 
 
 
@@ -388,5 +402,6 @@
 
 
 </script> 
+  </div>
   </body>
 </html>
