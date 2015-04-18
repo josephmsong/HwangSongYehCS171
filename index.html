@@ -90,6 +90,14 @@
 
   <ul id = "playerlist"></ul>
 
+  <br>
+
+  <div id = "teamNameDiv"> </div>
+
+  <br>
+
+  <div id = "playerNameDiv"></div>
+
 </body>
 
 <script>
@@ -158,9 +166,11 @@
                             })
                             .attr("id", function(d, i){return reverseLookup[i];})
                             .attr("onclick", function(d, i){
+
                               d3.select("#"+reverseLookup[i])
-                                .style("background-color", "#d3d3d3");
-                              return "showPlayers("+i+")";
+                                .style("border", "10px solid black");
+
+                              return "showTeamName("+i+"); showPlayers("+i+")";
                             });
 
   }
@@ -180,7 +190,10 @@
                                 .data(teamPlayersList[teamIndex])
                                 .enter().append("img")
                                 .attr("class", "playerList")
-                                .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;});
+                                .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
+                                .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name);})
+                                .on("mouseout", function(d, i){d3.select("#playerNameDiv").html("");})
+                                .on("click", function(){window.location.href = "table.html";});
                                 // .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
 
   }
@@ -203,6 +216,24 @@
 
       })
     }
+
+  }
+
+  // showTeamName appends text to the page to show which team is currently selected
+  function showTeamName(teamIndex){
+
+    var teamName = d3.select("#teamNameDiv")
+                     .attr("class", "teamNameDisplay")
+                     .html(function(d, i){return "Selected team: " + teamNamesList[teamIndex];})
+
+  }
+
+  // showPlayerName shows the name of the player on hover
+  function showPlayerName(playerName){
+
+    d3.select("#playerNameDiv")
+      .attr("class", "playerNameDisplay")
+      .html(function(d, i){return "Player: " + playerName;})
 
   }
 
