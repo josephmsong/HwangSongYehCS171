@@ -31,10 +31,48 @@
     }
 
     .playerList {
-      margin: 12px;
+      margin: 10px;
       width: 50px;
       height: 50px;
       background-color: #d3d3d3;
+    }
+
+    div#teamlist {
+      background-color: #0099FF;
+
+      /* Firefox */
+      display:-moz-box;
+      -moz-box-pack:center;
+      -moz-box-align:center;
+
+      /* Safari and Chrome */
+      display:-webkit-box;
+      -webkit-box-pack:center;
+      -webkit-box-align:center;
+
+      /* W3C */
+      display:box;
+      box-pack:center;
+      box-align:center;
+    }
+
+    div.playerlist {
+      background-color: #00CCFF;
+
+      /* Firefox */
+      display:-moz-box;
+      -moz-box-pack:center;
+      -moz-box-align:center;
+
+      /* Safari and Chrome */
+      display:-webkit-box;
+      -webkit-box-pack:center;
+      -webkit-box-align:center;
+
+      /* W3C */
+      display:box;
+      box-pack:center;
+      box-align:center;
     }
 
   </style>
@@ -49,8 +87,6 @@
 <body>
 
   <div id = "teamlist"></div>
-
-  <br>
 
   <ul id = "playerlist"></ul>
 
@@ -140,7 +176,7 @@
 
     playerList = d3.select("#playerlist");
 
-    var teamPlayers = playerList.selectAll("img")
+    var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
                                 .data(teamPlayersList[teamIndex])
                                 .enter().append("img")
                                 .attr("class", "playerList")
@@ -178,6 +214,7 @@
 
     d3.json('data/nba.json', function(error, data){
       playerData = data;
+      console.log(data)
 
     })
 
