@@ -62,6 +62,7 @@
     <div id="teamimg"></div>
     <div id="playerdetails"></div>
     <div class= "text">
+    <div id="playerName"></div>
    
   </div>
 
@@ -106,6 +107,12 @@
       var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
 
       averageDisplayData = wrangleData(playerData.seasons);
+
+      // addPlayerName adds the player's name and position to the page
+      addPlayerName(playerData);
+
+      // addTeamImage looks up the image for this player's team and puts it on the page
+      addTeamImage(playerData);
 
       initAverageBars(averageDisplayData);
 
@@ -257,6 +264,58 @@
           }
 
       }
+
+      function addPlayerName(player){
+
+        var info = player.name + ", " + player.position;
+
+          d3.select("#playerName")
+            .html([info])
+      }
+
+      function addTeamImage(playerData){
+
+          // teamAbbrev will be used to determine the link
+        var teamAbbrev;
+
+        // make adjustments for exceptions
+        switch(playerData.team){
+
+          case "GS": 
+            teamAbbrev = "GSW";
+            break;
+
+          case "NO":
+            teamAbbrev = "NOP";
+            break;
+
+          case "NY":
+            teamAbbrev = "NYK";
+            break;
+
+          case "PHO":
+            teamAbbrev = "PHX";
+            break;
+
+          case "SA": 
+            teamAbbrev = "SAS";
+            break;
+
+          default:
+            teamAbbrev = playerData.team;
+            break;
+        }
+
+
+        var team = d3.select("#teamimg")
+
+       var teamimg = team.selectAll("img")
+                .data([1])
+                .enter().append("img")
+                .attr("class", "teamimg") 
+                .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")    
+
+      }
       
           // used to generate team image links
       function reverseLookup(value){
@@ -279,47 +338,6 @@
               
 
      var text = d3.select("#playerdetails")
-
-     
-     var team = d3.select("#teamimg")
-
-     // teamAbbrev will be used to determine the link
-      var teamAbbrev;
-
-      // make adjustments for exceptions
-      switch(playerData.team){
-
-        case "GS": 
-          teamAbbrev = "GSW";
-          break;
-
-        case "NO":
-          teamAbbrev = "NOP";
-          break;
-
-        case "NY":
-          teamAbbrev = "NYK";
-          break;
-
-        case "PHO":
-          teamAbbrev = "PHX";
-          break;
-
-        case "SA": 
-          teamAbbrev = "SAS";
-          break;
-
-        default:
-          teamAbbrev = playerData.team;
-          break;
-      }
-
-     var teamimg = team.selectAll("img")
-     					.data([1])
-     					.enter().append("img")
-     					.attr("class", "teamimg")	
-     					.attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")		
-
 
   		var columns = Object.keys(playerData.seasons[0]);
 
