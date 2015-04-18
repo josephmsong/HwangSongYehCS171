@@ -71,17 +71,30 @@
     <div id = "averageBarDiv"> </div>
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <script>
 
     this.margin = {top: 20, right: 30, bottom: 30, left: 100},
     this.width = 400 - this.margin.left - this.margin.right,
     this.height = 540 - this.margin.top - this.margin.bottom;
+
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+    }
+
+    var playerID = $.urlParam('id');
    
 
 		var playerData
 			d3.json('data/nba.json', function(error, data){
-      playerData = data[78];
+      playerData = data[playerID];
 
       // averageDisplayData is the array with differences between this year and the average
       var averageDisplayData = [];
@@ -245,6 +258,16 @@
 
       }
       
+          // used to generate team image links
+      function reverseLookup(value){
+
+        for (iter in teamLookup){
+          if (teamLookup.hasOwnProperty(iter)){
+            if(teamLookup[iter] == value)
+              return iter;
+          }
+        }
+      }
    
      var imgaa = d3.select("#playerimg")
 
@@ -252,7 +275,7 @@
                 .data([77])
                 .enter().append("img")
                 .attr("class","playerimg")
-                .attr("src", data[78]["photo"])
+                .attr("src", data[playerID]["photo"])
               
 
      var text = d3.select("#playerdetails")
@@ -260,11 +283,42 @@
      
      var team = d3.select("#teamimg")
 
+     // teamAbbrev will be used to determine the link
+      var teamAbbrev;
+
+      // make adjustments for exceptions
+      switch(playerData.team){
+
+        case "GS": 
+          teamAbbrev = "GSW";
+          break;
+
+        case "NO":
+          teamAbbrev = "NOP";
+          break;
+
+        case "NY":
+          teamAbbrev = "NYK";
+          break;
+
+        case "PHO":
+          teamAbbrev = "PHX";
+          break;
+
+        case "SA": 
+          teamAbbrev = "SAS";
+          break;
+
+        default:
+          teamAbbrev = playerData.team;
+          break;
+      }
+
      var teamimg = team.selectAll("img")
      					.data([1])
      					.enter().append("img")
      					.attr("class", "teamimg")	
-     					.attr("src", "http://stats.nba.com/media/img/teams/logos/LAL_logo.svg")		
+     					.attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")		
 
 
   		var columns = Object.keys(playerData.seasons[0]);
@@ -314,7 +368,7 @@
 
   //         // add header names
   //         var cols = thead.append("tr").selectAll("th")
-  //          .data([data[78]])
+  //          .data([data[playerID]])
   //          .enter()
   //          .append("th")
   //          
