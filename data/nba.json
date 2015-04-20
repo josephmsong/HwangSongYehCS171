@@ -7759,11 +7759,8 @@
     }, 
     {
         "age": 23.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 80.0, 
         "name": "Jerrelle Benimon", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -7997,11 +7994,8 @@
     }, 
     {
         "age": 22.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 89.0, 
         "name": "Sim Bhullar", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -18041,11 +18035,8 @@
     }, 
     {
         "age": 24.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 72.0, 
         "name": "Will Cherry", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -18367,11 +18358,8 @@
     }, 
     {
         "age": 26.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 77.0, 
         "name": "Patrick Christopher", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -22537,11 +22525,8 @@
     }, 
     {
         "age": 24.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 77.0, 
         "name": "Andre Dawkins", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -25077,11 +25062,8 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 74.0, 
         "name": "Larry II Drew", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -26563,11 +26545,8 @@
     }, 
     {
         "age": 24.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 79.0, 
         "name": "Jarell Eddie", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -30291,11 +30270,8 @@
     }, 
     {
         "age": 31.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 80.0, 
         "name": "Tony Gaffney", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -34121,11 +34097,8 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "experience": 0, 
         "height": 81.0, 
         "name": "Drew Gordon", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -37901,11 +37874,7 @@
     }, 
     {
         "age": 26.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 80.0, 
         "name": "Elias Harris", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -51021,11 +50990,7 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 76.0, 
         "name": "Sean Kilpatrick", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -51401,11 +51366,7 @@
     }, 
     {
         "age": 24.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 84.0, 
         "name": "Alex Kirk", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -56223,11 +56184,7 @@
     }, 
     {
         "age": 26.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 73.0, 
         "name": "Kalin Lucas", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -65565,11 +65522,7 @@
         "age": 32.0, 
         "experience": 12.0, 
         "height": 83.0, 
-<<<<<<< HEAD
-        "name": 0, 
-=======
-        "name": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+        "name": "Nene Hilario", 
         "photo": "https://www.cbssports.com/images/basketball/nba/players/170x170/307834.png", 
         "position": "PF", 
         "seasons": [], 
@@ -66640,11 +66593,7 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 79.0, 
         "name": "James Nunnally", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -73696,11 +73645,7 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 82.0, 
         "name": "Willie Reed", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -74752,11 +74697,7 @@
     }, 
     {
         "age": 24.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 80.0, 
         "name": "Ronald Roberts", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -78658,11 +78599,7 @@
     }, 
     {
         "age": 28.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 74.0, 
         "name": "Chris Smith", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -88582,11 +88519,7 @@
     }, 
     {
         "age": 25.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 82.0, 
         "name": "David Wear", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -92638,11 +92571,7 @@
     }, 
     {
         "age": 22.0, 
-<<<<<<< HEAD
         "experience": 0, 
-=======
-        "experience": NaN, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
         "height": 81.0, 
         "name": "Patric Young", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
