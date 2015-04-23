@@ -575,7 +575,7 @@
         // this.svg.select(".y.axis")
         // .call(this.yAxis)
 
-        d3.selectAll(".avgBars").remove();
+        d3.selectAll(".playerAvgBars").remove();
         d3.selectAll(".barsLabel").remove();
 
         if(!isNaN(data[0])){
@@ -593,7 +593,7 @@
                         .attr("y", function (d,i) {return that.y(i);})
                         .attr("width", function(d, i){return Math.abs(that.x(d) - that.x(0));})
                         .attr("height", this.y.rangeBand())
-                        .attr("class", "avgBars")
+                        .attr("class", "playerAvgBars")
                         .attr("fill", function(d){
                             // if this is a negative value
                             if(d < 0){
