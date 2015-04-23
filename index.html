@@ -198,7 +198,7 @@
                                 .attr("class", "playerList")
                                 .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
                                 .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, teamPlayersList[teamIndex][i]);})
-                                .on("mouseout", function(d, i){d3.selectAll(".barsLabel").remove();d3.select("#playerNameDiv").html("");})
+                                .on("mouseout", function(d, i){d3.selectAll(".compareBarsDiv").remove();d3.select("#playerNameDiv").html([""]);})
                                 .on("click", function(d, i){
 
                                     var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
@@ -244,185 +244,187 @@
 
     d3.select("#playerNameDiv")
       .attr("class", "playerNameDisplay")
-      .html(function(d, i){return "Player: " + playerName;})
+      .html(function(d, i){return "Player: " + playerName;}) 
 
-    // console.log(player);
+    var teamData = wrangleTeamData(player.team);
+    var thisPlayerData = showPlayerComparison(player);
 
-    // var teamData = wrangleTeamData(player.team);
-    // var thisPlayerData = showPlayerComparison(player);
+    console.log(teamData);
+    console.log(thisPlayerData);
 
-    //     this.margin = {top: 20, right: 30, bottom: 30, left: 100},
-    // this.width = 400 - this.margin.left - this.margin.right,
-    // this.height = 540 - this.margin.top - this.margin.bottom;
+        this.margin = {top: 20, right: 30, bottom: 30, left: 100},
+    this.width = 400 - this.margin.left - this.margin.right,
+    this.height = 540 - this.margin.top - this.margin.bottom;
    
 
-    //     var that = this;
+        var that = this;
 
-    //     var avgDiv = d3.select("#compareBarsDiv")
+        var avgDiv = d3.select("#compareBarsDiv")
 
-    //     this.svg = avgDiv.append("svg")
-    //       .attr("width", this.width + this.margin.left + this.margin.right)
-    //       .attr("height", this.height + this.margin.top + this.margin.bottom)
-    //     .append("g")
-    //       .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+        this.svg = avgDiv.append("svg")
+          .attr("width", this.width + this.margin.left + this.margin.right)
+          .attr("height", this.height + this.margin.top + this.margin.bottom)
+          .attr("class", "compareBarsDiv")
+        .append("g")
+          .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
-    //     this.x = d3.scale.linear()
-    //       .range([0, this.width]);
+        this.x = d3.scale.linear()
+          .range([0, this.width]);
 
-    //     this.y = d3.scale.ordinal()
-    //         .rangeRoundBands([0, this.height/2], .2);
+        this.y = d3.scale.ordinal()
+            .rangeRoundBands([0, this.height/2], .2);
 
-    //     this.xAxis = d3.svg.axis()
-    //       .scale(this.x)
-    //       .orient("top");
+        this.xAxis = d3.svg.axis()
+          .scale(this.x)
+          .orient("top");
 
-    //     // this.yAxis = d3.svg.axis()
-    //     //   .scale(this.y)
-    //     //   .orient("left");
+        // this.yAxis = d3.svg.axis()
+        //   .scale(this.y)
+        //   .orient("left");
 
-    //     this.area = d3.svg.area()
-    //       .interpolate("monotone")
-    //       .x1(function(d) {return that.x(d); })
-    //       .x0(0)
-    //       .y1(function(d, i) {return that.y(i);});
+        this.area = d3.svg.area()
+          .interpolate("monotone")
+          .x1(function(d) {return that.x(d); })
+          .x0(0)
+          .y1(function(d, i) {return that.y(i);});
 
-    //     this.svg.append("g")
-    //         .attr("class", "x axis")
-    //         .attr("transform", "translate(0," + this.height/2 + ")")
+        this.svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0," + this.height/2 + ")")
 
-    //     this.svg.append("g")
-    //         .attr("class", "y axis")
-    //       .append("text")
-    //         .attr("x", 170)
-    //         .attr("y", -12)
-    //         .attr("dy", ".71em")
-    //         .style("text-anchor", "end")
-    //         .text("Comparison to Average")
-    //       .append("line")
-    //         .attr("x1", 0)
-    //         .attr("x2", 0)
-    //         .attr("y2", this.height);
+        this.svg.append("g")
+            .attr("class", "y axis")
+          .append("text")
+            .attr("x", 170)
+            .attr("y", -12)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end")
+            .text("Contribution to Team")
+          .append("line")
+            .attr("x1", 0)
+            .attr("x2", 0)
+            .attr("y2", this.height);
 
 
-    //     var x0 = Math.max(-d3.min(teamData), d3.max(teamData));
+        var x0 = Math.max(0, d3.max(teamData));
 
-    //     this.x.domain([-x0, x0]);
-    //     this.x.nice();
+        this.x.domain([0, x0]);
+        this.x.nice();
 
-    //     this.y.domain(d3.range(teamData.length));
+        this.y.domain(d3.range(teamData.length));
 
-    //     // updates axes
-    //     this.svg.select(".x.axis")
-    //         .call(this.xAxis);
+        // updates axes
+        this.svg.select(".x.axis")
+            .call(this.xAxis);
 
-    //     // this.svg.select(".y.axis")
-    //     // .call(this.yAxis)
+        // this.svg.select(".y.axis")
+        // .call(this.yAxis)
 
-    //     d3.selectAll(".avgBars").remove();
-    //     d3.selectAll(".barsLabel").remove();
+        d3.selectAll(".avgBars").remove();
+        d3.selectAll(".barsLabel").remove();
 
-    //     if(!isNaN(teamData[0])){
+        if(!isNaN(teamData[0])){
 
-    //         var groups = this.svg.append("g")
-    //                     .selectAll("g.row")
-    //                     .data(teamData)
-    //                     .enter()
-    //                     .append("g")
-    //                     .attr("class", "row");
+            var groups = this.svg.append("g")
+                        .selectAll("g.row")
+                        .data(teamData)
+                        .enter()
+                        .append("g")
+                        .attr("class", "row");
 
-    //         var bars = groups
-    //                     .append("rect")
-    //                     .attr("x", function (d, i) {return that.x(d);})
-    //                     .attr("y", function (d,i) {return that.y(i);})
-    //                     .attr("width", function(d, i){return that.x(d);})
-    //                     .attr("height", this.y.rangeBand())
-    //                     .attr("class", "avgBars")
-    //                     .attr("fill", "red")
+            var bars = groups
+                        .append("rect")
+                        .attr("x", 0)
+                        .attr("y", function (d,i) {return that.y(i);})
+                        .attr("width", function(d, i){return that.x(d);})
+                        .attr("height", this.y.rangeBand())
+                        .attr("class", "avgBars")
+                        .attr("fill", "red")
 
-    //         var groups2 = this.svg.append("g")
-    //                     .selectAll("g.row")
-    //                     .data(thisPlayerData)
-    //                     .enter()
-    //                     .append("g")
-    //                     .attr("class", "row");
+            var groups2 = this.svg.append("g")
+                        .selectAll("g.row")
+                        .data(thisPlayerData)
+                        .enter()
+                        .append("g")
+                        .attr("class", "row");
 
-    //         var bars2 = groups2
-    //                     .append("rect")
-    //                     .attr("x", function (d, i) {return that.x(d);})
-    //                     .attr("y", function (d,i) {return that.y(i);})
-    //                     .attr("width", function(d, i){return that.x(d);})
-    //                     .attr("height", this.y.rangeBand())
-    //                     .attr("class", "avgBars")
-    //                     .attr("fill", "green")
-    //       }
+            var bars2 = groups2
+                        .append("rect")
+                        .attr("x", 0)
+                        .attr("y", function (d,i) {return that.y(i);})
+                        .attr("width", function(d, i){return that.x(d);})
+                        .attr("height", this.y.rangeBand())
+                        .attr("class", "avgBars")
+                        .attr("fill", "green")
+          }
 
   }
 
-  // // wrangle the data for a specific team to create the bar chart
-  // function wrangleTeamData(teamName){
+  // wrangle the data for a specific team to create the bar chart
+  function wrangleTeamData(teamName){
 
-  //   console.log(teamName);
+    console.log(teamName);
 
-  //   var teamData = [0,0,0,0,0,0,0,0];
+    var teamData = [0,0,0,0,0,0,0,0];
 
-  //   var count = 0;
+    var count = 0;
 
-  //   // avgIndex is the list of indices that we want
-  //   var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
+    // avgIndex is the list of indices that we want
+    var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
 
-  //   playerData.map(function(d, i, array){
+    playerData.map(function(d, i, array){
 
-  //     count = 0; 
+      count = 0; 
 
-  //     // if this is a player on the team that we want
-  //     if(d.team == teamName){
+      // if this is a player on the team that we want
+      if(d.team == teamName){
 
-  //       var seasonData = d.seasons
+        var seasonData = d.seasons
 
-  //       var currentSeasonIndex = seasonData.length -2;
+        var currentSeasonIndex = seasonData.length -2;
 
-  //       for(var field in seasonData[currentSeasonIndex]){
+        for(var field in seasonData[currentSeasonIndex]){
 
-  //         if(seasonData[currentSeasonIndex].hasOwnProperty(field)){
+          if(seasonData[currentSeasonIndex].hasOwnProperty(field)){
 
-  //           // if this field is of interest to us
-  //           if(avgIndex.indexOf(field) > -1){
+            // if this field is of interest to us
+            if(avgIndex.indexOf(field) > -1){
 
-  //             // store the value
-  //             teamData[count] += seasonData[currentSeasonIndex][field];
+              // store the value
+              teamData[count] += seasonData[currentSeasonIndex][field];
 
-  //             count++;
-  //           }
+              count++;
+            }
 
-  //         }
-  //       }
-  //     }
+          }
+        }
+      }
 
-  //   })
+    })
 
-  //   return teamData;
+    return teamData;
 
-  // }
+  }
 
-  // function showPlayerComparison(playerData){
+  function showPlayerComparison(playerData){
 
-  //   var thisPlayerData = [];
+    var thisPlayerData = [];
 
-  //   var currentSeasonIndex = playerData.seasons.length - 2;
-
-
-  //       // avgIndex is the list of indices that we want
-  //   var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
-
-  //   for(var i in avgIndex){
-
-  //     thisPlayerData.push(playerData.seasons[currentSeasonIndex][avgIndex[i]]);
-  //   }
-
-  //   return thisPlayerData;
+    var currentSeasonIndex = playerData.seasons.length - 2;
 
 
-  // }
+        // avgIndex is the list of indices that we want
+    var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
+
+    for(var i in avgIndex){
+
+      thisPlayerData.push(playerData.seasons[currentSeasonIndex][avgIndex[i]]);
+    }
+
+    return thisPlayerData;
+
+
+  }
 
     // initVis loads the data
   function initVis(){
