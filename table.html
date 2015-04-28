@@ -2,7 +2,9 @@
 <html lang="en">
 <head>
 <style type="text/css">
-   img{
+
+  
+    img {
       width:20%;
       height:20%;
       background-repeat: no-repeat;
@@ -12,12 +14,18 @@
     div#averageBarDiv {
       float:left;
       width:40%;
-      height:40%;
+
+      height:300px;
     }
 
     .text {
       padding-left: 70px;
     }
+    .line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
     
     tr:nth-child(even) {
       background-color: lightgray;
@@ -36,29 +44,32 @@
       padding: 3px;
     }
 
-    div#playerimg {
-      
+
+    .playerimg {
+      float:left;
+      margin: 20px;
     }
 
-    div#teamimg {
-
+    .teamimg {
+      float:left;
+      margin-left: 50px;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
     }
 
 </style>
 
 </head>
-<body>
-
-  <div id = "playerimg"></div>
-  <div id="teamimg"></div>
-<div id = "playerdetails"></div>
-
-  <ul id = "playerimg"></ul>
-
-</body>
 <meta charset="utf-8">
   <body>
+
+    <div id="container">
+    <div id="playerimg" style="height:85%;width:85%"></div>
+    <div id="teamimg"></div>
+    <div id="playerdetails"></div>
     <div class= "text">
+    <div id="playerName"></div>
    
   </div>
 
@@ -68,18 +79,34 @@
     <div id = "averageBarDiv"> </div>
 
     <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="http://d3js.org/d3.v3.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 
     <script>
 
-    this.margin = {top: 20, right: 30, bottom: 30, left: 100},
+    this.margin = {top: 30, right: 30, bottom: 30, left: 50},
     this.width = 400 - this.margin.left - this.margin.right,
-    this.height = 540 - this.margin.top - this.margin.bottom;
-   
+    this.height = 400 - this.margin.top - this.margin.bottom;
+
+    $.urlParam = function(name){
+        var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+        if (results==null){
+           return null;
+        }
+        else{
+           return results[1] || 0;
+        }
+    }
+
+    var playerID = $.urlParam('id');
+
 
 		var playerData
 			d3.json('data/nba.json', function(error, data){
-      playerData = data[78];
 
+ 
+      playerData = data[playerID];
       // averageDisplayData is the array with differences between this year and the average
       var averageDisplayData = [];
 
@@ -91,7 +118,16 @@
 
       averageDisplayData = wrangleData(playerData.seasons);
 
+
+      // addPlayerName adds the player's name and position to the page
+      addPlayerName(playerData);
+
+      // addTeamImage looks up the image for this player's team and puts it on the page
+      addTeamImage(playerData);
+
       initAverageBars(averageDisplayData);
+      addLineGraph(playerData.seasons)
+      overTime(playerData.seasons)
 
 
       // wrangleData will be used to create an array of the differences
@@ -241,7 +277,223 @@
           }
 
       }
+      function overTime(data){
+        var parseDate = d3.time.format("%Y").parse
+
       
+        data.forEach(function(d,i){
+          if(parseDate(d.year.substring(0,4))!= null)
+            d.year = parseDate(d.year.substring(0,4))
+          // else
+            // d.year = parseDate("2005")
+        
+
+        })
+
+        var xscale = d3.time.scale().range([0,this.width])
+        var yscale = d3.scale.linear().range([this.height,0])
+
+      
+
+        var xAxis = d3.svg.axis()
+                      .scale(xscale)
+                      .orient("bottom")
+        var yAxis = d3.svg.axis()
+                      .scale(yscale)
+                      .orient("left")
+
+
+        var line = d3.svg.line()
+                    .x(function(d){return xscale(d.year)})
+                    .y(function(d){return yscale(d.ppg)})
+                    // .interpolate("linear")
+
+
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", this.width + margin.left + margin.right)
+                    .attr("height", this.height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate("+margin.left+ ","+margin.top + ")")
+
+        yscale.domain(d3.extent(data, function(d){return d.ppg}));
+        xscale.domain(d3.extent(data,function(d){return d.year}))
+
+        svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0,"+this.height + ")")
+            .call(xAxis)
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+
+          svg.append("path")
+            .attr("class", "line")
+            .attr("stroke","blue")
+            .attr("d", line(data))
+    
+
+
+      }
+      function addLineGraph(data){
+
+        // d3.json("data/nba.json", function(error, data){
+        //   data.forEach(function(d){
+        //     d.bgp = +d.bpg;
+        //     d.ppg = +d.ppg; 
+        //   })
+        // })
+        // var xscale = d3.scale.linear().range([0,this.width])
+        // var yscale = d3.scale.linear().range([this.height,0])
+
+      
+
+        // var xAxis = d3.svg.axis()
+        //               .scale(xscale)
+        //               .orient("bottom")
+        // var yAxis = d3.svg.axis()
+        //               .scale(yscale)
+        //               .orient("left")
+        // yscale.domain(d3.extent(data, function(d){return d.ppg}));
+
+        // xscale.domain(d3.extent(data,function(d){return d.bpg}))
+
+        // var line = d3.svg.line()
+        //             .x(function(d){return xscale(d.bpg)})
+        //             .y(function(d){return yscale(d.ppg)})
+        //             .interpolate("linear")
+
+        // var svg = d3.select("body")
+        //             .append("svg")
+        //             .attr("width", this.width + margin.left + margin.right)
+        //             .attr("height", this.height + margin.top + margin.bottom)
+        //             .append("g")
+        //             .attr("transform", "translate("+margin.left+ ","+margin.top + ")")
+
+        //   svg.append("line")
+        //     // .datum(data)
+        //     .attr("class", "line")
+        //     .attr("d", line(data))
+    
+
+        // svg.append("g")
+        //     .attr("class", "x axis")
+        //     .attr("transform", "translate(0,"+this.height + ")")
+        //     .call(xAxis)
+
+        // svg.append("g")
+        //     .attr("class", "y axis")
+        //     .call(yAxis)
+           
+
+        var xValue = function(d){return d.ppg}
+         xscale = d3.scale.linear().range([0,this.width])
+         var xMap = function(d){console.log((xValue(d)));return xscale(xValue(d))}
+          var xAxis = d3.svg.axis()
+                      .scale(xscale)
+                      .orient("bottom")
+
+        var yValue = function(d){return d.bpg}
+        var yscale = d3.scale.linear().range([this.height,0])
+        var yMap = function(d){return yscale(yValue(d))}
+        var yAxis = d3.svg.axis()
+                      .scale(yscale)
+                      .orient("left")
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", this.width + margin.left + margin.right)
+                    .attr("height", this.height + margin.top + margin.bottom)
+                    .append("g")
+                    .attr("transform", "translate("+margin.left+ ","+margin.top + ")")
+
+         yscale.domain(d3.extent(data, function(d){return d.bpg}));
+
+         xscale.domain(d3.extent(data,function(d){return d.ppg}))
+
+         svg.append("g")
+            .attr("class", "x axis")
+            .attr("transform", "translate(0,"+this.height + ")")
+            .call(xAxis)
+
+        svg.append("g")
+            .attr("class", "y axis")
+            .call(yAxis)
+
+            svg.selectAll(".dot")
+      .data(data)
+    .enter().append("circle")
+      .attr("class", "dot")
+      .attr("r", 3.5)
+      .attr("cx", xMap)
+      .attr("cy", yMap)
+       
+        
+
+      }
+
+      function addPlayerName(player){
+
+        var info = player.name + ", " + player.position;
+
+          d3.select("#playerName")
+            .html([info])
+      }
+
+      function addTeamImage(playerData){
+
+          // teamAbbrev will be used to determine the link
+        var teamAbbrev;
+
+        // make adjustments for exceptions
+        switch(playerData.team){
+
+          case "GS": 
+            teamAbbrev = "GSW";
+            break;
+
+          case "NO":
+            teamAbbrev = "NOP";
+            break;
+
+          case "NY":
+            teamAbbrev = "NYK";
+            break;
+
+          case "PHO":
+            teamAbbrev = "PHX";
+            break;
+
+          case "SA": 
+            teamAbbrev = "SAS";
+            break;
+
+          default:
+            teamAbbrev = playerData.team;
+            break;
+        }
+
+
+        var team = d3.select("#teamimg")
+
+       var teamimg = team.selectAll("img")
+                .data([1])
+                .enter().append("img")
+                .attr("class", "teamimg") 
+                .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")    
+
+      }
+      
+          // used to generate team image links
+      function reverseLookup(value){
+
+        for (iter in teamLookup){
+          if (teamLookup.hasOwnProperty(iter)){
+            if(teamLookup[iter] == value)
+              return iter;
+          }
+        }
+      }
    
      var imgaa = d3.select("#playerimg")
 
@@ -249,12 +501,12 @@
                 .data([77])
                 .enter().append("img")
                 .attr("class","playerimg")
-                .attr("src", data[78]["photo"])
-              
+                .attr("src", data[playerID]["photo"])
+
 
      var text = d3.select("#playerdetails")
 
-     
+
      var team = d3.select("#teamimg")
 
      var teamimg = team.selectAll("img")
@@ -311,7 +563,7 @@
 
   //         // add header names
   //         var cols = thead.append("tr").selectAll("th")
-  //          .data([data[78]])
+
   //          .enter()
   //          .append("th")
   //          
@@ -399,5 +651,8 @@
 
 
 </script> 
+
+  </div>
+
   </body>
 </html>
