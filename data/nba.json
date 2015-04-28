@@ -7759,11 +7759,9 @@
     }, 
     {
         "age": 23.0, 
-<<<<<<< HEAD
-        "experience": NaN, 
-=======
+
         "experience": 0, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+
         "height": 80.0, 
         "name": "Jerrelle Benimon", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
@@ -7997,11 +7995,9 @@
     }, 
     {
         "age": 22.0, 
-<<<<<<< HEAD
-        "experience": NaN, 
-=======
+
         "experience": 0, 
->>>>>>> d7e2329e6fd50d661a2ec3752b0783788d5a506b
+
         "height": 89.0, 
         "name": "Sim Bhullar", 
         "photo": "https://www.cbssports.com/images/players/unknown_player.gif", 
