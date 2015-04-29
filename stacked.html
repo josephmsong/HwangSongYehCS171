@@ -66,8 +66,7 @@ var x = d3.scale.ordinal()
 var y = d3.scale.linear()
     .range([height,0]);
 
-var color = d3.scale.ordinal()
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
+var color = d3.scale.category20()
 
 var xAxis = d3.svg.axis()
     .scale(x)
@@ -168,7 +167,7 @@ d3.json("data/nba.json", function(error, data) {
       .data(team.y)
     .enter().append("rect")
       .attr("width", 10)
-      .attr("y", function(d,i) { return y(total[i])})
+      .attr("y", function(d,i) { return height-y(total[i])})
       .attr("height", function(d,i) { return y(d)})
       .style("fill", function(d,i) { return color(i); })
        .on('mouseover', tip.show)
