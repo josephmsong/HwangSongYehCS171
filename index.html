@@ -166,7 +166,7 @@
   <div id="playerName"></div>
   <div id = "averageBarDiv"> </div>
    <div id = "tableDiv"> </div>
-
+   <div id = "stacked"> </div>
 
 <script>
   // array that stores team names
@@ -175,6 +175,7 @@
   var teamPlayersList;
   // playerData contains the data that'll be loaded from the JSON
   var playerData;
+
   // teamLookup is an object used to wrangle together the players from a selected team
   var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
   var playerNamesList = [];
@@ -217,38 +218,37 @@
                               return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
                             })
                             .attr("id", function(d, i){return reverseLookup[i];})
-                            .attr("onclick", function(d, i){
-                              d3.select("#"+reverseLookup[i])
-                                .style("border", "10px solid black");
-                              return "showTeamName("+i+"); showPlayers("+i+")";
+                            // .attr("onclick", function(d, i){
+                            //   d3.select("#"+reverseLookup[i])
+                            //     .style("border", "10px solid black");
+                            //   return "showTeamName("+i+"); showPlayers("+i+")";
 
-                            })
+                            // })
                             .on("click", function(d, i){
-                                 
+                               stacked(reverseLookup(i));
+                              showPlayers(i);
+                                    d3.selectAll(".averageBars").remove();
+                                    d3.selectAll(".compareBarsDiv").remove();
+                                    d3.select(".teamimg").remove();
+                                    d3.select(".playerimg").remove();
+                                    d3.select(".table").remove();
                                  d3.selectAll("svg").remove();
-                                    stacked(reverseLookup(i));
+                                   
+
+                                // d3.select("#"+reverseLookup[i])
+                                // .style("border", "10px solid black");
+
+                                showTeamName(i);
+
+                                
+
+                                // return "showTeamName("+i+"); showPlayers("+i+"); stacked(reverseLookup(" + i + "))";
+
                                     // maketablechart(ID);
                                     // window.location.href = "table.html?id=" + ID;
                             });
   }
-
-  function stacked(team)
-  {
-    var playerDatas;
-    var svg;
-    var color;
-    var margin = {top: 50, right: 5, bottom: 30, left: 100},
-    width = 50,
-    legwidth = 100;
-    height = 550 - margin.top - margin.bottom;
-    d3.json("data/nba.json", function(error, data) {
-  // filter the data based on specific team selected 
-    data = data.filter(function(d){return d.team==team});
-    playerData=data;
-    console.log(data);
-
-      //load the data
-      function wranglestackedData(value){
+  function wranglestackedData(value){
       var playerdata= playerData.map(function(d){
       
       // format the data into an array that consolidates players stats
@@ -307,6 +307,23 @@
     var team= {x:value, y:rawr[index], total:total, name:names}
     return team;
   }  
+  function stacked(team)
+  {
+    
+    var color;
+    var margin = {top: 50, right: 5, bottom: 30, left: 100},
+    width = 50,
+    legwidth = 100;
+    height = 550 - margin.top - margin.bottom;
+    console.log(playerData)
+    data=playerData.filter(function(d){return d.team==team})
+    console.log(playerData)
+    d3.json("data/nba.json", function(error, data) {
+  // filter the data based on specific team selected 
+    data = data.filter(function(d){return d.team==team});
+    playerData=data;
+
+  
 
   function drawBar (array){
 
@@ -329,7 +346,7 @@
       .tickFormat(d3.format(".2s"));
 
   // create svg
-  svg = d3.select("body").append("svg")
+  svg = d3.select("#stacked").append("svg")
   .attr("class", "rawr")
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom)
@@ -385,7 +402,7 @@
 
 
     function addLegend(array){
-      var legsvg = d3.select("body").append("svg")
+      var legsvg = d3.select("#stacked").append("svg")
         .attr("width", 200 + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
       .append("g")
@@ -442,6 +459,7 @@
                                 .on("mouseout", function(d, i){d3.selectAll(".compareBarsDiv").remove();d3.select("#playerNameDiv").html([""]);})
                                 .on("click", function(d, i){
                                     var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
+                                    d3.selectAll("svg").remove();
                                     d3.selectAll(".averageBars").remove();
                                     d3.selectAll(".compareBarsDiv").remove();
                                     d3.select("#playerNameDiv").html([""]);
@@ -835,16 +853,13 @@ var imgaa = d3.select("#playerimg")
     teamPlayersList = get2DArray(30);  
     d3.json('data/nba.json', function(error, data){
       playerData = data;
+
       for(var i in playerData){
         playerNamesList.push(playerData[i].name);
       };
     })
     loadTeamNavBar();
-  // this wasn't working
-  //   queue()
-  //     .defer(d3.json, 'data/nba.json')
-  //     .await(loadTeamNavBar);
-  // }
+
   }
   /* 
   * HELPER FUNCTIONS BELOW
@@ -878,6 +893,8 @@ var imgaa = d3.select("#playerimg")
     }
   }
   initVis();
+
+  
 
 </script> 
 </body>
