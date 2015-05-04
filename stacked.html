@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<meta charset="utf-8">
+<!-- <meta charset="utf-8"> -->
 <style>
 
 body {
@@ -17,6 +17,13 @@ body {
   fill: steelblue;
 }
 
+.bar:hover {
+    opacity: 2;
+  }
+.bar--not{
+  opacity:.5;
+
+}
 .x.axis path {
   display: none;
 }
@@ -50,15 +57,94 @@ body {
 }
 </style>
 <body>
+
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
 <script>
-var playerData = [];
+var playerDatas;
+var svg;
+var color;
+var margin = {top: 50, right: 5, bottom: 30, left: 5},
+    width = 50,
+    legwidth = 100;
+    height = 550 - margin.top - margin.bottom;
 
-var margin = {top: 20, right: 20, bottom: 30, left: 40},
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+
+
+
+
+d3.json("data/nba.json", function(error, data) { 
+
+  // filter the data based on specific team selected 
+
+  data = data.filter(function(d){return d.team=="LAL"});
+   playerData=data;
+
+
+
+//load the data
+function wranglestackedData(value){
+var playerdata= playerData.map(function(d){
+  console.log(d)
+    // format the data into an array that consolidates players stats
+      return {
+        ppg: d.seasons[d.seasons.length-2]["ppg"],
+        assists: d.seasons[d.seasons.length-2]["assists"],
+        blocks: d.seasons[d.seasons.length-2]["blocks"], 
+        fga: d.seasons[d.seasons.length-2]["fga"],
+        rpg: d.seasons[d.seasons.length-2]["rpg"],
+        turnovers: d.seasons[d.seasons.length-2]["turnovers"],
+        minutes: d.seasons[d.seasons.length-2]["minutes"],
+        steals: d.seasons[d.seasons.length-2]["steals"],
+        reb: d.seasons[d.seasons.length-2]["reb"],
+        
+        name:d.name
+        //steals: d.seasons[d.seasons.length-1]["steals"]
+      }
+    });
+  var ppg = [];
+  var assists = [];
+  var blocks = [];
+  var names = [];
+  var fga = [];
+  var rpg = [];
+  var turnovers = [];
+  var minutes = [];
+  var steals = [];
+  var reb = [];
+  for(var i=0; i< playerdata.length; i++)
+  {
+    ppg[i] = playerdata[i].ppg;
+    assists[i] = playerdata[i].assists;
+    blocks[i] = playerdata[i].blocks;
+    names[i] = playerdata[i].name;
+    fga[i] = playerdata[i].fga;
+    rpg[i] = playerdata[i].rpg;
+    turnovers[i] = playerdata[i].turnovers;
+    steals[i] = playerdata[i].steals;
+    minutes[i] = playerdata[i].minutes;
+    reb[i] = playerdata[i].reb;
+  }
+  var rawr = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
+
+  //var steals = [];
+  var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
+  var index = list.indexOf(value);
+
+  var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  total[1] = rawr[index][1]
+  for(var j = 1; j<rawr[index].length; j++)
+  {
+    // console.log(total[j])
+    total[j] = rawr[index][j-1] + total[j-1]
+  }
+
+  var team= {x:value, y:rawr[index], total:total, name:names}
+  return team;
+}  
+
+function drawBar (array){
 
 var x = d3.scale.ordinal()
     .rangeRoundBands([0, width], .1);
@@ -66,8 +152,9 @@ var x = d3.scale.ordinal()
 var y = d3.scale.linear()
     .range([height,0]);
 
-var color = d3.scale.category20()
+color = d3.scale.category20()
 
+// instantiate axis
 var xAxis = d3.svg.axis()
     .scale(x)
     .orient("bottom");
@@ -77,107 +164,70 @@ var yAxis = d3.svg.axis()
     .orient("left")
     .tickFormat(d3.format(".2s"));
 
-var svg = d3.select("body").append("svg")
+// create svg
+svg = d3.select("body").append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-d3.json("data/nba.json", function(error, data) { 
-		// console.log(data)
-  data = data.filter(function(d){return d.team=="MIA"});
-   var playerdata= data.map(function(d){
-    console.log(d.seasons[d.seasons.length-1]["ppg"]);
-      return {
-        ppg: d.seasons[d.seasons.length-1]["ppg"],
-        assists: d.seasons[d.seasons.length-1]["assists"],
-        blocks: d.seasons[d.seasons.length-1]["blocks"]
-
-      }
-    });
-
- 
-  var ppg = [];
-  var assists = [];
-  var blocks = [];
-  var team= {x:"ppg", y:ppg}
-
-  for(var i=0; i< playerdata.length; i++)
-  {
-    console.log(playerdata[i].ppg)
-    ppg[i] = playerdata[i].ppg;
-    assists[i] = playerdata[i].assists;
-    blocks[i] = playerdata[i].blocks;
-  }
-  var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  total[1] = ppg[1]
-  for(var j = 1; j<team.y.length; j++)
-  {
-    // console.log(total[j])
-    total[j] = team.y[j-1] + total[j-1]
-  }
-  console.log(total)
-  console.log(team.y)
-
-  var team= {x:"ppg", y:ppg}
-  console.log(team)
-  // team.forEach(function(d){
-  //   var y0=0;
-  //   d.player = color.domain().map(function(name){return {name:name, y0:y0, y1:y0 += +d[name]};})
-  //   d.total = d.player[d.player.length-1].y1
-  // })
-
- 
-  var names = ["ppg", "assists", "blocks"]
-
-  var tip = d3.tip()
+    var tip = d3.tip()
     .attr('class', 'd3-tip')
     .offset([-40, 0])
     .html(function(d,i) {
-      return d  ;
+      return array.name[i] + ": " + d  ;
     })
 
   svg.call(tip)
-  console.log(d3.max(total, function(d){return d}))
-  x.domain(team.x);
-  y.domain([0, d3.max(total, function(d){return d})])
+  x.domain(array.x);
+  y.domain([0, d3.max(array.total, function(d){return d})])
 
  svg.append("g")
       .attr("class", "x axis")
       .attr("transform", "translate(0," + height + ")")
-      .call(xAxis);
+      // .call(xAxis);
 
   svg.append("g")
       .attr("class", "y axis")
-      .call(yAxis)
+      // .call(yAxis)
     .append("text")
       .attr("transform", "rotate(-90)")
       .attr("y", 6)
       .attr("dy", ".71em")
-      .style("text-anchor", "end")
-      .text("Population");
+      .style("text-anchor", "center")
+      .text(array.x);
 
   var state = svg.selectAll(".state")
-      .data(team.y)
+      .data(array.y)
     .enter().append("g")
       .attr("class", "g")
       // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
 
-   state.selectAll("rect")
-      .data(team.y)
+ var bar=  state.selectAll("rect")
+      .data(array.y)
     .enter().append("rect")
-      .attr("width", 10)
-      .attr("y", function(d,i) { return height-y(total[i])})
+      .attr("width", 30)
+      .attr("y", function(d,i) { return height-y(array.total[i])})
       .attr("height", function(d,i) { return y(d)})
       .style("fill", function(d,i) { return color(i); })
        .on('mouseover', tip.show)
       .on('mouseout', tip.hide);
 
-  var legend = svg.selectAll(".legend")
+
+}
+
+
+function addLegend(array){
+  var legsvg = d3.select("body").append("svg")
+    .attr("width", 200 + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var legend = legsvg.selectAll(".legend")
       .data(color.domain().slice().reverse())
     .enter().append("g")
       .attr("class", "legend")
-      .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")"; });
+      .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
 
   legend.append("rect")
       .attr("x", width - 18)
@@ -190,12 +240,24 @@ d3.json("data/nba.json", function(error, data) {
       .attr("y", 9)
       .attr("dy", ".35em")
       .style("text-anchor", "end")
-      .text(function(d) { return d; });
-	});
+      .text(function(d,i) { return array.name[i]; });
   
-  
+
+}
+drawBar(wranglestackedData("minutes"))
+drawBar(wranglestackedData("ppg"))
+drawBar(wranglestackedData("reb"))
+drawBar(wranglestackedData("assists"))
+drawBar(wranglestackedData("steals"))
+drawBar(wranglestackedData("blocks"))
+drawBar(wranglestackedData("turnovers"))
+
+addLegend(wranglestackedData("ppg"));
+});
+
 
 	
 
 	</script>
 </body>
+</html>
