@@ -196,7 +196,7 @@ function makeShotChart(playerName){
       playerShotData = shotChartData[i].shots
   }
 
-  this.margin = {top: 10, right: 50, bottom: 50, left: 50},
+  this.margin = {top: 20, right: 50, bottom: 50, left: 50},
   this.width = 500 - this.margin.left - this.margin.right,
   this.height = 300 - this.margin.top - this.margin.bottom;
 
@@ -346,7 +346,7 @@ function comparePlayers(){
   	var svg = d3.selectAll("svg")
   				.data([0])
   				.enter().append("div").attr("id","playerimg").style("float","right").append("img")
-  				.attr("class", "playerimg")
+  				.attr("class", "playerimg comparePlayerImg")
   				.attr("src", compareWithPlayerData["photo"])
   				.style("float", "right")
 
@@ -394,7 +394,7 @@ function comparePlayers(){
    svg = d3.selectAll("svg")
            .data([0])
            .enter().append("div").attr("id", "teamimg").append("img")
-           .attr("class", "teamimg")
+           .attr("class", "teamimg comparePlayerTeamImg")
            .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")
            .style("float", "right")   
             
@@ -533,12 +533,18 @@ function initAverageBars(data, compare){
                   .attr("height", this.y.rangeBand())
                   .attr("class", "playerAvgBars")
                   .attr("fill", function(d){
-                      // if this is a negative value
-                      if(d < 0){
-                          return "red";
+                      
+                      if(compare)
+                        return "#2E8AE6";
+                      
+                      else{
+                        // if this is a negative value
+                        if(d < 0){
+                            return "red";
+                        }
+                        else
+                            return "green";
                       }
-                      else
-                          return "green";
                   });
 
 
@@ -603,6 +609,7 @@ function clearPlayerVis(){
   d3.selectAll(".make").remove();
   d3.selectAll(".miss").remove();
   d3.selectAll(".comparePlayerTeamImg").remove();
+  d3.selectAll(".comparePlayerImg").remove();
 }
 
 // searches through the JSON to find the player's data
