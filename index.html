@@ -263,6 +263,7 @@ svg {
     var teamLinks = teamList.selectAll("img")
                             .data(teamNamesList)
                             .enter().append("img")
+                            .attr("class", "teamListImage")
                             .attr("src", function(d, i){
                               // teamAbbrev will be used to determine the link
                               var teamAbbrev;
@@ -291,9 +292,8 @@ svg {
                             })
                             .attr("id", function(d, i){return reverseLookup[i];})
                             .attr("onclick", function(d, i){
-                              d3.select("#"+reverseLookup[i])
-                                .style("border", "10px solid black");
-                              return "showTeamName("+i+"); showPlayers("+i+")";
+
+                              // return "showTeamName("+i+"); showPlayers("+i+")";
 
                             })
                             .on("click", function(d, i){
@@ -340,6 +340,15 @@ svg {
 
                                   stacked(reverseLookup(i));
                                   brush(teamAbbrev);
+
+                                  console.log("ay")
+
+                                  d3.selectAll(".teamListImage").attr("border", "none")
+                                  d3.select(this)
+                                    .attr("border", "2px solid black");
+                                    
+                                  showTeamName(i); 
+                                  showPlayers(i);
                                     // maketablechart(ID);
                                     // window.location.href = "table.html?id=" + ID;
                             });
