@@ -256,10 +256,7 @@ svg {
   function loadTeamNavBar(_data){
     // playerData = _data;
     teamList = d3.select("#teamlist");
-    // var teamLinks = teamList.selectAll("li")
-    //                     .data(teamNamesList)
-    //                     .enter().append("li")
-    //                     .html(function(d, i){return "<a href = '#' onclick =showPlayers("+i+")>" + teamNamesList[i] + "</a>";})
+
     var teamLinks = teamList.selectAll("img")
                             .data(teamNamesList)
                             .enter().append("img")
@@ -642,14 +639,16 @@ svg {
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-          var tip = d3.tip()
-          .attr('class', 'd3-tip')
-          .offset([-40, 0])
-          .html(function(d,i) {
-            return array.name[i] + ": " + d  ;
-          })
+
+      var tip = d3.tip()
+                  .attr('class', 'd3-tip')
+                  .offset([-40, 0])
+                  .html(function(d,i) {
+                      return array.name[i] + ": " + d  ;
+                  })
 
       svg.call(tip)
+
       x.domain(array.x);
       y.domain([0, d3.max(array.total, function(d){return d})])
 
@@ -738,8 +737,6 @@ svg {
     // get a list of the players on that team
     teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
 
-    // console.log(aggregatePlayers(teamIndex))
-
     playerList = d3.select("#playerlist");
     var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
                                 .data(teamPlayersList[teamIndex])
@@ -767,10 +764,7 @@ svg {
                                     d3.selectAll(".compareBarsDiv").remove();
                                     d3.select("#playerNameDiv").html([""]);
                                     showPlayerPage(ID);
-                                    // maketablechart(ID);
-                                    // window.location.href = "table.html?id=" + ID;
                                   });
-                                // .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
   }
   // aggregatePlayers is used to get the list of players for a selected team
   function aggregatePlayers(teamIndex){

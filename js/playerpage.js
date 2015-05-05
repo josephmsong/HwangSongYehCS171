@@ -52,7 +52,7 @@ function maketablechart (data){
 }
 
 function showPlayerPage(playerID){
-    this.margin = {top: 20, right: 30, bottom: 30, left: 100},
+    this.margin = {top: 20, right: 40, bottom: 30, left: 100},
     this.width = 400 - this.margin.left - this.margin.right,
     this.height = 300 - this.margin.top - this.margin.bottom;
     // remove the old images to prepare for the new ones
@@ -527,10 +527,12 @@ function initAverageBars(data, compare){
                           return "green";
                   });
 
+
+
       var labels = groups.append("text")
                          .attr("x", function (d, i) {return that.x(Math.min(0, d)) + Math.abs(that.x(d) - that.x(0)) + 5;})
                          .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2;})
-                         .text(function(d,i){return nameList[i]});
+                         .text(function(d,i){return Math.ceil(d * 100) / 100 + " " + nameList[i]});
     }
 }
 
