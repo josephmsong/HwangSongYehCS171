@@ -10,7 +10,6 @@ function showPlayerName(playerName, player){
 
 
 function maketablechart (data){
-	// console.log(data)
 	var columns = Object.keys(data);
 
 	var table = d3.select("#tableDiv").append("table").attr("class","table");
@@ -52,7 +51,7 @@ function showPlayerPage(playerID){
     var indPlayerData
 
     indPlayerData = playerData[playerID];
-    console.log(indPlayerData)
+
     // averageDisplayData is the array with differences between this year and the average
     var averageDisplayData = [];
     // desireindex is the name, age, weight etc.
@@ -71,7 +70,7 @@ function showPlayerPage(playerID){
     function wrangleData(data){
       var currentSeasonIndex = data.length - 2;
       var averageSeasonIndex = currentSeasonIndex + 1;
-      console.log(data[currentSeasonIndex]);
+
       // avgData is the data that we'll be using
       var avgData = [];
       // go through and take the differences
@@ -89,84 +88,6 @@ function showPlayerPage(playerID){
       }
       return avgData;
     }
-    
-    // createAverageBars takes the processed data array of differences and creates the bar chart
-    function initAverageBars(data){
-      var that = this;
-      var avgDiv = d3.select("#averageBarDiv")
-      this.svg = avgDiv
-        .append("svg")
-        .attr("width", this.width + this.margin.left + this.margin.right)
-        .attr("height", this.height + this.margin.top + this.margin.bottom)
-        .attr("class", "averageBars")
-      .append("g")
-        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
-      this.x = d3.scale.linear()
-        .range([0, this.width]);
-      this.y = d3.scale.ordinal()
-          .rangeRoundBands([0, this.height/2], .2);
-      this.xAxis = d3.svg.axis()
-        .scale(this.x)
-        .orient("top");
-      // this.yAxis = d3.svg.axis()
-      //   .scale(this.y)
-      //   .orient("left");
-      this.area = d3.svg.area()
-        .interpolate("monotone")
-        .x1(function(d) {return that.x(d); })
-        .x0(0)
-        .y1(function(d, i) {return that.y(i);});
-      this.svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + this.height/2 + ")")
-      this.svg.append("g")
-          .attr("class", "y axis")
-        .append("text")
-          .attr("x", 170)
-          .attr("y", -12)
-          .attr("dy", ".71em")
-          .style("text-anchor", "end")
-          .text("Comparison to Average")
-        .append("line")
-          .attr("x1", 0)
-          .attr("x2", 0)
-          .attr("y2", this.height);
-
-      var x0 = Math.max(-d3.min(data), d3.max(data));
-      this.x.domain([-x0, x0]);
-      this.x.nice();
-      this.y.domain(d3.range(data.length));
-      // updates axes
-      this.svg.select(".x.axis")
-          .call(this.xAxis);
-      // this.svg.select(".y.axis")
-      // .call(this.yAxis)
-      d3.selectAll(".playerAvgBars").remove();
-      d3.selectAll(".barsLabel").remove();
-      if(!isNaN(data[0])){
-          var groups = this.svg.append("g")
-                      .selectAll("g.row")
-                      .data(data)
-                      .enter()
-                      .append("g")
-                      .attr("class", "row");
-          var bars = groups
-                      .append("rect")
-                      .attr("x", function (d, i) {return that.x(Math.min(0, d));})
-                      .attr("y", function (d,i) {return that.y(i);})
-                      .attr("width", function(d, i){return Math.abs(that.x(d) - that.x(0));})
-                      .attr("height", this.y.rangeBand())
-                      .attr("class", "playerAvgBars")
-                      .attr("fill", function(d){
-                          // if this is a negative value
-                          if(d < 0){
-                              return "red";
-                          }
-                          else
-                              return "green";
-                      });
-        }
-      }
 
     function addPlayerName(player){
       var info = player.name + ", " + player.position;
@@ -268,9 +189,152 @@ function comparePlayers(){
 	clearPlayerVis();
 
 	// get the data for the player to be compared with
+	compareWithPlayerData = findComparePlayer(compareWithPlayerName)
 
+	// add the image of this player to be compared with to the page
+	var svg = d3.selectAll("svg")
+				.data([0])
+				.enter().append("img")
+				.attr("class", "comparePlayerInfo")
+				.attr("src", compareWithPlayerData["photo"])
+				.style("float", "right")
+
+	// add the name of the player
+	svg = d3.selectAll("svg")
+	   .data([0])
+	   .enter().append("div")
+	   .attr("class", "comparePlayerInfo")
+	   .html(["Player: " + compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
+	   .style("float", "right")
+
+	// wrangle the data for comparison!
+
+	// this is the list we'll use for labeling
+	var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
+
+	// find how many seasons the player to be compared with has played so we can access the current season
+	var comparePlayerSeasonIndex = compareWithPlayerData.seasons.length - 2; 
+
+  // use findComparePlayer to get the data for the currently selected player as well
+  var currentNameAndPosition = document.getElementById("playerName").innerHTML
+  var currentPlayerName = currentNameAndPosition.split(",")[0]
+
+  var currentPlayerData = findComparePlayer(currentPlayerName);
+  var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
+
+  console.log(currentPlayerName);
+
+	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
+
+  initAverageBars(compareData);
 
 }
+
+// wrangle the data for comparison
+function wrangleCompareData(currentPlayerData, compareWithPlayerData){
+  
+  // differenceData is what we'll return to be used to make the compareBars
+  var differenceData = []
+
+  console.log(compareWithPlayerData);
+  console.log(currentPlayerData);
+
+  // we use nameList again here to get our values
+  var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
+  for(i in compareWithPlayerData){
+
+    if(compareWithPlayerData.hasOwnProperty(i)){
+
+      if(nameList.indexOf(i) > -1){
+
+        differenceData.push(compareWithPlayerData[i] - currentPlayerData[i])
+      }
+    }
+  }
+
+  return differenceData;
+
+}
+
+// initAverageBars takes the processed data array of differences and creates the bar chart
+function initAverageBars(data){
+  var that = this;
+  var avgDiv = d3.select("#averageBarDiv")
+  this.svg = avgDiv
+    .append("svg")
+    .attr("width", this.width + this.margin.left + this.margin.right)
+    .attr("height", this.height + this.margin.top + this.margin.bottom)
+    .attr("class", "averageBars")
+  .append("g")
+    .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+  this.x = d3.scale.linear()
+    .range([0, this.width]);
+  this.y = d3.scale.ordinal()
+      .rangeRoundBands([0, this.height/2], .2);
+  this.xAxis = d3.svg.axis()
+    .scale(this.x)
+    .orient("top");
+  // this.yAxis = d3.svg.axis()
+  //   .scale(this.y)
+  //   .orient("left");
+  this.area = d3.svg.area()
+    .interpolate("monotone")
+    .x1(function(d) {return that.x(d); })
+    .x0(0)
+    .y1(function(d, i) {return that.y(i);});
+  this.svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + this.height/2 + ")")
+  this.svg.append("g")
+      .attr("class", "y axis")
+    .append("text")
+      .attr("x", 170)
+      .attr("y", -12)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Comparison to Average")
+    .append("line")
+      .attr("x1", 0)
+      .attr("x2", 0)
+      .attr("y2", this.height);
+
+  var x0 = Math.max(-d3.min(data), d3.max(data));
+  this.x.domain([-x0, x0]);
+  this.x.nice();
+  this.y.domain(d3.range(data.length));
+  // updates axes
+  this.svg.select(".x.axis")
+      .call(this.xAxis);
+  // this.svg.select(".y.axis")
+  // .call(this.yAxis)
+  d3.selectAll(".playerAvgBars").remove();
+  d3.selectAll(".barsLabel").remove();
+  if(!isNaN(data[0])){
+      var groups = this.svg.append("g")
+                  .selectAll("g.row")
+                  .data(data)
+                  .enter()
+                  .append("g")
+                  .attr("class", "row");
+      var bars = groups
+                  .append("rect")
+                  .attr("x", function (d, i) {return that.x(Math.min(0, d));})
+                  .attr("y", function (d,i) {return that.y(i);})
+                  .attr("width", function(d, i){return Math.abs(that.x(d) - that.x(0));})
+                  .attr("height", this.y.rangeBand())
+                  .attr("class", "playerAvgBars")
+                  .attr("fill", function(d){
+                      // if this is a negative value
+                      if(d < 0){
+                          return "red";
+                      }
+                      else
+                          return "green";
+                  });
+    }
+}
+
+// HELPER FUNCTIONS AFTER THIS
 
 // this function clears out the vis to prepare for the comparison one
 function clearPlayerVis(){
@@ -283,7 +347,7 @@ function clearPlayerVis(){
   	// d3.selectAll("svg").remove();
 
 	d3.selectAll(".averageBars").remove();
- 	
+ 	d3.selectAll(".comparePlayerInfo").remove();
   	d3.selectAll(".compareBarsDiv").remove();
   	d3.select(".table").remove();
   	d3.selectAll(".brush").remove();
@@ -291,5 +355,11 @@ function clearPlayerVis(){
 
 // searches through the JSON to find the player's data
 function findComparePlayer(playerName){
-	
+
+	for(obj in playerData){
+		for(key in playerData[obj]){
+			if(playerData[obj].name == playerName)
+				return playerData[obj];
+		}
+	}
 }

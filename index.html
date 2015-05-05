@@ -213,6 +213,7 @@ svg {
   var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
   var playerNamesList = [];
   var svg;
+
   // function to create the team navigation bar
   function loadTeamNavBar(_data){
     // playerData = _data;
@@ -584,7 +585,7 @@ svg {
     drawBar(wranglestackedData("blocks"))
     drawBar(wranglestackedData("turnovers"))
     addLegend(wranglestackedData("ppg"));
-}
+  }
 
   // showPlayers takes in the index of the team that was clicked and shows the players of that team
   function showPlayers(teamIndex){
@@ -625,8 +626,8 @@ svg {
     // }
     // // if we haven't already clicked on this team, round up the players
     // else{
-
       return playerData.filter(function(d, i, array){
+
         return teamLookup[d.team] == teamIndex && d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
       })
     // }
@@ -671,9 +672,13 @@ svg {
     // initialize the teamPlayersList
     teamPlayersList = get2DArray(30);  
     d3.json('data/nba.json', function(error, data){
-      playerData = data;
+      playerData = data.filter(function(d, i, array){
+
+        return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png"
+      });
       for(var i in playerData){
-        playerNamesList.push(playerData[i].name);
+
+          playerNamesList.push(playerData[i].name);  
       };
     })
     loadTeamNavBar();
