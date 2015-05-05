@@ -131,7 +131,7 @@ function showPlayerPage(playerID){
           .attr("x1", 0)
           .attr("x2", 0)
           .attr("y2", this.height);
-          
+
       var x0 = Math.max(-d3.min(data), d3.max(data));
       this.x.domain([-x0, x0]);
       this.x.nice();
@@ -227,5 +227,69 @@ function showPlayerPage(playerID){
    var text = d3.select("#playerdetails")
    var columns = Object.keys(indPlayerData.seasons[0]);
 
-  
+   // add the drop down to allow comparison
+   addComparisonSlider(indPlayerData.name)
+ 
+}
+
+// this function populates the drop down menu with the other players in the league for comparison
+// currentPlayer is included so that the drop down won't let you select the player you're currently viewing
+function addComparisonSlider(currentPlayer){
+
+	var select = document.getElementById("comparePlayerDropDown");
+
+	// length is used so we can add the options in the correct order
+	var length = playerNamesList.length;
+
+    for(i in playerNamesList) {
+
+	    var option = document.createElement('option');
+
+	    var nextName = playerNamesList[length-i-1];
+
+	    // check to make sure that we're not adding in the player currently selected
+	    if(nextName != currentPlayer){
+	    	option.text = option.value = playerNamesList[length - i - 1];
+	    	select.add(option, 0);
+	    }
+    }
+
+    // prepend a blank option so that we have a default value
+    $("#comparePlayerDropDown").prepend("<option value='' selected='selected'></option>");
+}
+
+// this is the larger function that will be handling the processing of comparison
+function comparePlayers(){
+
+	// first, see what value is selected in the drop down
+	var compareWithPlayerName = d3.select("#comparePlayerDropDown").node().value;
+
+	// clear the vis 
+	clearPlayerVis();
+
+	// get the data for the player to be compared with
+
+
+}
+
+// this function clears out the vis to prepare for the comparison one
+function clearPlayerVis(){
+
+	// we'll reformat these later.
+	// d3.select("#teamNameDiv").html([""]);
+	// d3.select("#playerName").html([""]);
+	// d3.select(".teamimg").remove();
+  	// d3.select(".playerimg").remove();
+  	// d3.selectAll("svg").remove();
+
+	d3.selectAll(".averageBars").remove();
+ 	
+  	d3.selectAll(".compareBarsDiv").remove();
+  	d3.select(".table").remove();
+  	d3.selectAll(".brush").remove();
+}
+
+// searches through the JSON to find the player's data
+function findComparePlayer(playerName){
+	
 }
