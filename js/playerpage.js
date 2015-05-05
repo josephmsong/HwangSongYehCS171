@@ -18,7 +18,7 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
       var idName = "#stackedRect"+i
 
-      d3.selectAll(idName).style("opacity", "0")
+      d3.selectAll(idName).style("fill", "#d3d3d3")
     }
   }
 
@@ -83,12 +83,16 @@ function showPlayerPage(playerID){
     // avgIndex is the list of indices that we want
     var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
     averageDisplayData = wrangleData(indPlayerData.seasons);
+
     // addPlayerName adds the player's name and position to the page
     addPlayerName(indPlayerData);
     // addTeamImage looks up the image for this player's team and puts it on the page
     addTeamImage(indPlayerData);
-    initAverageBars(averageDisplayData);
+
+    // add the actual visualizations to the page
+    initAverageBars(averageDisplayData, false);
     maketablechart(indPlayerData);
+    makeShotChart(indPlayerData.name);
 
     // wrangleData will be used to create an array of the differences
     function wrangleData(data){
@@ -174,7 +178,77 @@ function showPlayerPage(playerID){
 
    // add the drop down to allow comparison
    addComparisonSelect(indPlayerData.name)
- 
+}
+
+// the function to create the shot chart
+function makeShotChart(playerName){
+
+  var playerShotData = []
+
+  // find the relevant shot data for this player
+  for(i in shotChartData){
+    if(shotChartData[i].name == playerName)
+      playerShotData = shotChartData[i].shots
+  }
+
+  this.margin = {top: 10, right: 50, bottom: 50, left: 50},
+  this.width = 850 - this.margin.left - this.margin.right,
+  this.height = 350 - this.margin.top - this.margin.bottom;
+
+  var that = this;
+
+  // select the div and add the SVG
+  var svg = d3.select("#shotChartDiv")
+              .append("svg")
+              .attr("width", this.width + this.margin.left + this.margin.right)
+              .attr("height", this.height + this.margin.top + this.margin.bottom)
+              .attr("class", "shotChart")
+              .append("g")
+              .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+
+  var shotChart = svg.append("g")
+                      .selectAll("shots")
+                      .data(playerShotData)
+                      .enter().append("g")
+
+  var shots = shotChart.append("rect")
+                       .attr("class", "shotRect")
+                       .attr("width", "5")
+                       .attr("height", "5")
+                       // .style("left", function(d){return d.left + "px";})
+                       // .style("top", function(d){return d.top + "px";})
+                       .attr("x", function(d){return d.left;})
+                       .attr("y", function(d){return d.top;})
+                       .style("fill", function(d){
+                          if(d.made == 1)
+                            return "red"
+                          else
+                            return "green"
+                       })
+
+
+      // var groups = this.svg.append("g")
+      //             .selectAll("g.row")
+      //             .data(data)
+      //             .enter()
+      //             .append("g")
+      //             .attr("class", "row");
+      // var bars = groups
+      //             .append("rect")
+      //             .attr("x", function (d, i) {return that.x(Math.min(0, d));})
+      //             .attr("y", function (d,i) {return that.y(i);})
+      //             .attr("width", function(d, i){return Math.abs(that.x(d) - that.x(0));})
+      //             .attr("height", this.y.rangeBand())
+      //             .attr("class", "playerAvgBars")
+      //             .attr("fill", function(d){
+      //                 // if this is a negative value
+      //                 if(d < 0){
+      //                     return "red";
+      //                 }
+      //                 else
+      //                     return "green";
+      //             });
+
 }
 
 // this function populates the drop down menu with the other players in the league for comparison
@@ -251,7 +325,7 @@ function comparePlayers(){
 	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
 
   // add the bars
-  initAverageBars(compareData);
+  initAverageBars(compareData, true);
 
   // adding the "back" button and functionality
   var backButton = d3.select("#backButton")
@@ -284,7 +358,7 @@ function wrangleCompareData(currentPlayerData, compareWithPlayerData){
 }
 
 // initAverageBars takes the processed data array of differences and creates the bar chart
-function initAverageBars(data){
+function initAverageBars(data, compare){
   var that = this;
   var avgDiv = d3.select("#averageBarDiv")
   this.svg = avgDiv
@@ -319,7 +393,13 @@ function initAverageBars(data){
       .attr("y", -12)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("Comparison to Average")
+      .text(function(){
+
+        if(compare)
+          return "Comparison of Stats"
+        else
+          return "Comparison to Average";
+      })
     .append("line")
       .attr("x1", 0)
       .attr("x2", 0)
@@ -337,6 +417,7 @@ function initAverageBars(data){
   d3.selectAll(".playerAvgBars").remove();
   d3.selectAll(".barsLabel").remove();
   if(!isNaN(data[0])){
+
       var groups = this.svg.append("g")
                   .selectAll("g.row")
                   .data(data)
@@ -375,13 +456,6 @@ function goBack(currentPlayerData){
   // hiding the back button and compare dropdown/button
   var backButton = d3.select("#backButton")
                      .style("visibility", "hidden")
-  
-  // showing the comparison drop down and submit button 
-  d3.select("#comparePlayerDropDown")
-      .style("visibility", "hidden")
-
-  d3.select("#submitCompare")
-      .style("visibility", "hidden")  
 }
 
 // HELPER FUNCTIONS AFTER THIS
@@ -393,14 +467,15 @@ function clearPlayerVis(){
 	// d3.select("#teamNameDiv").html([""]);
 	// d3.select("#playerName").html([""]);
 	// d3.select(".teamimg").remove();
-  	// d3.select(".playerimg").remove();
-  	// d3.selectAll("svg").remove();
+	// d3.select(".playerimg").remove();
+	// d3.selectAll("svg").remove();
 
 	d3.selectAll(".averageBars").remove();
  	d3.selectAll(".comparePlayerInfo").remove();
-  	d3.selectAll(".compareBarsDiv").remove();
-  	d3.select(".table").remove();
-  	d3.selectAll(".brush").remove();
+	d3.selectAll(".compareBarsDiv").remove();
+	d3.select(".table").remove();
+	d3.selectAll(".brush").remove();
+  d3.select(".shotChart").remove();
 }
 
 // searches through the JSON to find the player's data
