@@ -199,7 +199,8 @@ function makeShotChart(playerName){
               .attr("width", "500px")
               .attr("height", "472px")
               .attr("class", "shotChart")
-              .append("div").attr("class","shotContainer")
+              .append("div")
+              .attr("class","shotContainer")
               .style("height","472px")
               .style("width","500px")
               .style("position","relative");
@@ -527,7 +528,8 @@ function clearPlayerVis(){
 	d3.selectAll(".compareBarsDiv").remove();
 	d3.select(".table").remove();
 	d3.selectAll(".brush").remove();
-  d3.select(".shotChart").remove();
+  d3.selectAll(".shotChart").remove();
+  d3.selectAll(".shotContainer").remove();
 }
 
 // searches through the JSON to find the player's data

@@ -243,7 +243,7 @@ svg {
   <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
   <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
   </div>
-  
+
    <div  class = "col-md-9" id = "tableDiv"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
    <div class="col-md-3"  style="float:right"></div>
@@ -338,6 +338,8 @@ svg {
                                   d3.select(".playerimg").remove();
                                   d3.select(".table").remove();
                                   d3.selectAll(".brush").remove();
+                                  d3.selectAll(".shotChart").remove();
+                                  d3.selectAll(".shotContainer").remove();
                                   stacked(reverseLookup(i));
                                   brush(teamAbbrev);
                                     // maketablechart(ID);
