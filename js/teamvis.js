@@ -195,9 +195,45 @@ function brush(team){
     drawBar(wranglestackedData("steals",data))
     drawBar(wranglestackedData("blocks",data))
     drawBar(wranglestackedData("turnovers",data))
+
     addLegend(wranglestackedData("ppg",data));
   }
+  function addLegend(array){
+   var playerDatas;
+    var svg;
+    var color = d3.scale.category20c()
+    var margin = {top: 10, right: 5, bottom: 30, left: 5},
+    width = 50,
+    legwidth = 100;
+    height = 400 - margin.top - margin.bottom;
 
+    var legsvg = d3.select("body").append("svg")
+      .attr("width", 100 + 50+ margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + 30 + "," + 0+ ")");
+
+    var legend = legsvg.selectAll(".legend")
+        .data(color.domain().slice().reverse())
+      .enter().append("g")
+        .attr("class", "legend")
+        .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
+
+    legend.append("rect")
+        .attr("class", "rawr")
+        .attr("x", width - 18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", function(d,i) {return color(i)});
+
+    legend.append("text")
+        .attr("x", width - 24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function(d,i) { return array.name[i]; });
+    
+  }
   //wrangles the data to get in correct format
   function wranglestackedData(value,data){
     var indPlayerData= data.map(function(d){
@@ -269,43 +305,7 @@ function brush(team){
     }  
 
    // this function adds legend to the stacked bar chart 
-  function addLegend(array){
-   var playerDatas;
-    var svg;
-    var color = d3.scale.category20c()
-    var margin = {top: 10, right: 5, bottom: 30, left: 5},
-    width = 50,
-    legwidth = 100;
-    height = 400 - margin.top - margin.bottom;
-
-    var legsvg = d3.select("body").append("svg")
-      .attr("width", 100 + 50+ margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + 30 + "," + 0+ ")");
-
-    var legend = legsvg.selectAll(".legend")
-        .data(color.domain().slice().reverse())
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
-
-    legend.append("rect")
-        .attr("class", "rawr")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", function(d,i) {return color(i)});
-
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d,i) { return array.name[i]; });
-    
-  }
-
+  
   // this function draws the bars
   function drawBar (array){
 
