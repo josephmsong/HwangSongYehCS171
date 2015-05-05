@@ -722,13 +722,14 @@ svg {
                                 .on("mouseout", function(d, i){
                                   d3.selectAll(".compareBarsDiv").remove();
                                   d3.select("#playerNameDiv").html([""]);
-
-                                  color = d3.scale.category20c()
-
-                                  for(var i = 0; i< teamPlayersList[teamIndex].length; i++){
-
-                                    var idName = "#stackedRect"+i
-                                    d3.selectAll(idName).style("fill", function(d, i){return color(i);})
+                                  for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
+                                    color = d3.scale.category20c()
+                                  
+                                      for(var j=0; j<teamPlayersList[teamIndex].length+1; j++)
+                                      {
+                                      var idName = "#stackedRect"+j
+                                       d3.selectAll(idName).style("fill", function(d){return color(j)})
+                                    }
                                   }
                                 })
                                 .on("click", function(d, i){
