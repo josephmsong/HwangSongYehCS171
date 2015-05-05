@@ -214,6 +214,7 @@ function makeShotChart(playerName){
   var courtImage = court.append("img")
                         .attr("src", "nbahalfcourt.jpg")
 
+
   var shotChart = svg.append("g")
                       .selectAll("shots")
                       .data(playerShotData)
@@ -233,7 +234,6 @@ function makeShotChart(playerName){
                           else
                             return "green"
                        })
-
 
       // var groups = this.svg.append("g")
       //             .selectAll("g.row")
