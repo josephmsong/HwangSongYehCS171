@@ -497,8 +497,8 @@ function initAverageBars(data, compare){
   this.x.nice();
   this.y.domain(d3.range(data.length));
   // updates axes
-  this.svg.select(".x.axis")
-      .call(this.xAxis);
+  // this.svg.select(".x.axis")
+  //     .call(this.xAxis);
   // this.svg.select(".y.axis")
   // .call(this.yAxis)
   d3.selectAll(".playerAvgBars").remove();
@@ -530,8 +530,19 @@ function initAverageBars(data, compare){
 
 
       var labels = groups.append("text")
-                         .attr("x", function (d, i) {return that.x(Math.min(0, d)) + Math.abs(that.x(d) - that.x(0)) + 5;})
-                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2;})
+                         .attr("x", function (d, i) {
+
+                            if(d < 0){
+
+                              return that.x(0) - Math.abs(that.x(d) - that.x(0)) - 60;
+                            }
+
+                            else{
+
+                              return that.x(0) + Math.abs(that.x(d) - that.x(0)) + 5;  
+                            }
+                          })
+                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2 + 2;})
                          .text(function(d,i){return Math.ceil(d * 100) / 100 + " " + nameList[i]});
     }
 }
