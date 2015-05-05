@@ -200,7 +200,8 @@ function makeShotChart(playerName){
               .attr("width", "500px")
               .attr("height", "472px")
               .attr("class", "shotChart")
-              .append("div").attr("class","shotContainer")
+              .append("div")
+              .attr("class","shotContainer")
               .style("height","472px")
               .style("width","500px")
               .style("position","relative");
@@ -405,6 +406,10 @@ function wrangleCompareData(currentPlayerData, compareWithPlayerData){
 
 // initAverageBars takes the processed data array of differences and creates the bar chart
 function initAverageBars(data, compare){
+
+  // the names of the bars
+  var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
+
   var that = this;
   var avgDiv = d3.select("#averageBarDiv")
   this.svg = avgDiv
@@ -444,7 +449,7 @@ function initAverageBars(data, compare){
         if(compare)
           return "Comparison of Stats"
         else
-          return "Comparison to Average";
+          return "Current Year Comparison to Average";
       })
     .append("line")
       .attr("x1", 0)
@@ -485,6 +490,11 @@ function initAverageBars(data, compare){
                       else
                           return "green";
                   });
+
+      var labels = groups.append("text")
+                         .attr("x", function (d, i) {return that.x(Math.min(0, d)) + Math.abs(that.x(d) - that.x(0)) + 5;})
+                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2;})
+                         .text(function(d,i){return nameList[i]});
     }
 }
 
@@ -521,6 +531,8 @@ function clearPlayerVis(){
 	d3.selectAll(".compareBarsDiv").remove();
 	d3.select(".table").remove();
 	d3.selectAll(".brush").remove();
+  d3.selectAll(".shotChart").remove();
+  d3.selectAll(".shotContainer").remove();
 }
 
 // searches through the JSON to find the player's data

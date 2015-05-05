@@ -80,7 +80,7 @@ table {
 */
 
 body {
-  background: #293f50;
+  background: #ffffff;
   color: #888;
   font: 300 16px/22px "Lato", "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
@@ -419,5 +419,209 @@ p a {
 }
 .venue-map {
   height: 264px;
+}
+
+
+ ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    li {
+      float: left;
+    }
+    .btn {
+    background: #3498db;
+    background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+    background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+    background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+    background-image: -o-linear-gradient(top, #3498db, #2980b9);
+    background-image: linear-gradient(to bottom, #3498db, #2980b9);
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0px;
+    font-family: Courier New;
+    color: #ffffff;
+    font-size: 10px;
+    padding: 8px 14px 8px 14px;
+    text-decoration: none;
+  }
+
+  .btn:hover {
+    background: #3cb0fd;
+    background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+    background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+    text-decoration: none;
+  }
+    a {
+      display: block;
+      width: 170px;
+      background-color: #dddddd;
+    }
+    img{
+      width:3.2%;
+      height:3.2%;
+    }
+    .playerList {
+      margin: 10px;
+      width: 50px;
+      height: 50px;
+      background-color: #d3d3d3;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
+    }
+    .teamimg {
+      width: 15%;
+      height: 15%;
+      float:right;
+    }
+    .playerimg {
+      width: 15%;
+      height: 15%;
+      float:left;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
+    }
+    div#teamlist {
+      background-color: #0099FF;
+      /* Firefox */
+      display:-moz-box;
+      -moz-box-pack:center;
+      -moz-box-align:center;
+      /* Safari and Chrome */
+      display:-webkit-box;
+      -webkit-box-pack:center;
+      -webkit-box-align:center;
+      /* W3C */
+      display:box;
+      box-pack:center;
+      box-align:center;
+    }
+    div.playerlist {
+      background-color: #00CCFF;
+      /* Firefox */
+      display:-moz-box;
+      -moz-box-pack:center;
+      -moz-box-align:center;
+      /* Safari and Chrome */
+      display:-webkit-box;
+      -webkit-box-pack:center;
+      -webkit-box-align:center;
+      /* W3C */
+      display:box;
+      box-pack:center;
+      box-align:center;
+    }
+     tr:nth-child(even) {
+      background-color: lightgray;
+    }
+    tr:nth-child(odd) {
+      background-color: white;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    table, th, td, caption {
+        border: 1px solid #888888;
+    }
+
+    th, td, caption {
+      padding: 3px;
+    }
+    .axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: steelblue;
+}
+/*.rawr {
+  opacity: 0;
+}*/
+
+.bar{
+    opacity: .2;
+  }
+.bar--not{
+  opacity:.5;
+
+}
+.x.axis path {
+  display: none;
+}
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+svg {
+  font: 10px sans-serif;
+}
+
+
+.area2{
+  fill: #9edae5;
+  clip-path: url(#clip);
+
+}
+.area3{
+  fill: #17becf;
+  clip-path: url(#clip);
+
+}
+.area4{
+  fill: #a1d99b;
+  clip-path: url(#clip);
+
+}
+.area5{
+  fill: green;
+  clip-path: url(#clip);
+
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.brush .extent {
+  stroke: #fff;
+  fill-opacity: .125;
+  shape-rendering: crispEdges;
 }
 
