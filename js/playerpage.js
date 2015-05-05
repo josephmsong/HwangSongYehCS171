@@ -206,6 +206,14 @@ function makeShotChart(playerName){
               .append("g")
               .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
 
+  var court = svg.append("g")
+                 .selectAll("courtimage")
+                 .data([1])
+                 .enter().append("g")
+
+  var courtImage = court.append("img")
+                        .attr("src", "nbahalfcourt.jpg")
+
   var shotChart = svg.append("g")
                       .selectAll("shots")
                       .data(playerShotData)
