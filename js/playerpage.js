@@ -222,7 +222,7 @@ function makeShotChart(playerName){
                         .style("left","0px")
                         .style("top","0px")
 
-  var shots = shotChart.append("div").attr("class","point")
+  var shots = shotChart.append("div")
                        .style("position","absolute")
                        .style("left", function(d){return d.left + "px";})
                        .style("top", function(d){return d.top + "px";})
