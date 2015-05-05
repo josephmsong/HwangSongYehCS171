@@ -32,14 +32,13 @@
       border-radius: 50%;
     }
     .teamimg {
-      width: 15%;
-      height: 15%;
-      float:right;
+      width: 10%;
+      height: 10%;
+      float:left;
     }
     .playerimg {
-      width: 15%;
-      height: 15%;
-      float:left;
+      width: 150%;
+      height: 150%;
       background-repeat: no-repeat;
       background-position: 50%;
       border-radius: 50%;
@@ -191,6 +190,7 @@ svg {
   fill-opacity: .125;
   shape-rendering: crispEdges;
 }
+
   </style>
 
   <script src="libs/d3/d3.min.js" charset="utf-8"></script>
@@ -218,11 +218,11 @@ svg {
 
   <br>
 
-  <div id = "teamNameDiv"> </div>
+  <div id = "playerNameDiv"></div>
 
   <br>
 
-  <div id = "playerNameDiv"></div>
+  <div id = "teamNameDiv"> </div>
 
   <br> 
 
@@ -231,20 +231,20 @@ svg {
   <br> 
 
   <div id="container">
-  <div id="playerimg" style="height:85%;width:85%"></div>
-  <div id="teamimg"></div>
-  <div id="playerdetails"></div>
   <div class= "text">
-  <div id="playerName"></div>
-  <div id = "averageBarDiv"> </div>
-  <div id="shotChartDiv" style="float:left"></div>
-
-  <div id="shotToggleDiv" style="visibility:hidden">
-  <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
-  <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
+  <div id="playerimg" style="float:left;margin-right:7%"></div>
+  <div id="playerName" style ="float:left"></div>
+  <br/><br/>
+  <div id="teamimg"></div>
+  <div id ="averageBarDiv" style="float:left"></div>
+  <div id="shotChartDiv" style="float:right; margin-left:2%; margin-right:4%"></div>
+  <div id="shotToggleDiv" style="visibility:hidden; float:right">
+    <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
+    <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
   </div>
 
-   <div  class = "col-md-9" id = "tableDiv"> </div>
+
+   <div  class = "col-md-9" id = "tableDiv" style="margin-top:15%"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
    <div class="col-md-3"  style="float:right"></div>
             
