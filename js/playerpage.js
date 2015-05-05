@@ -329,88 +329,89 @@ function comparePlayers(){
 	// first, see what value is selected in the drop down
 	var compareWithPlayerName = d3.select("#comparePlayerDropDown").node().value;
 
-	// clear the vis 
-	clearPlayerVis();
+  if(compareWithPlayerName != 0){
+  	// clear the vis 
+  	clearPlayerVis();
 
-	// get the data for the player to be compared with
-	compareWithPlayerData = findComparePlayer(compareWithPlayerName)
+  	// get the data for the player to be compared with
+  	compareWithPlayerData = findComparePlayer(compareWithPlayerName)
 
-	// add the image of this player to be compared with to the page
-	var svg = d3.selectAll("svg")
-				.data([0])
-				.enter().append("img")
-				.attr("class", "comparePlayerInfo")
-				.attr("src", compareWithPlayerData["photo"])
-				.style("float", "right")
+  	// add the image of this player to be compared with to the page
+  	var svg = d3.selectAll("svg")
+  				.data([0])
+  				.enter().append("img")
+  				.attr("class", "comparePlayerInfo")
+  				.attr("src", compareWithPlayerData["photo"])
+  				.style("float", "right")
 
-	// add the name of the player
-	svg = d3.selectAll("svg")
-	   .data([0])
-	   .enter().append("div")
-	   .attr("class", "comparePlayerInfo")
-	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
-	   .style("float", "right")
+  	// add the name of the player
+  	svg = d3.selectAll("svg")
+  	   .data([0])
+  	   .enter().append("div")
+  	   .attr("class", "comparePlayerInfo")
+  	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
+  	   .style("float", "right")
 
-  // add the image of the player
-  // teamAbbrev will be used to determine the link
-  var teamAbbrev;
-  // make adjustments for exceptions
-  switch(compareWithPlayerData.team){
-    case "GS": 
-      teamAbbrev = "GSW";
-      break;
-    case "NO":
-      teamAbbrev = "NOP";
-      break;
-    case "NY":
-      teamAbbrev = "NYK";
-      break;
-    case "PHO":
-      teamAbbrev = "PHX";
-      break;
-    case "SA": 
-      teamAbbrev = "SAS";
-      break;
-    default:
-      teamAbbrev = compareWithPlayerData.team;
-      break;
-  }
+    // add the image of the player
+    // teamAbbrev will be used to determine the link
+    var teamAbbrev;
+    // make adjustments for exceptions
+    switch(compareWithPlayerData.team){
+      case "GS": 
+        teamAbbrev = "GSW";
+        break;
+      case "NO":
+        teamAbbrev = "NOP";
+        break;
+      case "NY":
+        teamAbbrev = "NYK";
+        break;
+      case "PHO":
+        teamAbbrev = "PHX";
+        break;
+      case "SA": 
+        teamAbbrev = "SAS";
+        break;
+      default:
+        teamAbbrev = compareWithPlayerData.team;
+        break;
+    }
 
- svg = d3.selectAll("svg")
-         .data([0])
-         .enter().append("img")
-         .attr("class", "comparePlayerTeamImg")
-         .style("float", "right")
-         .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")   
-          
+   svg = d3.selectAll("svg")
+           .data([0])
+           .enter().append("img")
+           .attr("class", "comparePlayerTeamImg")
+           .style("float", "right")
+           .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")   
+            
 
-	// wrangle the data for comparison!
+  	// wrangle the data for comparison!
 
-	// this is the list we'll use for labeling
-	var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
+  	// this is the list we'll use for labeling
+  	var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
 
-	// find how many seasons the player to be compared with has played so we can access the current season
-	var comparePlayerSeasonIndex = compareWithPlayerData.seasons.length - 2; 
+  	// find how many seasons the player to be compared with has played so we can access the current season
+  	var comparePlayerSeasonIndex = compareWithPlayerData.seasons.length - 2; 
 
-  // use findComparePlayer to get the data for the currently selected player as well
-  var currentNameAndPosition = document.getElementById("playerName").innerHTML
-  var currentPlayerName = currentNameAndPosition.split(",")[0]
+    // use findComparePlayer to get the data for the currently selected player as well
+    var currentNameAndPosition = document.getElementById("playerName").innerHTML
+    var currentPlayerName = currentNameAndPosition.split(",")[0]
 
-  var currentPlayerData = findComparePlayer(currentPlayerName);
-  var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
+    var currentPlayerData = findComparePlayer(currentPlayerName);
+    var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
 
-  console.log(currentPlayerData)
+    console.log(currentPlayerData)
 
-	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
+  	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
 
-  // add the bars
-  initAverageBars(compareData, true);
+    // add the bars
+    initAverageBars(compareData, true);
 
-  // adding the "back" button and functionality
-  var backButton = d3.select("#backButton")
-                     .style("visibility", "visible")
-                     .on("click", function(){goBack(currentPlayerData);})
-
+    // adding the "back" button and functionality
+    var backButton = d3.select("#backButton")
+                       .style("visibility", "visible")
+                       .on("click", function(){goBack(currentPlayerData);})
+  }                 
 }
 
 // wrangle the data for comparison
