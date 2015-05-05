@@ -18,7 +18,7 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
       var idName = "#stackedRect"+i
 
-      d3.selectAll(idName).style("opacity", "0")
+      d3.selectAll(idName).style("fill", "#d3d3d3")
     }
   }
 

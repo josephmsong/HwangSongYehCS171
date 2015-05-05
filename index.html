@@ -286,6 +286,28 @@ svg {
 
                             })
                             .on("click", function(d, i){
+                               var teamAbbrev;
+                              // make adjustments for exceptions
+                              switch(i){
+                                case 9: 
+                                  teamAbbrev = "GSW";
+                                  break;
+                                case 18:
+                                  teamAbbrev = "NOP";
+                                  break;
+                                case 19:
+                                  teamAbbrev = "NYK";
+                                  break;
+                                case 23:
+                                  teamAbbrev = "PHX";
+                                  break;
+                                case 26: 
+                                  teamAbbrev = "SAS";
+                                  break;
+                                default:
+                                  teamAbbrev = reverseLookup(i);
+                                  break;
+                                }
                                  d3.selectAll(".averageBars").remove();
                                  d3.selectAll("svg").remove();
                                   d3.selectAll(".compareBarsDiv").remove();
@@ -294,7 +316,7 @@ svg {
                                   d3.select(".table").remove();
                                   d3.selectAll(".brush").remove();
                                   stacked(reverseLookup(i));
-                                  brush(reverseLookup(i));
+                                  brush(teamAbbrev);
                                     // maketablechart(ID);
                                     // window.location.href = "table.html?id=" + ID;
                             });
@@ -699,10 +721,16 @@ svg {
                                   d3.selectAll(".compareBarsDiv").remove();
                                   d3.select("#playerNameDiv").html([""]);
 
-                                  for(var i = 0; i< teamPlayersList[teamIndex].length; i++){
+                                  for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
+                                    color = d3.scale.category20c()
+                                  
+                                      for(var j=0; j<teamPlayersList[teamIndex].length+1; j++)
+                                      {
+                                      var idName = "#stackedRect"+j
+                                       d3.selectAll(idName).style("fill", function(d){return color(j)})
+                                    }
 
-                                    var idName = "#stackedRect"+i
-                                    d3.selectAll(idName).style("opacity", "1")
+                                    
                                   }
                                 })
                                 .on("click", function(d, i){
