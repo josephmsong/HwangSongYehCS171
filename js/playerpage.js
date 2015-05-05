@@ -8,13 +8,9 @@ function showPlayerName(playerName, playerIndex, teamLength){
     .attr("class", "playerNameDisplay")
     .html(function(d, i){return "Player: " + playerName;}) 
 
-  console.log(teamLength)
-
   for(var i = 0; i < teamLength; i++){
 
     if(i != playerIndex){
-
-      console.log("bruh")
 
       var idName = "#stackedRect"+i
 
@@ -328,8 +324,6 @@ function comparePlayers(){
   var currentPlayerData = findComparePlayer(currentPlayerName);
   var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
 
-  console.log(currentPlayerData);
-
 	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
 
   // add the bars
@@ -473,7 +467,7 @@ function clearPlayerVis(){
 
 	// we'll reformat these later.
 	// d3.select("#teamNameDiv").html([""]);
-	// d3.select("#playerName").html([""]);
+	d3.select("#playerName").html([""]);
 	// d3.select(".teamimg").remove();
 	// d3.select(".playerimg").remove();
 	// d3.selectAll("svg").remove();
