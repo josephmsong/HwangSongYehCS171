@@ -348,8 +348,41 @@ function comparePlayers(){
 	   .data([0])
 	   .enter().append("div")
 	   .attr("class", "comparePlayerInfo")
-	   .html(["Player: " + compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
+	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
 	   .style("float", "right")
+
+  // add the image of the player
+  // teamAbbrev will be used to determine the link
+  var teamAbbrev;
+  // make adjustments for exceptions
+  switch(compareWithPlayerData.team){
+    case "GS": 
+      teamAbbrev = "GSW";
+      break;
+    case "NO":
+      teamAbbrev = "NOP";
+      break;
+    case "NY":
+      teamAbbrev = "NYK";
+      break;
+    case "PHO":
+      teamAbbrev = "PHX";
+      break;
+    case "SA": 
+      teamAbbrev = "SAS";
+      break;
+    default:
+      teamAbbrev = compareWithPlayerData.team;
+      break;
+  }
+
+ svg = d3.selectAll("svg")
+         .data([0])
+         .enter().append("img")
+         .attr("class", "comparePlayerTeamImg")
+         .style("float", "right")
+         .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")   
+          
 
 	// wrangle the data for comparison!
 
@@ -528,6 +561,10 @@ function clearPlayerVis(){
 	// d3.select(".playerimg").remove();
 	// d3.selectAll("svg").remove();
 
+  // hide the shot toggle
+  var toggle = d3.select("#shotToggleDiv")
+                 .style("visibility", "hidden");
+
 	d3.selectAll(".averageBars").remove();
  	d3.selectAll(".comparePlayerInfo").remove();
 	d3.selectAll(".compareBarsDiv").remove();
@@ -537,6 +574,7 @@ function clearPlayerVis(){
   d3.selectAll(".shotContainer").remove();
   d3.selectAll(".make").remove();
   d3.selectAll(".miss").remove();
+  d3.selectAll(".comparePlayerTeamImg").remove();
 }
 
 // searches through the JSON to find the player's data

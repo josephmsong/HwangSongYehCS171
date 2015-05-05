@@ -329,6 +329,8 @@ svg {
                                   d3.selectAll(".brush").remove();
                                   d3.selectAll(".shotChart").remove();
                                   d3.selectAll(".shotContainer").remove();
+                                  var toggle = d3.select("#shotToggleDiv")
+                                                 .style("visibility", "hidden");
                                   stacked(reverseLookup(i));
                                   brush(teamAbbrev);
                                     // maketablechart(ID);
