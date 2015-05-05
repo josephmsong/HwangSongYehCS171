@@ -6,6 +6,7 @@ function showPlayerName(playerName, player){
 	d3.select("#playerNameDiv")
 	  .attr("class", "playerNameDisplay")
 	  .html(function(d, i){return "Player: " + playerName;}) 
+  d3.selectAll("#stackedRect2").style("opacity", .05);
 }
 
 
