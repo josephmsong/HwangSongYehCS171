@@ -3,10 +3,6 @@
 <head>
   <title>Ball Is Life</title>
 
-  <style> 
-   
-  </style>
-
   <script src="libs/d3/d3.min.js" charset="utf-8"></script>
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
   <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
@@ -25,6 +21,7 @@
   <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
   <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
   <br>
+
   <div id = "teamNameDiv"> </div>
   <br>
   <div id = "playerNameDiv"></div>
@@ -33,19 +30,20 @@
   <br> 
 
   <div id="container">
-  <div id="playerimg" style="height:85%;width:85%"></div>
-  <div id="teamimg"></div>
-  <div id="playerdetails"></div>
   <div class= "text">
-  <div id="playerName"></div>
-  <div id = "averageBarDiv"> </div>
-  <div id="shotChartDiv" style="float:left"></div>
-  <div id="shotToggleDiv" style="visibility:hidden">
-  <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
-  <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
+  <div id="playerimg" style="float:left;margin-right:7%"></div>
+  <div id="playerName" style ="float:left"></div>
+  <br/><br/>
+  <div id="teamimg"></div>
+  <div id ="averageBarDiv" style="float:left"></div>
+  <div id="shotChartDiv" style="float:right; margin-left:2%; margin-right:4%"></div>
+  <div id="shotToggleDiv" style="visibility:hidden; float:right">
+    <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
+    <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
   </div>
 
-   <div  class = "col-md-9" id = "tableDiv"> </div>
+
+   <div  class = "col-md-9" id = "tableDiv" style="margin-top:15%"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
    <div class="col-md-3" id="stacked" style="float:right"></div>
             

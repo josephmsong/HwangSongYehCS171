@@ -81,10 +81,12 @@ function showPlayerPage(playerID){
     var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
     averageDisplayData = wrangleData(indPlayerData.seasons);
 
-    // addPlayerName adds the player's name and position to the page
-    addPlayerName(indPlayerData);
     // addTeamImage looks up the image for this player's team and puts it on the page
     addTeamImage(indPlayerData);
+
+    // addPlayerName adds the player's name and position to the page
+    addPlayerName(indPlayerData);
+
 
     // add the actual visualizations to the page
     initAverageBars(averageDisplayData, false);
@@ -150,6 +152,7 @@ function showPlayerPage(playerID){
               .data([1])
               .enter().append("img")
               .attr("class", "teamimg") 
+              .style("float", "left")
               .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")    
     }
       
@@ -342,8 +345,8 @@ function comparePlayers(){
   	// add the image of this player to be compared with to the page
   	var svg = d3.selectAll("svg")
   				.data([0])
-  				.enter().append("img")
-  				.attr("class", "comparePlayerInfo")
+  				.enter().append("div").attr("id","playerimg").style("float","right").append("img")
+  				.attr("class", "playerimg")
   				.attr("src", compareWithPlayerData["photo"])
   				.style("float", "right")
 
@@ -354,6 +357,7 @@ function comparePlayers(){
   	   .attr("class", "comparePlayerInfo")
   	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
   	   .style("float", "right")
+       .style("margin-right", "7%")
 
     // add the image of the player
     // teamAbbrev will be used to determine the link
@@ -381,11 +385,18 @@ function comparePlayers(){
     }
 
    svg = d3.selectAll("svg")
+    .append("br")
+
+   svg = d3.selectAll("svg")
+    .append("br")
+
+
+   svg = d3.selectAll("svg")
            .data([0])
-           .enter().append("img")
-           .attr("class", "comparePlayerTeamImg")
-           .style("float", "right")
-           .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")   
+           .enter().append("div").attr("id", "teamimg").append("img")
+           .attr("class", "teamimg")
+           .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")
+           .style("float", "right")   
             
 
   	// wrangle the data for comparison!
