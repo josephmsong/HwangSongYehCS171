@@ -402,6 +402,10 @@ function wrangleCompareData(currentPlayerData, compareWithPlayerData){
 
 // initAverageBars takes the processed data array of differences and creates the bar chart
 function initAverageBars(data, compare){
+
+  // the names of the bars
+  var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
+
   var that = this;
   var avgDiv = d3.select("#averageBarDiv")
   this.svg = avgDiv
@@ -441,7 +445,7 @@ function initAverageBars(data, compare){
         if(compare)
           return "Comparison of Stats"
         else
-          return "Comparison to Average";
+          return "Current Year Comparison to Average";
       })
     .append("line")
       .attr("x1", 0)
@@ -482,6 +486,11 @@ function initAverageBars(data, compare){
                       else
                           return "green";
                   });
+
+      var labels = groups.append("text")
+                         .attr("x", function (d, i) {return that.x(Math.min(0, d)) + Math.abs(that.x(d) - that.x(0)) + 5;})
+                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2;})
+                         .text(function(d,i){return nameList[i]});
     }
 }
 
