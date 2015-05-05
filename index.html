@@ -223,6 +223,7 @@ svg {
   <div class= "text">
   <div id="playerName"></div>
   <div id = "averageBarDiv"> </div>
+  <div id="shotChartDiv"></div>
    <div  class = "col-md-9" id = "tableDiv"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
    <div class="col-md-3"  style="float:right"></div>
@@ -239,6 +240,7 @@ svg {
   // teamLookup is an object used to wrangle together the players from a selected team
   var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
   var playerNamesList = [];
+  var shotChartData = [];
   var svg;
 
   // function to create the team navigation bar
@@ -721,6 +723,7 @@ svg {
                                   d3.selectAll(".compareBarsDiv").remove();
                                   d3.select("#playerNameDiv").html([""]);
 
+<<<<<<< HEAD
                                   for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
                                     color = d3.scale.category20c()
                                   
@@ -731,6 +734,14 @@ svg {
                                     }
 
                                     
+=======
+                                  color = d3.scale.category20c()
+
+                                  for(var i = 0; i< teamPlayersList[teamIndex].length; i++){
+
+                                    var idName = "#stackedRect"+i
+                                    d3.selectAll(idName).style("fill", function(d, i){return color(i);})
+>>>>>>> 9007111446bdeb81425abb2b03744491cb92d5a3
                                   }
                                 })
                                 .on("click", function(d, i){
@@ -802,13 +813,23 @@ svg {
     d3.json('data/nba.json', function(error, data){
       playerData = data.filter(function(d, i, array){
 
-        return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png"
+        return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
       });
+
       for(var i in playerData){
 
           playerNamesList.push(playerData[i].name);  
       };
     })
+
+    d3.json('data/shotchart.json', function(error, data){
+      
+      shotChartData = data.filter(function(d, i, array){
+        return playerNamesList.indexOf(d.name) > -1;
+      });
+      
+    })
+
     loadTeamNavBar();
 
   }
