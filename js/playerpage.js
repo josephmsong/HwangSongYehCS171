@@ -275,7 +275,7 @@ function initAverageBars(data){
   this.svg = avgDiv
     .append("svg")
     .attr("width", this.width + this.margin.left + this.margin.right)
-    .attr("height", this.height + this.margin.top + this.margin.bottom)
+    .attr("height", 100 + this.margin.top + this.margin.bottom)
     .attr("class", "averageBars")
   .append("g")
     .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");

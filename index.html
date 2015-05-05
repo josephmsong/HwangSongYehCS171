@@ -31,6 +31,16 @@
       height: 50px;
       background-color: #d3d3d3;
     }
+    .teamimg {
+      width: 15%;
+      height: 15%;
+      float:right;
+    }
+    .playerimg {
+      width: 15%;
+      height: 15%;
+      float:left;
+    }
     div#teamlist {
       background-color: #0099FF;
       /* Firefox */
@@ -133,12 +143,24 @@ svg {
   font: 10px sans-serif;
 }
 
-.area1 {
-  fill: #C0C0C0;
-  clip-path: url(#clip);
-}
+
 .area2{
-  fill: #404040;
+  fill: #9edae5;
+  clip-path: url(#clip);
+
+}
+.area3{
+  fill: #17becf;
+  clip-path: url(#clip);
+
+}
+.area4{
+  fill: #a1d99b;
+  clip-path: url(#clip);
+
+}
+.area5{
+  fill: green;
   clip-path: url(#clip);
 
 }
@@ -340,26 +362,26 @@ svg {
 
     svg.append("defs").append("clipPath")
         .attr("id", "clip")
-      .append("rect")
+        .append("rect")
         .attr("width", width)
         .attr("height", height);
 
     
     var context = svg.append("g")
         .attr("class", "context")
-        .attr("transform", "translate(" + 0+ "," + 0+ ")");
+        .attr("transform", "translate(" + 20+ "," + 0+ ")");
 
     var ppg = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 0+ "," + 100 + ")");
+        .attr("transform", "translate(" + 20+ "," + 100 + ")");
 
     var fg3perc = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 0+ "," + 200 + ")");
+        .attr("transform", "translate(" + 20+ "," + 200 + ")");
 
     var rpg = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 0 + "," + 300 + ")");
+        .attr("transform", "translate(" + 20 + "," + 300 + ")");
 
     d3.json("data/nbateams.json", function(error, data) {
       var teamdata = data.filter(function(d){return d.name == team});
@@ -443,6 +465,8 @@ svg {
         .selectAll("rect")
           .attr("y", -6)
           .attr("height", height2 + 7);
+
+      
     });
 
     function brushed() {
@@ -604,6 +628,8 @@ svg {
           .data(array.y)
           .enter().append("rect")
           .attr("width", 30)
+
+          // travis look here
           .attr("id", function(d,i){return "stackedRect"+i})
           .attr("y", function(d,i) { return height-y(array.total[i])})
           .attr("height", function(d,i) { return y(d)})
