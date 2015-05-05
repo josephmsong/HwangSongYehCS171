@@ -198,36 +198,25 @@ svg {
   <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
   <script src="http://d3js.org/queue.v1.min.js"></script>
   <script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="js/playerpage.js"></script>
-<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-
+  <script src="js/playerpage.js"></script>
+  <script src="js/teamvis.js"></script>
+  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+  <link rel="stylesheet" href="main.css">
 </head>
-
 <body>
-
   <div id = "teamlist"></div>
-
   <ul id = "playerlist"></ul>
-
   <br>
-
   <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
-  <button type="submit" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
+  <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
   <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
-
-  <br>
-
-  <div id = "playerNameDiv"></div>
-
   <br>
 
   <div id = "teamNameDiv"> </div>
-
+  <br>
+  <div id = "playerNameDiv"></div>
   <br> 
-
   <div id = "compareBarsDiv"></div>
-
   <br> 
 
   <div id="container">
@@ -246,7 +235,7 @@ svg {
 
    <div  class = "col-md-9" id = "tableDiv" style="margin-top:15%"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
-   <div class="col-md-3"  style="float:right"></div>
+   <div class="col-md-3" id="stacked" style="float:right"></div>
             
 
 
@@ -267,13 +256,10 @@ svg {
   function loadTeamNavBar(_data){
     // playerData = _data;
     teamList = d3.select("#teamlist");
-    // var teamLinks = teamList.selectAll("li")
-    //                     .data(teamNamesList)
-    //                     .enter().append("li")
-    //                     .html(function(d, i){return "<a href = '#' onclick =showPlayers("+i+")>" + teamNamesList[i] + "</a>";})
     var teamLinks = teamList.selectAll("img")
                             .data(teamNamesList)
                             .enter().append("img")
+                            .attr("class", "teamListImage")
                             .attr("src", function(d, i){
                               // teamAbbrev will be used to determine the link
                               var teamAbbrev;
@@ -302,9 +288,8 @@ svg {
                             })
                             .attr("id", function(d, i){return reverseLookup[i];})
                             .attr("onclick", function(d, i){
-                              d3.select("#"+reverseLookup[i])
-                                .style("border", "10px solid black");
-                              return "showTeamName("+i+"); showPlayers("+i+")";
+
+                              // return "showTeamName("+i+"); showPlayers("+i+")";
 
                             })
                             .on("click", function(d, i){
@@ -330,6 +315,7 @@ svg {
                                   teamAbbrev = reverseLookup(i);
                                   break;
                                 }
+                                clearPlayerVis();
                                  d3.selectAll(".averageBars").remove();
                                  d3.select("#playerName").html([""]);
                                  d3.selectAll("svg").remove();
@@ -349,198 +335,20 @@ svg {
                                   d3.select("#submitCompare")
                                     .style("visibility", "hidden")  
 
-                                  stacked(reverseLookup(i));
+                                  stacked(reverseLookup(i), playerData);
                                   brush(teamAbbrev);
+
+                                  d3.selectAll(".teamListImage").attr("border", "none")
+                                  d3.select(this)
+                                    .attr("border", "2px solid black");
+                                    
+                                  showTeamName(i); 
+                                  showPlayers(i);
                                     // maketablechart(ID);
                                     // window.location.href = "table.html?id=" + ID;
                             });
   }
 
-  function brush(team){
-   var margin = {top: 10, right: 50, bottom: 10, left: 20},
-    margin2 = {top: 200, right: 50, bottom: 20, left: 20},
-    width = 600, 
-    height = 80,
-    height2 = 80;
-    // var parseDate = d3.time.format("%b %Y").parse;
-
-    var x = d3.time.scale().range([0, width]),
-        x2 = d3.time.scale().range([0, width]),
-        y = d3.scale.linear().range([height, 0]),
-        y2 = d3.scale.linear().range([height2, 0]),
-        y3 = d3.scale.linear().range([height,0]),
-        y4 = d3.scale.linear().range([height,0]),
-        y5 = d3.scale.linear().range([height,0]);
-
-    var xAxis = d3.svg.axis().scale(x).orient("bottom"),
-        xAxis2 = d3.svg.axis().scale(x2).orient("bottom"),
-        yAxis = d3.svg.axis().scale(y).orient("left"),
-        yAxis3 = d3.svg.axis().scale(y3).orient("left"),
-        yAxis4 = d3.svg.axis().scale(y4).orient("left"),
-        yAxis5 = d3.svg.axis().scale(y5).orient("left");
-
-
-    var brush = d3.svg.brush()
-        .x(x2)
-        .on("brush", brushed);
-
-    var area = d3.svg.area()
-        .interpolate("monotone")
-        .x(function(d) { return x(d.year); })
-        .y0(height)
-        .y1(function(d) { return y(d.win); });
-
-    var area2 = d3.svg.area()
-        .interpolate("monotone")
-        .x(function(d) { return x2(d.year); })
-        .y0(height2)
-        .y1(function(d) { return y2(d.win); });
-    var area3 = d3.svg.area()
-          .interpolate("monotone")
-          .x(function(d) { return x(d.year); })
-          .y0(height)
-          .y1(function(d) { return y3(d.ppg); });
-    var area4 = d3.svg.area()
-          .interpolate("monotone")
-          .x(function(d) { return x(d.year); })
-          .y0(height)
-          .y1(function(d) {return y4(d.fg3perc); });
-    var area5 = d3.svg.area()
-          .interpolate("monotone")
-          .x(function(d) { return x(d.year); })
-          .y0(height)
-          .y1(function(d) {return y5(d.rpg); });
-
-    var svg = d3.select("#brushDiv").append("svg")
-        .attr("class", "brush")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", 500 + margin.top + margin.bottom);
-
-    svg.append("defs").append("clipPath")
-        .attr("id", "clip")
-        .append("rect")
-        .attr("width", width)
-        .attr("height", height);
-
-    
-    var context = svg.append("g")
-        .attr("class", "context")
-        .attr("transform", "translate(" + 20+ "," + 0+ ")");
-
-    var ppg = svg.append("g")
-        .attr("class", "alt")
-        .attr("transform", "translate(" + 20+ "," + 100 + ")");
-
-    var fg3perc = svg.append("g")
-        .attr("class", "alt")
-        .attr("transform", "translate(" + 20+ "," + 200 + ")");
-
-    var rpg = svg.append("g")
-        .attr("class", "alt")
-        .attr("transform", "translate(" + 20 + "," + 300 + ")");
-
-    d3.json("data/nbateams.json", function(error, data) {
-      var teamdata = data.filter(function(d){return d.name == team});
-      // console.log()
-      var parseDate = d3.time.format("%Y").parse;
-
-          
-            teamdata[0].years.forEach(function(d,i){
-              if(parseDate(d.year.substring(0,4))!= null)
-                d.year = parseDate(d.year.substring(0,4))
-              // else
-                // d.year = parseDate("2005")
-
-            })
-            // console.log(team.years)
-      x.domain(d3.extent(teamdata[0].years.map(function(d) { return d.year; })));
-      y.domain([0, d3.max(teamdata[0].years.map(function(d) { return d.win; }))]);
-      y3.domain([d3.min(teamdata[0].years.map(function(d) { return d.ppg; })), d3.max(teamdata[0].years.map(function(d) { return d.ppg; }))]);
-      y4.domain([0, d3.max(teamdata[0].years.map(function(d) { return d.fg3perc; }))]);
-      y5.domain([d3.min(teamdata[0].years.map(function(d) { return d.rpg; })), d3.max(teamdata[0].years.map(function(d) { return d.rpg; }))])
-      x2.domain(x.domain());
-      y2.domain(y.domain());
-
-      rpg.append("path")
-          .datum(teamdata[0].years)
-          .attr("class", "area5")
-          .attr("d", area5)
-
-      rpg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(20," + height + ")")
-          .call(xAxis);
-
-      rpg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis5);
-
-      ppg.append("path")
-          .datum(teamdata[0].years)
-          .attr("class", "area3")
-          .attr("d", area3)
-
-      ppg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(20," + height + ")")
-          .call(xAxis);
-
-      ppg.append("g")
-          .attr("class", "y axis")
-          .call(yAxis);
-
-
-      fg3perc.append("path")
-          .datum(teamdata[0].years)
-          .attr("class", "area4")
-          .attr("d", area4)
-
-      fg3perc.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(20," + height + ")")
-          .call(xAxis);
-
-      fg3perc.append("g")
-          .attr("class", "y axis")
-          .call(yAxis4);
-
-
-      context.append("path")
-          .datum(teamdata[0].years)
-          .attr("class", "area2")
-          .attr("d", area2);
-
-      context.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(20," + height2 + ")")
-          .call(xAxis2);
-
-      context.append("g")
-          .attr("class", "x brush")
-          .call(brush)
-        .selectAll("rect")
-          .attr("y", -6)
-          .attr("height", height2 + 7);
-
-      
-    });
-
-    function brushed() {
-      x.domain(brush.empty() ? x2.domain() : brush.extent());
-      ppg.select(".area3").attr("d", area3);
-      ppg.select(".x.axis").call(xAxis);
-      fg3perc.select(".area4").attr("d", area4);
-      fg3perc.select(".x.axis").call(xAxis);
-      rpg.select(".area5").attr("d", area5);
-      rpg.select(".x.axis").call(xAxis);
-    }
-
-    function type(d) {
-      d.date = parseDate(d.date);
-      d.price = +d.price;
-      return d;
-    }
-}    
 
   function stacked(team) {
     var playerDatas;
@@ -640,20 +448,22 @@ svg {
           .tickFormat(d3.format(".2s"));
 
       // create svg
-      svg = d3.select("body").append("svg")
+      svg = d3.select("#stacked").append("svg")
       .attr("class", "rawr")
           .attr("width", width + margin.left + margin.right)
           .attr("height", height + margin.top + margin.bottom)
           .append("g")
           .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-          var tip = d3.tip()
-          .attr('class', 'd3-tip')
-          .offset([-40, 0])
-          .html(function(d,i) {
-            return array.name[i] + ": " + d  ;
-          })
+
+      var tip = d3.tip()
+                  .attr('class', 'd3-tip')
+                  .offset([-40, 0])
+                  .html(function(d,i) {
+                      return array.name[i] + ": " + d  ;
+                  })
 
       svg.call(tip)
+
       x.domain(array.x);
       y.domain([0, d3.max(array.total, function(d){return d})])
 
@@ -734,6 +544,7 @@ svg {
     addLegend(wranglestackedData("ppg"));
   }
 
+
   // showPlayers takes in the index of the team that was clicked and shows the players of that team
   function showPlayers(teamIndex){
     // remove whatever list there was previously
@@ -741,8 +552,6 @@ svg {
 
     // get a list of the players on that team
     teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
-
-    // console.log(aggregatePlayers(teamIndex))
 
     playerList = d3.select("#playerlist");
     var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
@@ -771,10 +580,7 @@ svg {
                                     d3.selectAll(".compareBarsDiv").remove();
                                     d3.select("#playerNameDiv").html([""]);
                                     showPlayerPage(ID);
-                                    // maketablechart(ID);
-                                    // window.location.href = "table.html?id=" + ID;
                                   });
-                                // .html(function(d, i){return "<a href = '#'>" + teamPlayersList[teamIndex][i].name + "</a>";})
   }
   // aggregatePlayers is used to get the list of players for a selected team
   function aggregatePlayers(teamIndex){
@@ -887,7 +693,6 @@ svg {
 
   // start the vis!
   initVis();
-
 </script> 
 </body>
 

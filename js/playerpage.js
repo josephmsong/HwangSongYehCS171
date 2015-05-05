@@ -22,7 +22,8 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
 
 function maketablechart (data){
-	var columns = Object.keys(data);
+  console.log(Object.keys(data.seasons[0]));
+	var columns = Object.keys(data.seasons[0]);
 
 	var table = d3.select("#tableDiv").append("table").attr("class","table");
 	var thead = table.append("thead").attr("class", "thead");
@@ -52,7 +53,7 @@ function maketablechart (data){
 }
 
 function showPlayerPage(playerID){
-    this.margin = {top: 20, right: 30, bottom: 30, left: 100},
+    this.margin = {top: 20, right: 40, bottom: 30, left: 100},
     this.width = 400 - this.margin.left - this.margin.right,
     this.height = 300 - this.margin.top - this.margin.bottom;
     // remove the old images to prepare for the new ones
@@ -196,8 +197,8 @@ function makeShotChart(playerName){
   }
 
   this.margin = {top: 10, right: 50, bottom: 50, left: 50},
-  this.width = 850 - this.margin.left - this.margin.right,
-  this.height = 350 - this.margin.top - this.margin.bottom;
+  this.width = 500 - this.margin.left - this.margin.right,
+  this.height = 300 - this.margin.top - this.margin.bottom;
 
   var that = this;
 
@@ -253,12 +254,14 @@ function makeShotChart(playerName){
                         else
                           return "red"
                        })
+
                        .style("fill", function(d){
                           if(d.made == 1)
                             return "red"
                           else
                             return "green"
                        })
+
 
   // add the toggle so we can choose which shots to show
   var toggle = d3.select("#shotToggleDiv")
@@ -508,8 +511,8 @@ function initAverageBars(data, compare){
   this.x.nice();
   this.y.domain(d3.range(data.length));
   // updates axes
-  this.svg.select(".x.axis")
-      .call(this.xAxis);
+  // this.svg.select(".x.axis")
+  //     .call(this.xAxis);
   // this.svg.select(".y.axis")
   // .call(this.yAxis)
   d3.selectAll(".playerAvgBars").remove();
@@ -538,10 +541,23 @@ function initAverageBars(data, compare){
                           return "green";
                   });
 
+
+
       var labels = groups.append("text")
-                         .attr("x", function (d, i) {return that.x(Math.min(0, d)) + Math.abs(that.x(d) - that.x(0)) + 5;})
-                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2;})
-                         .text(function(d,i){return nameList[i]});
+                         .attr("x", function (d, i) {
+
+                            if(d < 0){
+
+                              return that.x(0) - Math.abs(that.x(d) - that.x(0)) - 60;
+                            }
+
+                            else{
+
+                              return that.x(0) + Math.abs(that.x(d) - that.x(0)) + 5;  
+                            }
+                          })
+                         .attr("y", function (d,i) {return that.y(i) + that.y.rangeBand()/2 + 2;})
+                         .text(function(d,i){return Math.ceil(d * 100) / 100 + " " + nameList[i]});
     }
 }
 
