@@ -180,6 +180,11 @@ function showPlayerPage(playerID){
 // the function to create the shot chart
 function makeShotChart(playerName){
 
+  d3.selectAll(".shotChart").remove();
+  d3.selectAll(".shotContainer").remove();
+  d3.selectAll(".make").remove();
+  d3.selectAll(".miss").remove();
+
   var playerShotData = []
 
   // find the relevant shot data for this player
@@ -533,6 +538,8 @@ function clearPlayerVis(){
 	d3.selectAll(".brush").remove();
   d3.selectAll(".shotChart").remove();
   d3.selectAll(".shotContainer").remove();
+  d3.selectAll(".make").remove();
+  d3.selectAll(".miss").remove();
 }
 
 // searches through the JSON to find the player's data
