@@ -1,12 +1,27 @@
 // this file contains the JS related to the individual player portions of our visualization
 
 // showPlayerName shows the name of the player on hover
-function showPlayerName(playerName, player){
 
-	d3.select("#playerNameDiv")
-	  .attr("class", "playerNameDisplay")
-	  .html(function(d, i){return "Player: " + playerName;}) 
-  d3.selectAll("#stackedRect2").style("opacity", .05);
+function showPlayerName(playerName, playerIndex, teamLength){
+
+  d3.select("#playerNameDiv")
+    .attr("class", "playerNameDisplay")
+    .html(function(d, i){return "Player: " + playerName;}) 
+
+  console.log(teamLength)
+
+  for(var i = 0; i < teamLength; i++){
+
+    if(i != playerIndex){
+
+      console.log("bruh")
+
+      var idName = "#stackedRect"+i
+
+      d3.selectAll(idName).style("opacity", "0")
+    }
+  }
+
 }
 
 
