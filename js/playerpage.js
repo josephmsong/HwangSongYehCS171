@@ -47,6 +47,14 @@ function showPlayerPage(playerID){
     d3.select(".teamimg").remove();
     d3.select(".playerimg").remove();
     d3.select(".table").remove();
+
+    // showing the comparison drop down and submit button 
+    d3.select("#comparePlayerDropDown")
+      .style("visibility", "visible")
+
+    d3.select("#submitCompare")
+      .style("visibility", "visible")  
+      
    
     var indPlayerData
 
@@ -149,13 +157,13 @@ function showPlayerPage(playerID){
    var columns = Object.keys(indPlayerData.seasons[0]);
 
    // add the drop down to allow comparison
-   addComparisonSlider(indPlayerData.name)
+   addComparisonSelect(indPlayerData.name)
  
 }
 
 // this function populates the drop down menu with the other players in the league for comparison
 // currentPlayer is included so that the drop down won't let you select the player you're currently viewing
-function addComparisonSlider(currentPlayer){
+function addComparisonSelect(currentPlayer){
 
 	var select = document.getElementById("comparePlayerDropDown");
 
@@ -222,11 +230,17 @@ function comparePlayers(){
   var currentPlayerData = findComparePlayer(currentPlayerName);
   var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
 
-  console.log(currentPlayerName);
+  console.log(currentPlayerData);
 
 	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
 
+  // add the bars
   initAverageBars(compareData);
+
+  // adding the "back" button and functionality
+  var backButton = d3.select("#backButton")
+                     .style("visibility", "visible")
+                     .on("click", function(){goBack(currentPlayerData);})
 
 }
 
@@ -235,9 +249,6 @@ function wrangleCompareData(currentPlayerData, compareWithPlayerData){
   
   // differenceData is what we'll return to be used to make the compareBars
   var differenceData = []
-
-  console.log(compareWithPlayerData);
-  console.log(currentPlayerData);
 
   // we use nameList again here to get our values
   var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
@@ -332,6 +343,29 @@ function initAverageBars(data){
                           return "green";
                   });
     }
+}
+
+function goBack(currentPlayerData){
+
+  // clear the vis
+  clearPlayerVis();
+
+  // find the ID of the current player to reload their individual page
+  var ID = playerNamesList.indexOf(currentPlayerData.name);
+
+  // put the individual player page back
+  showPlayerPage(ID);
+
+  // hiding the back button and compare dropdown/button
+  var backButton = d3.select("#backButton")
+                     .style("visibility", "hidden")
+  
+  // showing the comparison drop down and submit button 
+  d3.select("#comparePlayerDropDown")
+      .style("visibility", "hidden")
+
+  d3.select("#submitCompare")
+      .style("visibility", "hidden")  
 }
 
 // HELPER FUNCTIONS AFTER THIS
