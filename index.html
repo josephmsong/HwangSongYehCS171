@@ -830,7 +830,7 @@ svg {
   function initVis(){
     // initialize the teamPlayersList
     teamPlayersList = get2DArray(30);  
-    d3.json('data/nbaNene.json', function(error, data){
+    d3.json('data/nba.json', function(error, data){
       playerData = data.filter(function(d, i, array){
 
         return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
