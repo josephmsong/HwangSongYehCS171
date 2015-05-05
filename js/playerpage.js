@@ -223,6 +223,12 @@ function makeShotChart(playerName){
                         .style("top","0px")
 
   var shots = shotChart.append("div")
+                       .attr("class", function(d){
+                          if(d.made == 1)
+                            return "make";
+                          else
+                            return "miss";
+                       })
                        .style("position","absolute")
                        .style("left", function(d){return d.left + "px";})
                        .style("top", function(d){return d.top + "px";})
@@ -238,13 +244,6 @@ function makeShotChart(playerName){
                         else
                           return "red"
                        })
-                       // .append("rect").style("position","absolute")
-                       // .attr("class", "shotRect")
-                       // .attr("width", "5px")
-                       // .attr("height", "5px")
-
-                       // .attr("x", function(d){return d.left;})
-                       // .attr("y", function(d){return d.top;})
                        .style("fill", function(d){
                           if(d.made == 1)
                             return "red"
@@ -252,29 +251,44 @@ function makeShotChart(playerName){
                             return "green"
                        })
 
+  // add the toggle so we can choose which shots to show
+  var toggle = d3.select("#shotToggleDiv")
+                 .style("visibility", "visible")
+                 .attr("onchange", "shotToggle()");
+}
 
-      // var groups = this.svg.append("g")
-      //             .selectAll("g.row")
-      //             .data(data)
-      //             .enter()
-      //             .append("g")
-      //             .attr("class", "row");
-      // var bars = groups
-      //             .append("rect")
-      //             .attr("x", function (d, i) {return that.x(Math.min(0, d));})
-      //             .attr("y", function (d,i) {return that.y(i);})
-      //             .attr("width", function(d, i){return Math.abs(that.x(d) - that.x(0));})
-      //             .attr("height", this.y.rangeBand())
-      //             .attr("class", "playerAvgBars")
-      //             .attr("fill", function(d){
-      //                 // if this is a negative value
-      //                 if(d < 0){
-      //                     return "red";
-      //                 }
-      //                 else
-      //                     return "green";
-      //             });
+// function that toggles what's shown on the shot chart based on what's selected
+function shotToggle(){
 
+  // variables for which parts of the checkbox are checked
+  var made = document.getElementById("madeShots").checked
+  var missed = document.getElementById("missedShots").checked
+
+  // if both options are selected
+  if(made && missed){
+
+    d3.selectAll(".make").style("visibility", "visible")
+    d3.selectAll(".miss").style("visibility", "visible")
+  }
+
+  else if (made && !missed){
+
+    d3.selectAll(".make").style("visibility", "visible")
+    d3.selectAll(".miss").style("visibility", "hidden")
+  }
+
+  else if (!made && missed){
+
+    d3.selectAll(".make").style("visibility", "hidden")
+    d3.selectAll(".miss").style("visibility", "visible")
+  }
+
+  else{
+
+    d3.selectAll(".make").style("visibility", "hidden")
+    d3.selectAll(".miss").style("visibility", "hidden")
+
+  }
 }
 
 // this function populates the drop down menu with the other players in the league for comparison
@@ -346,6 +360,8 @@ function comparePlayers(){
   var currentPlayerData = findComparePlayer(currentPlayerName);
   var currentPlayerSeasonIndex = currentPlayerData.seasons.length-2;
 
+  console.log(currentPlayerData)
+
 	var compareData = wrangleCompareData(currentPlayerData.seasons[currentPlayerSeasonIndex], compareWithPlayerData.seasons[comparePlayerSeasonIndex])
 
   // add the bars
@@ -363,6 +379,9 @@ function wrangleCompareData(currentPlayerData, compareWithPlayerData){
   
   // differenceData is what we'll return to be used to make the compareBars
   var differenceData = []
+
+  console.log(currentPlayerData)
+  console.log(compareWithPlayerData)
 
   // we use nameList again here to get our values
   var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
@@ -489,7 +508,7 @@ function clearPlayerVis(){
 
 	// we'll reformat these later.
 	// d3.select("#teamNameDiv").html([""]);
-	d3.select("#playerName").html([""]);
+	// d3.select("#playerName").html([""]);
 	// d3.select(".teamimg").remove();
 	// d3.select(".playerimg").remove();
 	// d3.selectAll("svg").remove();
