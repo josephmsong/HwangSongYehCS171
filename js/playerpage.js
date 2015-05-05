@@ -195,34 +195,56 @@ function makeShotChart(playerName){
 
   // select the div and add the SVG
   var svg = d3.select("#shotChartDiv")
-              .append("svg")
-              .attr("width", this.width + this.margin.left + this.margin.right)
-              .attr("height", this.height + this.margin.top + this.margin.bottom)
+              .append("div")
+              .attr("width", "500px")
+              .attr("height", "472px")
               .attr("class", "shotChart")
-              .append("g")
-              .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+              .append("div").attr("class","shotContainer")
+              .style("height","472px")
+              .style("width","500px")
+              .style("position","relative");
 
-  var court = svg.append("g")
+  var shotChart = d3.select(".shotContainer")
+                      .selectAll("shots")
+                      .data(playerShotData)
+                      .enter()
+
+  var court = d3.select(".shotContainer")
                  .selectAll("courtimage")
                  .data([1])
-                 .enter().append("g")
+                 .enter()
 
   var courtImage = court.append("img")
                         .attr("src", "nbahalfcourt.jpg")
+                        .style("height","472px")
+                        .style("width","500px")
+                        .style("position","absolute")
+                        .style("left","0px")
+                        .style("top","0px")
 
-  var shotChart = svg.append("g")
-                      .selectAll("shots")
-                      .data(playerShotData)
-                      .enter().append("g")
+  var shots = shotChart.append("div").attr("class","point")
+                       .style("position","absolute")
+                       .style("left", function(d){return d.left + "px";})
+                       .style("top", function(d){return d.top + "px";})
+                       .text(function(d) {
+                        if(d.made ==1)
+                          return "o"
+                        else
+                          return "x"
+                       })
+                       .style("color", function(d) {
+                        if(d.made ==1)
+                          return "green"
+                        else
+                          return "red"
+                       })
+                       // .append("rect").style("position","absolute")
+                       // .attr("class", "shotRect")
+                       // .attr("width", "5px")
+                       // .attr("height", "5px")
 
-  var shots = shotChart.append("rect")
-                       .attr("class", "shotRect")
-                       .attr("width", "5")
-                       .attr("height", "5")
-                       // .style("left", function(d){return d.left + "px";})
-                       // .style("top", function(d){return d.top + "px";})
-                       .attr("x", function(d){return d.left;})
-                       .attr("y", function(d){return d.top;})
+                       // .attr("x", function(d){return d.left;})
+                       // .attr("y", function(d){return d.top;})
                        .style("fill", function(d){
                           if(d.made == 1)
                             return "red"

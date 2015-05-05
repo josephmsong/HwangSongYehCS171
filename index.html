@@ -21,15 +21,15 @@
     img{
       width:3.2%;
       height:3.2%;
-      background-repeat: no-repeat;
-      background-position: 50%;
-      border-radius: 50%;
     }
     .playerList {
       margin: 10px;
       width: 50px;
       height: 50px;
       background-color: #d3d3d3;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
     }
     .teamimg {
       width: 15%;
@@ -40,6 +40,9 @@
       width: 15%;
       height: 15%;
       float:left;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      border-radius: 50%;
     }
     div#teamlist {
       background-color: #0099FF;
@@ -223,7 +226,8 @@ svg {
   <div class= "text">
   <div id="playerName"></div>
   <div id = "averageBarDiv"> </div>
-  <div id="shotChartDiv"></div>
+  <div id="shotChartDiv" style="float:left">
+  </div>
    <div  class = "col-md-9" id = "tableDiv"> </div>
    <div class="col-md-3" id="brushDiv" style="float:left"></div>
    <div class="col-md-3"  style="float:right"></div>
