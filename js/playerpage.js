@@ -350,6 +350,7 @@ function comparePlayers(){
   				.attr("class", "playerimg comparePlayerImg")
   				.attr("src", compareWithPlayerData["photo"])
   				.style("float", "right")
+          .style("margin-top", "-76px")
 
   	// add the name of the player
   	svg = d3.select(".text").selectAll("svg")
@@ -358,7 +359,8 @@ function comparePlayers(){
   	   .attr("class", "comparePlayerInfo")
   	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
   	   .style("float", "right")
-       .style("margin-right", "7%")
+       .style("margin-top", "-65px")
+       .style("margin-right", "60px")
 
     // add the image of the player
     // teamAbbrev will be used to determine the link
@@ -388,9 +390,6 @@ function comparePlayers(){
    svg = d3.select(".text").selectAll("svg")
     .append("br")
 
-   svg = d3.select(".text").selectAll("svg")
-    .append("br")
-
 
    svg = d3.select(".text").selectAll("svg")
            .data([0])
@@ -398,6 +397,8 @@ function comparePlayers(){
            .attr("class", "teamimg comparePlayerTeamImg")
            .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")
            .style("float", "right")   
+           .style("margin-top", "-35px")
+           .style("margin-right", "40px")
             
 
   	// wrangle the data for comparison!
@@ -599,8 +600,6 @@ function clearPlayerVis(){
   // hide the shot toggle
   var toggle = d3.select("#shotToggleDiv")
                  .style("visibility", "hidden")
-                 .style("width", "0px")
-                 .style("height", "0px");
 
 	d3.selectAll(".averageBars").remove();
  	d3.selectAll(".comparePlayerInfo").remove();
