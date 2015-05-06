@@ -462,6 +462,7 @@ p a {
       background-position: 50%;
       border-radius: 50%;
     }
+
     div#teamlist {
       background-color: #0099FF;
       /* Firefox */
@@ -492,6 +493,11 @@ p a {
       box-pack:center;
       box-align:center;
     }
+
+    .teamListImage {
+       display: block;
+    }
+
      tr:nth-child(even) {
       background-color: lightgray;
     }
@@ -611,7 +617,7 @@ svg {
 }
 
 .container { 
-    width: 1400px; /* pick whatever width you want */
+    width: 1425px; /* pick whatever width you want */
 }
 .container .outer {
     width: 100%;

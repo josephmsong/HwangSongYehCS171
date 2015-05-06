@@ -343,7 +343,7 @@ function comparePlayers(){
   	compareWithPlayerData = findComparePlayer(compareWithPlayerName)
 
   	// add the image of this player to be compared with to the page
-  	var svg = d3.selectAll("svg")
+  	var svg = d3.select(".text").selectAll("svg")
   				.data([0])
   				.enter().append("div").attr("id","playerimg").style("float","right").append("img")
   				.attr("class", "playerimg comparePlayerImg")
@@ -351,7 +351,7 @@ function comparePlayers(){
   				.style("float", "right")
 
   	// add the name of the player
-  	svg = d3.selectAll("svg")
+  	svg = d3.select(".text").selectAll("svg")
   	   .data([0])
   	   .enter().append("div")
   	   .attr("class", "comparePlayerInfo")
@@ -384,14 +384,14 @@ function comparePlayers(){
         break;
     }
 
-   svg = d3.selectAll("svg")
+   svg = d3.select(".text").selectAll("svg")
     .append("br")
 
-   svg = d3.selectAll("svg")
+   svg = d3.select(".text").selectAll("svg")
     .append("br")
 
 
-   svg = d3.selectAll("svg")
+   svg = d3.select(".text").selectAll("svg")
            .data([0])
            .enter().append("div").attr("id", "teamimg").append("img")
            .attr("class", "teamimg comparePlayerTeamImg")
@@ -597,7 +597,9 @@ function clearPlayerVis(){
 
   // hide the shot toggle
   var toggle = d3.select("#shotToggleDiv")
-                 .style("visibility", "hidden");
+                 .style("visibility", "hidden")
+                 .style("width", "0px")
+                 .style("height", "0px");
 
 	d3.selectAll(".averageBars").remove();
  	d3.selectAll(".comparePlayerInfo").remove();
