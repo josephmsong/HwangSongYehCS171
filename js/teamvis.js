@@ -58,7 +58,8 @@ function brush(team){
           .y1(function(d) {return y5(d.rpg); });
 
     // svg that contains all path elements
-    var svg = d3.select("#brushDiv").append("svg")
+    var svg = d3.select("#compareBarsDiv").append("svg")
+        .attr("float", "left")
         .attr("class", "brush")
         .attr("width", width + margin.left + margin.right)
         .attr("height", 500 + margin.top + margin.bottom);
@@ -325,8 +326,9 @@ function brush(team){
                 .tickFormat(d3.format(".2s"));
 
             // create svg
-            svg = d3.select("#stacked").append("svg")
+            svg = d3.select("#compareBarsDiv").append("svg")
             .attr("class", "rawr")
+            .style("float", "left")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
                 .append("g")
@@ -384,7 +386,8 @@ function brush(team){
 
 
           function addLegend(array){
-            var legsvg = d3.select("#stacked").append("svg")
+            var legsvg = d3.select("#compareBarsDiv").append("svg")
+              .style("float", "left")
               .attr("width", 100 + 50+ margin.right)
               .attr("height", height + margin.top + margin.bottom)
             .append("g")

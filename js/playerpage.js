@@ -22,8 +22,9 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
 
 function maketablechart (data){
+  var column= [19,11,13,15,0,16,3,9,7,10,18];
   console.log(Object.keys(data.seasons[0]));
-	var columns = Object.keys(data.seasons[0]);
+	var columns = ["year", "gamesplayed", "ppg", "rpg", "apg", "spg", "bpg", "fgperc", "fg3perc", "ftperc", "turnovers"];
 
 	var table = d3.select("#tableDiv").append("table").attr("class","table");
 	var thead = table.append("thead").attr("class", "thead");
@@ -43,8 +44,8 @@ function maketablechart (data){
 
 	var cells = rows.selectAll("td")
 	              .data(function(row){
-	                return d3.range(Object.keys(row).length).map(function(column,i){
-	                  return row[Object.keys(row)[i]]
+	                return column.map(function(column,i){
+	                  return row[columns[i]];
 	                });
 	              })
 	              .enter()
@@ -85,10 +86,6 @@ function showPlayerPage(playerID){
     // addTeamImage looks up the image for this player's team and puts it on the page
     addTeamImage(indPlayerData);
 
-    // addPlayerName adds the player's name and position to the page
-    addPlayerName(indPlayerData);
-
-
     // add the actual visualizations to the page
     initAverageBars(averageDisplayData, false);
     maketablechart(indPlayerData);
@@ -115,12 +112,6 @@ function showPlayerPage(playerID){
         }
       }
       return avgData;
-    }
-
-    function addPlayerName(player){
-      var info = player.name + ", " + player.position;
-        d3.select("#playerName")
-          .html([info])
     }
 
     function addTeamImage(playerData){
