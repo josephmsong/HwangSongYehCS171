@@ -85,7 +85,7 @@ function showPlayerPage(playerID){
 
     // addTeamImage looks up the image for this player's team and puts it on the page
     addTeamImage(indPlayerData);
-
+    addPlayerName(indPlayerData); 
     // add the actual visualizations to the page
     initAverageBars(averageDisplayData, false);
     maketablechart(indPlayerData);
@@ -217,7 +217,7 @@ function makeShotChart(playerName){
                  .enter()
 
   var courtImage = court.append("img")
-                        .attr("src", "nbahalfcourt.jpg")
+                        .attr("src", "images/nbahalfcourt.jpg")
                         .style("height","472px")
                         .style("width","500px")
                         .style("position","absolute")
@@ -349,8 +349,8 @@ function comparePlayers(){
   	   .attr("class", "comparePlayerInfo")
   	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
   	   .style("float", "right")
-       .style("margin-right", "7%")
-
+       .style("margin-top", "-65px")
+      .style("margin-right", "60px")
     // add the image of the player
     // teamAbbrev will be used to determine the link
     var teamAbbrev;
@@ -604,6 +604,11 @@ function clearPlayerVis(){
   d3.selectAll(".comparePlayerImg").remove();
 }
 
+ function addPlayerName(player){
+      var info = player.name + ", " + player.position;
+        d3.select("#playerName")
+          .html([info])
+  }
 // searches through the JSON to find the player's data
 function findComparePlayer(playerName){
 
