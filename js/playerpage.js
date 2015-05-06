@@ -6,7 +6,6 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
   d3.select("#playerNameDiv")
     .attr("class", "playerNameDisplay")
-    .html(function(d, i){return "Player: " + playerName;}) 
 
   for(var i = 0; i < teamLength; i++){
 
@@ -22,17 +21,17 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
 
 function maketablechart (data){
-  var column= [19,11,13,15,0,16,3,9,7,10,18];
+  var column= [19,11,12,13,14,15,1,0,17,16,2,3,4,8,9,5,6,7,10,18];
   console.log(Object.keys(data.seasons[0]));
-	var columns = ["year", "gamesplayed", "ppg", "rpg", "apg", "spg", "bpg", "fgperc", "fg3perc", "ftperc", "turnovers"];
-
+	var columns = ["year", "gamesplayed", "minutes", "ppg", "reb", "rpg", "assists", "apg", "steals", "spg", "blocks", "bpg","fg","fga", "fgperc","fg3", "fg3a", "fg3perc", "ftperc", "turnovers"];
+  var columnnames = ["SEASON","GP", "MIN", "PPG","REB","RPG","AST","APG","STL","SPG","BLK", "BPG","FG", "FGA", "FG%","3FG", "3FGA", "3FG%","FT%","TO"]
 	var table = d3.select("#tableDiv").append("table").attr("class","table");
 	var thead = table.append("thead").attr("class", "thead");
 	var tbody = table.append("tbody");
 	table.append("caption").html("NBA Individual Stats");
 
 	thead.append("tr").selectAll("th")
-	          .data(columns)
+	          .data(columnnames)
 	          .enter()
 	          .append("th")
 	          .text(function(d){return d;})
@@ -85,7 +84,11 @@ function showPlayerPage(playerID){
 
     // addTeamImage looks up the image for this player's team and puts it on the page
     addTeamImage(indPlayerData);
-    addPlayerName(indPlayerData); 
+
+
+    // addPlayerName adds the player's name and position to the page
+    addPlayerName(indPlayerData);
+
     // add the actual visualizations to the page
     initAverageBars(averageDisplayData, false);
     maketablechart(indPlayerData);
@@ -112,6 +115,12 @@ function showPlayerPage(playerID){
         }
       }
       return avgData;
+    }
+
+    function addPlayerName(player){
+      var info = player.name + ", " + player.position;
+        d3.select("#playerName")
+          .html([info])
     }
 
     function addTeamImage(playerData){
@@ -335,22 +344,24 @@ function comparePlayers(){
   	compareWithPlayerData = findComparePlayer(compareWithPlayerName)
 
   	// add the image of this player to be compared with to the page
-  	var svg = d3.selectAll("svg")
+  	var svg = d3.select(".text").selectAll("svg")
   				.data([0])
   				.enter().append("div").attr("id","playerimg").style("float","right").append("img")
   				.attr("class", "playerimg comparePlayerImg")
   				.attr("src", compareWithPlayerData["photo"])
   				.style("float", "right")
+          .style("margin-top", "-257px")
 
   	// add the name of the player
-  	svg = d3.selectAll("svg")
+  	svg = d3.select(".text").selectAll("svg")
   	   .data([0])
   	   .enter().append("div")
   	   .attr("class", "comparePlayerInfo")
   	   .html([compareWithPlayerData["name"] + ", " + compareWithPlayerData["position"]])
   	   .style("float", "right")
-       .style("margin-top", "-65px")
-      .style("margin-right", "60px")
+       .style("margin-top", "-245px")
+       .style("margin-right", "230px")
+
     // add the image of the player
     // teamAbbrev will be used to determine the link
     var teamAbbrev;
@@ -376,19 +387,18 @@ function comparePlayers(){
         break;
     }
 
-   svg = d3.selectAll("svg")
-    .append("br")
-
-   svg = d3.selectAll("svg")
+   svg = d3.select(".text").selectAll("svg")
     .append("br")
 
 
-   svg = d3.selectAll("svg")
+   svg = d3.select(".text").selectAll("svg")
            .data([0])
            .enter().append("div").attr("id", "teamimg").append("img")
            .attr("class", "teamimg comparePlayerTeamImg")
            .attr("src", "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg")
            .style("float", "right")   
+           .style("margin-top", "-210px")
+           .style("margin-right", "215px")
             
 
   	// wrangle the data for comparison!
@@ -453,7 +463,12 @@ function initAverageBars(data, compare){
   var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
 
   var that = this;
-  var avgDiv = d3.select("#averageBarDiv")
+  if (!compare) {
+    var avgDiv = d3.select("#averageBarDiv")
+  }
+  else {
+    var avgDiv = d3.select("#compareBarDiv")
+  }
   this.svg = avgDiv
     .append("svg")
     .attr("width", this.width + this.margin.left + this.margin.right)
@@ -589,7 +604,7 @@ function clearPlayerVis(){
 
   // hide the shot toggle
   var toggle = d3.select("#shotToggleDiv")
-                 .style("visibility", "hidden");
+                 .style("visibility", "hidden")
 
 	d3.selectAll(".averageBars").remove();
  	d3.selectAll(".comparePlayerInfo").remove();

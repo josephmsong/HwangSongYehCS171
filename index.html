@@ -1,333 +1,124 @@
-<!DOCTYPE html> 
+<!DOCTYPE HTML>
+
 <html>
-<head>
-  <style>
-  </style>
-  <title>Ball Is Life</title>
+  <head>
+    <title> </title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <!--[if lte IE 8]><script src="css/ie/html5shiv.js"></script><![endif]-->
+    <script src="js2/jquery.min.js"></script>
+    <script src="js2/jquery.dropotron.min.js"></script>
+    <script src="js2/jquery.scrollgress.min.js"></script>
+    <script src="js2/jquery.scrolly.min.js"></script>
+    <script src="js2/jquery.slidertron.min.js"></script>
+    <script src="js2/skel.min.js"></script>
+    <script src="js2/skel-layers.min.js"></script>
+    <script src="js2/init.js"></script>
+    <noscript>
+      <link rel="stylesheet" href="css/skel.css" />
+      <link rel="stylesheet" href="css/style.css" />
+      <link rel="stylesheet" href="css/style-xlarge.css" />
+    </noscript>
+    <!--[if lte IE 9]><link rel="stylesheet" href="css/ie/v9.css" /><![endif]-->
+    <!--[if lte IE 8]><link rel="stylesheet" href="css/ie/v8.css" /><![endif]-->
+  </head>
+  <body class="landing">
 
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="libs/d3/d3.min.js" charset="utf-8"></script>
-  <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
-  <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
-  <script src="http://d3js.org/queue.v1.min.js"></script>
-  <script src="http://d3js.org/d3.v3.min.js"></script>
-  <script src="js/playerpage.js"></script>
-  <script src="js/teamvis.js"></script>
-  <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
-  <link rel="stylesheet" href="main.css">
-  <style>
-    @viewport {
-      width: device-width;
-      min-zoom: 0.25;
-      max-zoom: 5;
-      orientation: landscape;
-    }
-  </style>
-</head>
-<body>
-  <div class = "container">
-    <div class="outer">
-      <div class="inner">
-        <div id = "teamlist"></div>
-        <ul id = "playerlist"></ul>
-        <br>
-        <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
-        <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
-        <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
-        <br>
+    <!-- Header -->
+      <header id="header" class="alt skel-layers-fixed">
+        <h1><a href="home.html">Ball is Life <span></span></a></h1>
+        <nav id="nav">
+          <ul>
+            <li><a href="home.html">Home</a></li>
+            </li>
+          </ul>
+        </nav>
+      </header>
 
-        <div id = "teamNameDiv"> </div>
-        <br>
-        <div id = "playerNameDiv"></div>
-        <br> 
-        <div id = "compareBarsDiv"></div>
-        <br> 
-
-        <div id="container">
-        <div class= "text">
-        <div id="playerimg" style="float:left;margin-right:7%"></div>
-        <div id="playerName" style ="float:left"></div>
-        <br/><br/>
-        <div id="teamimg"></div>
-         <div id ="averageBarDiv" style="float:left; margin-left:5px"></div>
-        <div id="shotChartDiv" style="float:right; margin-left:1%;; margin-top:-40px"></div>
-       <div id="shotToggleDiv" style="visibility:hidden; float:right; margin-top:-40px">
-          <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
-          <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
+    <!-- Banner -->
+      <section id="banner">
+        <div class="inner">
+          <h2>NBA Visualization</h2>
+          <p>Click to Explore NBA Data</p>
+          <ul class="actions">
+            <li><a href="#one" class="button big scrolly"> Learn the Details</a></li>
+          </ul>
         </div>
-         <div id="brushDiv" style="float:left"></div>
-         <div id="stacked" style="float:left"></div>
-          <div  class = "col-md-9" id = "tableDiv" style="margin-top:2%"> </div>
-      </div>          
-    </div>
-  </div>
-      <script>
-        // array that stores team names
-        var teamNamesList = ["Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"];
-        // teamPlayersList will contain the list of players for the team selected from the first navbar
-        var teamPlayersList = Array.apply(null, new Array(30)).map(Number.prototype.valueOf,0);;
-        // playerData contains the data that'll be loaded from the JSON
-        var playerData;
-        // teamLookup is an object used to wrangle together the players from a selected team
-        var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
-        var playerNamesList = [];
-        var shotChartData = [];
-        var svg;
+      </section>
 
-        // function to create the team navigation bar
-        function loadTeamNavBar(_data){
-          // playerData = _data;
-          teamList = d3.select("#teamlist");
-          var teamLinks = teamList.selectAll("img")
-                                  .data(teamNamesList)
-                                  .enter().append("img")
-                                  .attr("class", "teamListImage")
-                                  .attr("src", function(d, i){
-                                    // teamAbbrev will be used to determine the link
-                                    var teamAbbrev;
-                                    // make adjustments for exceptions
-                                    switch(i){
-                                      case 9: 
-                                        teamAbbrev = "GSW";
-                                        break;
-                                      case 18:
-                                        teamAbbrev = "NOP";
-                                        break;
-                                      case 19:
-                                        teamAbbrev = "NYK";
-                                        break;
-                                      case 23:
-                                        teamAbbrev = "PHX";
-                                        break;
-                                      case 26: 
-                                        teamAbbrev = "SAS";
-                                        break;
-                                      default:
-                                        teamAbbrev = reverseLookup(i);
-                                        break;
-                                    }
-                                    return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
-                                  })
-                                  .attr("id", function(d, i){return reverseLookup[i];})
-                                  .attr("onclick", function(d, i){
+    <!-- One -->
+      <section id="one" class="wrapper style1">
+        <div class="container">
+          <header class="major">
+            <h2>Goal</h2>
+            <p>Through this visualization we aim to tell a story using NBA basketball data. </p>
+          </header>
+          <div class="slider">
+            <span class="nav-previous"></span>
+            <div class="viewer">
+              <div class="reel">
+                <div class="slide">
+                  <img src="images/image.png" alt="" />
+                </div>
+                <div class="slide">
+                  <img src="images/Picture1.png" alt="" />
+                </div>
+                 <div class="slide">
+                  <img src="images/Picture2.png" alt="" />
+                </div>
+            </div>
+            <span class="nav-next"></span>
+          </div>
+        </div>
+      </section>
+      
+    <!-- Two -->
+      <section id="two" class="wrapper style2">
+        <div class="container">
+          <div class="row uniform">
+            <div class="4u 6u(2) 12u$(3)">
+              <section class="feature fa-briefcase">
+                <h3>Team Overview</h3>
+                <p>Our Visualization has a team overview function that shows how a team has progressed over the years. It also gives us a stacked barchart with each individual team member's contribution to the team.</p>
+              </section>
+            </div>
+            <div class="4u 6u$(2) 12u$(3)">
+              <section class="feature fa-code">
+                <h3>Player to player comparison</h3>
+                <p>With our new player to player comparison, we can see which player has higher stats. </p>
+              </section>
+            </div>
+            <div class="4u$ 6u(2) 12u$(3)">
+              <section class="feature fa-save">
+                <h3>Player to Self comparison</h3>
+                <p>When you select a player, you can see how they have progress this year compared to their average. We also have a brand new feature that allows us to see a shot chart.</p>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+    <!-- CTA -->
+      <section id="cta" class="wrapper style3">
+        <h2>Go see the visualization</h2>
+        <ul class="actions">
+          <li><a href="home.html" class="button big">Visualize Now</a></li>
+        </ul>
+      </section>
+      
+    <!-- Footer -->
+      <footer id="footer">
+        <ul class="menu">
+          <li><a href="#">FAQ</a></li>
+          <li><a href="#">Terms of Use</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+        <span class="copyright">
+          &copy; Copyright. All rights reserved. Design by <a href="http://www.html5webtemplates.co.uk">Responsive Web Templates</a>
+        </span>
+      </footer>
 
-                                    // return "showTeamName("+i+"); showPlayers("+i+")";
-
-                                  })
-                                  .on("click", function(d, i){
-                                     var teamAbbrev;
-                                    // make adjustments for exceptions
-                                    switch(i){
-                                      case 9: 
-                                        teamAbbrev = "GSW";
-                                        break;
-                                      case 18:
-                                        teamAbbrev = "NOP";
-                                        break;
-                                      case 19:
-                                        teamAbbrev = "NYK";
-                                        break;
-                                      case 23:
-                                        teamAbbrev = "PHO";
-                                        break;
-                                      case 26: 
-                                        teamAbbrev = "SAS";
-                                        break;
-                                      default:
-                                        teamAbbrev = reverseLookup(i);
-                                        break;
-                                      }
-                                      clearPlayerVis();
-                                       d3.selectAll(".averageBars").remove();
-                                       d3.select("#playerName").html([""]);
-                                       d3.selectAll("svg").remove();
-                                        d3.selectAll(".compareBarsDiv").remove();
-                                        d3.select(".teamimg").remove();
-                                        d3.select(".playerimg").remove();
-                                        d3.select(".table").remove();
-                                        d3.selectAll(".brush").remove();
-                                        d3.selectAll(".shotChart").remove();
-                                        d3.selectAll(".shotContainer").remove();
-                                        var toggle = d3.select("#shotToggleDiv")
-                                                       .style("visibility", "hidden");
-
-                                        d3.select("#comparePlayerDropDown")
-                                          .style("visibility", "hidden")
-
-                                        d3.select("#submitCompare")
-                                          .style("visibility", "hidden")  
-
-                                        stacked(reverseLookup(i), playerData);
-                                        brush(teamAbbrev);
-
-                                        d3.selectAll(".teamListImage").attr("border", "none")
-                                        d3.select(this)
-                                          .attr("border", "3px solid black");
-                                          
-                                        showTeamName(i); 
-                                        showPlayers(i);
-                                          // maketablechart(ID);
-                                          // window.location.href = "table.html?id=" + ID;
-                                  });
-        }
-
-
-        
-
-        // showPlayers takes in the index of the team that was clicked and shows the players of that team
-        function showPlayers(teamIndex){
-          // remove whatever list there was previously
-          d3.selectAll(".playerList").remove();
-
-          // get a list of the players on that team
-          teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
-
-          playerList = d3.select("#playerlist");
-          var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
-                                      .data(teamPlayersList[teamIndex])
-                                      .enter().append("img")
-                                      .attr("class", "playerList")
-
-                                      .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
-                                      .attr("title", function(d,i){return teamPlayersList[teamIndex][i].name;})
-                                      .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, i, teamPlayersList[teamIndex].length);})
-                                      .on("mouseout", function(d, i){
-                                        d3.selectAll(".compareBarsDiv").remove();
-                                        d3.select("#playerNameDiv").html([""]);
-                                        for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
-                                          color = d3.scale.category20c()
-                                        
-                                            for(var j=0; j<teamPlayersList[teamIndex].length+1; j++)
-                                            {
-                                            var idName = "#stackedRect"+j
-                                             d3.selectAll(idName).style("fill", function(d){return color(j)})
-                                          }
-                                        }
-                                      })
-                                      .on("click", function(d, i){
-                                          var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
-                                          d3.selectAll(".averageBars").remove();
-                                          d3.selectAll("svg").remove();
-                                          d3.selectAll(".compareBarsDiv").remove();
-                                          d3.select("#playerNameDiv").html([""]);
-                                          showPlayerPage(ID);
-                                        });
-        }
-        // aggregatePlayers is used to get the list of players for a selected team
-        function aggregatePlayers(teamIndex){
-
-          // // first check to see if we've already created the list for this team
-          // if(isEmpty(teamPlayersList[teamIndex])){
-          //   return teamPlayersList[teamIndex];
-          // }
-          // // if we haven't already clicked on this team, round up the players
-          // else{
-            return playerData.filter(function(d, i, array){
-
-              return teamLookup[d.team] == teamIndex && d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
-            })
-          // }
-        }
-        // showTeamName appends text to the page to show which team is currently selected
-        function showTeamName(teamIndex){
-          var teamName = d3.select("#teamNameDiv")
-                           .attr("class", "teamNameDisplay")
-                           .html(function(d, i){return "Selected team: " + teamNamesList[teamIndex];})
-        }
-
-        // wrangle the data for a specific team to create the bar chart
-        function wrangleTeamData(teamName){
-          // console.log(teamName);
-          var teamData = [0,0,0,0,0,0,0,0];
-          var count = 0;
-          // avgIndex is the list of indices that we want
-          var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
-          playerData.map(function(d, i, array){
-            count = 0; 
-            // if this is a player on the team that we want
-            if(d.team == teamName){
-              var seasonData = d.seasons
-              var currentSeasonIndex = seasonData.length -2;
-              for(var field in seasonData[currentSeasonIndex]){
-                if(seasonData[currentSeasonIndex].hasOwnProperty(field)){
-                  // if this field is of interest to us
-                  if(avgIndex.indexOf(field) > -1){
-                    // store the value
-                    teamData[count] += seasonData[currentSeasonIndex][field];
-                    count++;
-                  }
-                }
-              }
-            }
-          })
-          return teamData;
-        }
-          
-        // initVis loads the data
-        function initVis(){
-          // initialize the teamPlayersList
-          teamPlayersList = get2DArray(30);  
-          d3.json('data/nba.json', function(error, data){
-            playerData = data.filter(function(d, i, array){
-
-              return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
-            });
-
-            for(var i in playerData){
-
-                playerNamesList.push(playerData[i].name);  
-            };
-          })
-
-          d3.json('data/shotchart.json', function(error, data){
-            
-            shotChartData = data.filter(function(d, i, array){
-              return playerNamesList.indexOf(d.name) > -1;
-            });
-            
-          })
-
-          loadTeamNavBar();
-
-        }
-        /* 
-        * HELPER FUNCTIONS BELOW
-        */
-        // function to create an empty 2D-array. We'll use this to setup memoization 
-        //for team players so we don't need to iterate too much over the large JSON file that we have
-        // source: http://stackoverflow.com/questions/6495187/best-way-to-generate-empty-2d-array
-        function get2DArray(size) {
-          size = size > 0 ? size : 0;
-          var arr = [];
-          while(size--) {
-              arr.push([]);
-          }
-          return arr;
-        }
-        // isEmpty checks to see if an array is empty
-        // source: http://stackoverflow.com/questions/11743392/check-if-array-is-empty-or-exists
-        function isEmpty(array){
-          return typeof array != "undefined"
-            && array != null
-            && array.length != null
-            && array.length > 0
-        }
-        // used to generate team image links
-        function reverseLookup(value){
-          for (iter in teamLookup){
-            if (teamLookup.hasOwnProperty(iter)){
-              if(teamLookup[iter] == value)
-                return iter;
-
-            }
-          }
-        }
-
-        // start the vis!
-        initVis();
-      </script> 
-      </body>
-
-      </html>
+  </body>
+</html>

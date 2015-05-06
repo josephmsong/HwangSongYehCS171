@@ -1,4 +1,15 @@
 
+<<<<<<< HEAD
+=======
+  body, input, select, textarea {
+/*    color: #646464;
+    font-family: "Lato", Helvetica, sans-serif;
+    font-size: 15pt;
+    font-weight: 300;
+    line-height: 1.75em;*/
+  }
+
+>>>>>>> 258884bd23be0d976416e57b2f6bca917de119fe
     ul {
       list-style-type: none;
       margin: 0;
@@ -38,6 +49,7 @@
       background-position: 50%;
       border-radius: 50%;
     }
+
     div#teamlist {
       background-color: #0099FF;
       /* Firefox */
@@ -68,6 +80,11 @@
       box-pack:center;
       box-align:center;
     }
+
+    .teamListImage {
+       display: block;
+    }
+
      tr:nth-child(even) {
       background-color: lightgray;
     }
@@ -200,6 +217,10 @@ svg {
     left: 0;
     right: 0;
     bottom: 0;
+}
+
+.legend {
+    margin-top:100px;
 }
 }
 
