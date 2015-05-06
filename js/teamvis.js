@@ -78,15 +78,15 @@ function brush(team){
     // points per game, free throw percentage, rebounds per game
     var ppg = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 20+ "," + 100 + ")");
+        .attr("transform", "translate(" + 20+ "," + 110 + ")");
 
     var fg3perc = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 20+ "," + 200 + ")");
+        .attr("transform", "translate(" + 20+ "," + 220 + ")");
 
     var rpg = svg.append("g")
         .attr("class", "alt")
-        .attr("transform", "translate(" + 20 + "," + 300 + ")");
+        .attr("transform", "translate(" + 20 + "," + 330 + ")");
 
     //load data
     d3.json("data/nbateams.json", function(error, data) {
@@ -121,7 +121,7 @@ function brush(team){
           .attr("class", "y axis")
           .call(yAxis5)
           .append("text")
-          .attr("x", 90)
+          .attr("x", 100)
           .attr("y", -5)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
@@ -141,7 +141,7 @@ function brush(team){
           .attr("class", "y axis")
           .call(yAxis)
           .append("text")
-          .attr("x", 70)
+          .attr("x", 75)
           .attr("y", -5)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
@@ -162,7 +162,7 @@ function brush(team){
           .attr("class", "y axis")
           .call(yAxis4)
           .append("text")
-          .attr("x", 80)
+          .attr("x", 85)
           .attr("y", -4)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
