@@ -2,6 +2,13 @@
 <html>
 <head>
   <style>
+  .start {
+    font-size:400%;
+    margin-top:20%;
+    margin-left:26%;
+    font-family: "Helvetica", "Arial";
+    color: #696969;
+  }
   </style>
   <title>Ball Is Life</title>
 
@@ -33,6 +40,7 @@
         <div id = "teamlist"></div>
         <ul id = "playerlist"></ul>
         <br>
+        <div class="start">Select a team to get started.</div>
         <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
         <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
         <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
@@ -117,6 +125,7 @@
 
                                   })
                                   .on("click", function(d, i){
+                                     d3.select(".start").remove()
                                      var teamAbbrev;
                                     // make adjustments for exceptions
                                     switch(i){

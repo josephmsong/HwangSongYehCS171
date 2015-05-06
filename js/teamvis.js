@@ -6,7 +6,7 @@ function brush(team){
     //constants
    var margin = {top: 10, right: 20, bottom: 10, left: 0},
     margin2 = {top: 200, right: 20, bottom: 20, left: 0},
-    width = 800, 
+    width = 750, 
     height = 80,
     height2 = 80;
 
