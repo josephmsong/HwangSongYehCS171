@@ -2,9 +2,15 @@
 <html>
 <head>
   <style>
+  .start {
+  font-size:400%;
+  margin-top:20%;
+  margin-left:27%;
+  font-family: "Helvetica", "Arial"
+}
   </style>
   <title>Ball Is Life</title>
-
+  
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -44,7 +50,7 @@
         <br> 
         <div id = "compareBarsDiv"></div>
         <br> 
-
+        
         <div id="container">
         <div class= "text">
         <div id="playerimg" style="float:left;margin-right:5%"></div>
@@ -168,8 +174,7 @@
                                         d3.selectAll(".teamListImage").attr("border", "none")
                                         d3.select(this)
                                           .attr("border", "3px solid black");
-                                          
-                                        showTeamName(i); 
+                             
                                         showPlayers(i);
                                           // maketablechart(ID);
                                           // window.location.href = "table.html?id=" + ID;
