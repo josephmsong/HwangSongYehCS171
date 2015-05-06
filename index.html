@@ -1,6 +1,8 @@
 <!DOCTYPE html> 
 <html>
 <head>
+  <style>
+  </style>
   <title>Ball Is Life</title>
 
   <meta charset="UTF-8" />
@@ -176,14 +178,6 @@
 
         // showPlayers takes in the index of the team that was clicked and shows the players of that team
         function showPlayers(teamIndex){
-          var tip = d3.tip()
-                        .attr('class', 'd3-tip')
-                        .offset([-40, 0])
-                        .html(function(d,i) {
-                            return "hi";
-                        })
-
-          svg.call(tip)
           // remove whatever list there was previously
           d3.selectAll(".playerList").remove();
 
@@ -195,8 +189,10 @@
                                       .data(teamPlayersList[teamIndex])
                                       .enter().append("img")
                                       .attr("class", "playerList")
+
                                       .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
-                                      .on("mouseover", tip.show)
+                                      .attr("title", function(d,i){return teamPlayersList[teamIndex][i].name;})
+                                      .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, i, teamPlayersList[teamIndex].length);})
                                       .on("mouseout", function(d, i){
                                         d3.selectAll(".compareBarsDiv").remove();
                                         d3.select("#playerNameDiv").html([""]);
@@ -209,7 +205,6 @@
                                              d3.selectAll(idName).style("fill", function(d){return color(j)})
                                           }
                                         }
-
                                       })
                                       .on("click", function(d, i){
                                           var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
