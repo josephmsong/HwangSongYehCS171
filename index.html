@@ -3,6 +3,9 @@
 <head>
   <title>Ball Is Life</title>
 
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="libs/d3/d3.min.js" charset="utf-8"></script>
   <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
   <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
@@ -12,496 +15,324 @@
   <script src="js/teamvis.js"></script>
   <script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
   <link rel="stylesheet" href="main.css">
+  <style>
+    @viewport {
+      width: device-width;
+      min-zoom: 0.25;
+      max-zoom: 5;
+      orientation: landscape;
+    }
+  </style>
 </head>
 <body>
-  <div id = "teamlist"></div>
-  <ul id = "playerlist"></ul>
-  <br>
-  <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
-  <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
-  <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
-  <br>
+  <div class = "container">
+    <div class="outer">
+      <div class="inner">
+        <div id = "teamlist"></div>
+        <ul id = "playerlist"></ul>
+        <br>
+        <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
+        <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
+        <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
+        <br>
 
-  <div id = "teamNameDiv"> </div>
-  <br>
-  <div id = "playerNameDiv"></div>
-  <br> 
-  <div id = "compareBarsDiv"></div>
-  <br> 
+        <div id = "teamNameDiv"> </div>
+        <br>
+        <div id = "playerNameDiv"></div>
+        <br> 
+        <div id = "compareBarsDiv"></div>
+        <br> 
 
-  <div id="container">
-  <div class= "text">
-  <div id="playerimg" style="float:left;margin-right:7%"></div>
-  <div id="playerName" style ="float:left"></div>
-  <br/><br/>
-  <div id="teamimg"></div>
-  <div id ="averageBarDiv" style="float:left"></div>
-  <div id="shotChartDiv" style="float:right; margin-left:2%; margin-right:4%"></div>
-  <div id="shotToggleDiv" style="visibility:hidden; float:right">
-    <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
-    <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
+        <div id="container">
+        <div class= "text">
+        <div id="playerimg" style="float:left;margin-right:7%"></div>
+        <div id="playerName" style ="float:left"></div>
+        <br/><br/>
+        <div id="teamimg"></div>
+        <div id ="averageBarDiv" style="float:left"></div>
+        <div id="shotChartDiv" style="float:right; margin-left:2%; margin-right:4%"></div>
+        <div id="shotToggleDiv" style="visibility:hidden; float:right">
+          <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
+          <input type = "checkbox" name="shotToggle" id="missedShots" checked>Missed shots<br>
+        </div>
+         <div id="brushDiv" style="float:left"></div>
+         <div id="stacked" style="float:left"></div>
+         <div  class = "col-md-9" id = "tableDiv" style="margin-top:15%"> </div>
+      </div>          
+    </div>
   </div>
-   <div id="brushDiv" style="float:left"></div>
-   <div id="stacked" style="float:right"></div>
-   <div  class = "col-md-9" id = "tableDiv" style="margin-top:15%"> </div>
-            
+      <script>
+        // array that stores team names
+        var teamNamesList = ["Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"];
+        // teamPlayersList will contain the list of players for the team selected from the first navbar
+        var teamPlayersList = Array.apply(null, new Array(30)).map(Number.prototype.valueOf,0);;
+        // playerData contains the data that'll be loaded from the JSON
+        var playerData;
+        // teamLookup is an object used to wrangle together the players from a selected team
+        var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
+        var playerNamesList = [];
+        var shotChartData = [];
+        var svg;
 
-
-<script>
-  // array that stores team names
-  var teamNamesList = ["Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks", "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "Los Angeles Clippers", "Los Angeles Lakers", "Memphis Grizzlies", "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards"];
-  // teamPlayersList will contain the list of players for the team selected from the first navbar
-  var teamPlayersList = Array.apply(null, new Array(30)).map(Number.prototype.valueOf,0);;
-  // playerData contains the data that'll be loaded from the JSON
-  var playerData;
-  // teamLookup is an object used to wrangle together the players from a selected team
-  var teamLookup = {"ATL": 0, "BOS": 1, "BKN": 2, "CHA": 3, "CHI": 4, "CLE": 5, "DAL": 6, "DEN": 7, "DET": 8, "GS": 9, "HOU": 10, "IND": 11, "LAC": 12, "LAL": 13, "MEM": 14, "MIA": 15, "MIL": 16, "MIN": 17, "NO": 18, "NY": 19, "OKC": 20, "ORL": 21, "PHI": 22, "PHO": 23, "POR": 24, "SAC": 25, "SA": 26, "TOR": 27, "UTA": 28, "WAS": 29}
-  var playerNamesList = [];
-  var shotChartData = [];
-  var svg;
-
-  // function to create the team navigation bar
-  function loadTeamNavBar(_data){
-    // playerData = _data;
-    teamList = d3.select("#teamlist");
-    var teamLinks = teamList.selectAll("img")
-                            .data(teamNamesList)
-                            .enter().append("img")
-                            .attr("class", "teamListImage")
-                            .attr("src", function(d, i){
-                              // teamAbbrev will be used to determine the link
-                              var teamAbbrev;
-                              // make adjustments for exceptions
-                              switch(i){
-                                case 9: 
-                                  teamAbbrev = "GSW";
-                                  break;
-                                case 18:
-                                  teamAbbrev = "NOP";
-                                  break;
-                                case 19:
-                                  teamAbbrev = "NYK";
-                                  break;
-                                case 23:
-                                  teamAbbrev = "PHX";
-                                  break;
-                                case 26: 
-                                  teamAbbrev = "SAS";
-                                  break;
-                                default:
-                                  teamAbbrev = reverseLookup(i);
-                                  break;
-                              }
-                              return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
-                            })
-                            .attr("id", function(d, i){return reverseLookup[i];})
-                            .attr("onclick", function(d, i){
-
-                              // return "showTeamName("+i+"); showPlayers("+i+")";
-
-                            })
-                            .on("click", function(d, i){
-                               var teamAbbrev;
-                              // make adjustments for exceptions
-                              switch(i){
-                                case 9: 
-                                  teamAbbrev = "GSW";
-                                  break;
-                                case 18:
-                                  teamAbbrev = "NOP";
-                                  break;
-                                case 19:
-                                  teamAbbrev = "NYK";
-                                  break;
-                                case 23:
-                                  teamAbbrev = "PHO";
-                                  break;
-                                case 26: 
-                                  teamAbbrev = "SAS";
-                                  break;
-                                default:
-                                  teamAbbrev = reverseLookup(i);
-                                  break;
-                                }
-                                clearPlayerVis();
-                                 d3.selectAll(".averageBars").remove();
-                                 d3.select("#playerName").html([""]);
-                                 d3.selectAll("svg").remove();
-                                  d3.selectAll(".compareBarsDiv").remove();
-                                  d3.select(".teamimg").remove();
-                                  d3.select(".playerimg").remove();
-                                  d3.select(".table").remove();
-                                  d3.selectAll(".brush").remove();
-                                  d3.selectAll(".shotChart").remove();
-                                  d3.selectAll(".shotContainer").remove();
-                                  var toggle = d3.select("#shotToggleDiv")
-                                                 .style("visibility", "hidden");
-
-                                  d3.select("#comparePlayerDropDown")
-                                    .style("visibility", "hidden")
-
-                                  d3.select("#submitCompare")
-                                    .style("visibility", "hidden")  
-
-                                  stacked(reverseLookup(i), playerData);
-                                  brush(teamAbbrev);
-
-                                  d3.selectAll(".teamListImage").attr("border", "none")
-                                  d3.select(this)
-                                    .attr("border", "3px solid black");
-                                    
-                                  showTeamName(i); 
-                                  showPlayers(i);
-                                    // maketablechart(ID);
-                                    // window.location.href = "table.html?id=" + ID;
-                            });
-  }
-
-
-  // function stacked(team) {
-  //   var playerDatas;
-  //   var svg;
-  //   var color;
-  //   var margin = {top: 45, right: 5, bottom: 30, left: 5},
-  //   width = 50,
-  //   legwidth = 100;
-  //   height = 400 - margin.top - margin.bottom;
-  //   // filter the data based on specific team selected 
-
-  //   var data = playerData.filter(function(d){return d.team==team});
-
-  //   //load the data
-  //   function wranglestackedData(value){
-
-  //     var indPlayerData= data.map(function(d){
-      
-  //     // format the data into an array that consolidates players stats
-  //       return {
-  //         ppg: d.seasons[d.seasons.length-2]["ppg"],
-  //         assists: d.seasons[d.seasons.length-2]["assists"],
-  //         blocks: d.seasons[d.seasons.length-2]["blocks"], 
-  //         fga: d.seasons[d.seasons.length-2]["fga"],
-  //         rpg: d.seasons[d.seasons.length-2]["rpg"],
-  //         turnovers: d.seasons[d.seasons.length-2]["turnovers"],
-  //         minutes: d.seasons[d.seasons.length-2]["minutes"],
-  //         steals: d.seasons[d.seasons.length-2]["steals"],
-  //         reb: d.seasons[d.seasons.length-2]["reb"],
-          
-  //         name:d.name
-  //         //steals: d.seasons[d.seasons.length-1]["steals"]
-  //       }
-  //     });
-
-  //     var ppg = [];
-  //     var assists = [];
-  //     var blocks = [];
-  //     var names = [];
-  //     var fga = [];
-  //     var rpg = [];
-  //     var turnovers = [];
-  //     var minutes = [];
-  //     var steals = [];
-  //     var reb = [];
-
-  //     for(var i=0; i< indPlayerData.length; i++)
-  //     {
-  //       ppg[i] = indPlayerData[i].ppg;
-  //       assists[i] = indPlayerData[i].assists;
-  //       blocks[i] = indPlayerData[i].blocks;
-  //       names[i] = indPlayerData[i].name;
-  //       fga[i] = indPlayerData[i].fga;
-  //       rpg[i] = indPlayerData[i].rpg;
-  //       turnovers[i] = indPlayerData[i].turnovers;
-  //       steals[i] = indPlayerData[i].steals;
-  //       minutes[i] = indPlayerData[i].minutes;
-  //       reb[i] = indPlayerData[i].reb;
-  //     }
-
-  //     var rawr = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
-
-  //     //var steals = [];
-  //     var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
-  //     var index = list.indexOf(value);
-
-  //     var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-  //     total[1] = rawr[index][1]
-  //     for(var j = 1; j<rawr[index].length; j++)
-  //     {
-  //       // console.log(total[j])
-  //       total[j] = rawr[index][j-1] + total[j-1]
-  //     }
-
-  //     var team= {x:value, y:rawr[index], total:total, name:names}
-
-  //     return team;
-  //   }  
-
-  //   function drawBar (array){
-  //     var x = d3.scale.ordinal()
-  //         .rangeRoundBands([0, width], .1);
-
-  //     var y = d3.scale.linear()
-  //         .range([320,0]);
-
-  //     color = d3.scale.category20c()
-
-  //     // instantiate axis
-  //     var xAxis = d3.svg.axis()
-  //         .scale(x)
-  //         .orient("bottom");
-
-  //     var yAxis = d3.svg.axis()
-  //         .scale(y)
-  //         .orient("left")
-  //         .tickFormat(d3.format(".2s"));
-
-  //     // create svg
-  //     svg = d3.select("#stacked").append("svg")
-  //     .attr("class", "rawr")
-  //         .attr("width", width + margin.left + margin.right)
-  //         .attr("height", height + margin.top + margin.bottom)
-  //         .append("g")
-  //         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-  //     var tip = d3.tip()
-  //                 .attr('class', 'd3-tip')
-  //                 .offset([-40, 0])
-  //                 .html(function(d,i) {
-  //                     return array.name[i] + ": " + d  ;
-  //                 })
-
-  //     svg.call(tip)
-
-  //     x.domain(array.x);
-  //     y.domain([0, d3.max(array.total, function(d){return d})])
-
-  //    svg.append("g")
-  //         .attr("class", "x axis")
-  //         .attr("transform", "translate(0," + height + ")")
-  //         // .call(xAxis);
-
-  //     svg.append("g")
-  //         .attr("class", "y axis")
-  //         // .call(yAxis)
-  //       .append("text")
-  //       .attr("class", function(d,i){return "bar"+i})
-  //         .attr("transform", "rotate(-90)")
-  //         .attr("y", 6)
-  //         .attr("dy", ".71em")
-  //         .style("text-anchor", "center")
-  //         .text(array.x);
-
-  //     var state = svg.selectAll(".state")
-  //         .data(array.y)
-  //       .enter().append("g")
-  //         .attr("class", "g")
-  //         // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
-
-  //    var bar=  state.selectAll("rect")
-         
-  //         .data(array.y)
-  //         .enter().append("rect")
-  //         .attr("width", 30)
-
-  //         // travis look here
-  //         .attr("id", function(d,i){return "stackedRect"+i})
-  //         .attr("y", function(d,i) { return height-y(array.total[i])})
-  //         .attr("height", function(d,i) { return y(d)})
-  //         .style("fill", function(d,i) { return color(i); })
-  //          .on('mouseover', tip.show)
-  //         .on('mouseout', tip.hide);
-
-  //   }
-
-
-  //   function addLegend(array){
-  //     var legsvg = d3.select("#stacked").append("svg")
-  //       .attr("width", 100 + 50+ margin.right)
-  //       .attr("height", 200 + margin.top + margin.bottom)
-  //       .append("g")
-  //       .attr("transform", "translate(" + 30 + "," + 0+ ")");
-
-  //     var legend = legsvg.selectAll(".legend")
-  //         .data(color.domain().slice().reverse())
-  //       .enter().append("g")
-  //         .attr("class", "legend")
-  //         .attr("transform", function(d, i) { return "translate(30," + i * 20 + ")"; });
-
-  //     legend.append("rect")
-  //         .attr("class", "rawr")
-  //         .attr("x", width - 18)
-  //         .attr("width", 18)
-  //         .attr("height", 18)
-  //         .style("fill", function(d,i) {return color(i)});
-
-  //     legend.append("text")
-  //         .attr("x", width - 24)
-  //         .attr("y", 9)
-  //         .attr("dy", ".35em")
-  //         .style("text-anchor", "end")
-  //         .text(function(d,i) { return array.name[i]; });
-      
-  //   }
-  //   drawBar(wranglestackedData("minutes"))
-  //   drawBar(wranglestackedData("ppg"))
-  //   drawBar(wranglestackedData("reb"))
-  //   drawBar(wranglestackedData("assists"))
-  //   drawBar(wranglestackedData("steals"))
-  //   drawBar(wranglestackedData("blocks"))
-  //   drawBar(wranglestackedData("turnovers"))
-  //   addLegend(wranglestackedData("ppg"));
-  // }
-
-
-  // showPlayers takes in the index of the team that was clicked and shows the players of that team
-  function showPlayers(teamIndex){
-    // remove whatever list there was previously
-    d3.selectAll(".playerList").remove();
-
-    // get a list of the players on that team
-    teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
-
-    playerList = d3.select("#playerlist");
-    var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
-                                .data(teamPlayersList[teamIndex])
-                                .enter().append("img")
-                                .attr("class", "playerList")
-                                .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
-                                .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, i, teamPlayersList[teamIndex].length);})
-                                .on("mouseout", function(d, i){
-                                  d3.selectAll(".compareBarsDiv").remove();
-                                  d3.select("#playerNameDiv").html([""]);
-                                  for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
-                                    color = d3.scale.category20c()
-                                  
-                                      for(var j=0; j<teamPlayersList[teamIndex].length+1; j++)
-                                      {
-                                      var idName = "#stackedRect"+j
-                                       d3.selectAll(idName).style("fill", function(d){return color(j)})
+        // function to create the team navigation bar
+        function loadTeamNavBar(_data){
+          // playerData = _data;
+          teamList = d3.select("#teamlist");
+          var teamLinks = teamList.selectAll("img")
+                                  .data(teamNamesList)
+                                  .enter().append("img")
+                                  .attr("class", "teamListImage")
+                                  .attr("src", function(d, i){
+                                    // teamAbbrev will be used to determine the link
+                                    var teamAbbrev;
+                                    // make adjustments for exceptions
+                                    switch(i){
+                                      case 9: 
+                                        teamAbbrev = "GSW";
+                                        break;
+                                      case 18:
+                                        teamAbbrev = "NOP";
+                                        break;
+                                      case 19:
+                                        teamAbbrev = "NYK";
+                                        break;
+                                      case 23:
+                                        teamAbbrev = "PHX";
+                                        break;
+                                      case 26: 
+                                        teamAbbrev = "SAS";
+                                        break;
+                                      default:
+                                        teamAbbrev = reverseLookup(i);
+                                        break;
                                     }
-                                  }
-                                })
-                                .on("click", function(d, i){
-                                    var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
-                                    d3.selectAll(".averageBars").remove();
-                                    d3.selectAll("svg").remove();
-                                    d3.selectAll(".compareBarsDiv").remove();
-                                    d3.select("#playerNameDiv").html([""]);
-                                    showPlayerPage(ID);
+                                    return "http://stats.nba.com/media/img/teams/logos/"+teamAbbrev+"_logo.svg";
+                                  })
+                                  .attr("id", function(d, i){return reverseLookup[i];})
+                                  .attr("onclick", function(d, i){
+
+                                    // return "showTeamName("+i+"); showPlayers("+i+")";
+
+                                  })
+                                  .on("click", function(d, i){
+                                     var teamAbbrev;
+                                    // make adjustments for exceptions
+                                    switch(i){
+                                      case 9: 
+                                        teamAbbrev = "GSW";
+                                        break;
+                                      case 18:
+                                        teamAbbrev = "NOP";
+                                        break;
+                                      case 19:
+                                        teamAbbrev = "NYK";
+                                        break;
+                                      case 23:
+                                        teamAbbrev = "PHO";
+                                        break;
+                                      case 26: 
+                                        teamAbbrev = "SAS";
+                                        break;
+                                      default:
+                                        teamAbbrev = reverseLookup(i);
+                                        break;
+                                      }
+                                      clearPlayerVis();
+                                       d3.selectAll(".averageBars").remove();
+                                       d3.select("#playerName").html([""]);
+                                       d3.selectAll("svg").remove();
+                                        d3.selectAll(".compareBarsDiv").remove();
+                                        d3.select(".teamimg").remove();
+                                        d3.select(".playerimg").remove();
+                                        d3.select(".table").remove();
+                                        d3.selectAll(".brush").remove();
+                                        d3.selectAll(".shotChart").remove();
+                                        d3.selectAll(".shotContainer").remove();
+                                        var toggle = d3.select("#shotToggleDiv")
+                                                       .style("visibility", "hidden");
+
+                                        d3.select("#comparePlayerDropDown")
+                                          .style("visibility", "hidden")
+
+                                        d3.select("#submitCompare")
+                                          .style("visibility", "hidden")  
+
+                                        stacked(reverseLookup(i), playerData);
+                                        brush(teamAbbrev);
+
+                                        d3.selectAll(".teamListImage").attr("border", "none")
+                                        d3.select(this)
+                                          .attr("border", "3px solid black");
+                                          
+                                        showTeamName(i); 
+                                        showPlayers(i);
+                                          // maketablechart(ID);
+                                          // window.location.href = "table.html?id=" + ID;
                                   });
-  }
-  // aggregatePlayers is used to get the list of players for a selected team
-  function aggregatePlayers(teamIndex){
+        }
 
-    // // first check to see if we've already created the list for this team
-    // if(isEmpty(teamPlayersList[teamIndex])){
-    //   return teamPlayersList[teamIndex];
-    // }
-    // // if we haven't already clicked on this team, round up the players
-    // else{
-      return playerData.filter(function(d, i, array){
 
-        return teamLookup[d.team] == teamIndex && d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
-      })
-    // }
-  }
-  // showTeamName appends text to the page to show which team is currently selected
-  function showTeamName(teamIndex){
-    var teamName = d3.select("#teamNameDiv")
-                     .attr("class", "teamNameDisplay")
-                     .html(function(d, i){return "Selected team: " + teamNamesList[teamIndex];})
-  }
+        
 
-  // wrangle the data for a specific team to create the bar chart
-  function wrangleTeamData(teamName){
-    // console.log(teamName);
-    var teamData = [0,0,0,0,0,0,0,0];
-    var count = 0;
-    // avgIndex is the list of indices that we want
-    var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
-    playerData.map(function(d, i, array){
-      count = 0; 
-      // if this is a player on the team that we want
-      if(d.team == teamName){
-        var seasonData = d.seasons
-        var currentSeasonIndex = seasonData.length -2;
-        for(var field in seasonData[currentSeasonIndex]){
-          if(seasonData[currentSeasonIndex].hasOwnProperty(field)){
-            // if this field is of interest to us
-            if(avgIndex.indexOf(field) > -1){
-              // store the value
-              teamData[count] += seasonData[currentSeasonIndex][field];
-              count++;
+        // showPlayers takes in the index of the team that was clicked and shows the players of that team
+        function showPlayers(teamIndex){
+          var tip = d3.tip()
+                        .attr('class', 'd3-tip')
+                        .offset([-40, 0])
+                        .html(function(d,i) {
+                            return "hi";
+                        })
+
+          svg.call(tip)
+          // remove whatever list there was previously
+          d3.selectAll(".playerList").remove();
+
+          // get a list of the players on that team
+          teamPlayersList[teamIndex] = aggregatePlayers(teamIndex);
+
+          playerList = d3.select("#playerlist");
+          var teamPlayers = playerList.append("div").attr("class","playerlist").selectAll("img")
+                                      .data(teamPlayersList[teamIndex])
+                                      .enter().append("img")
+                                      .attr("class", "playerList")
+                                      .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
+                                      .on("mouseover", tip.show)
+                                      .on("mouseout", function(d, i){
+                                        d3.selectAll(".compareBarsDiv").remove();
+                                        d3.select("#playerNameDiv").html([""]);
+                                        for(var i = 0; i< teamPlayersList[teamIndex].length+1; i++){
+                                          color = d3.scale.category20c()
+                                        
+                                            for(var j=0; j<teamPlayersList[teamIndex].length+1; j++)
+                                            {
+                                            var idName = "#stackedRect"+j
+                                             d3.selectAll(idName).style("fill", function(d){return color(j)})
+                                          }
+                                        }
+
+                                      })
+                                      .on("click", function(d, i){
+                                          var ID = playerNamesList.indexOf(teamPlayersList[teamIndex][i].name);
+                                          d3.selectAll(".averageBars").remove();
+                                          d3.selectAll("svg").remove();
+                                          d3.selectAll(".compareBarsDiv").remove();
+                                          d3.select("#playerNameDiv").html([""]);
+                                          showPlayerPage(ID);
+                                        });
+        }
+        // aggregatePlayers is used to get the list of players for a selected team
+        function aggregatePlayers(teamIndex){
+
+          // // first check to see if we've already created the list for this team
+          // if(isEmpty(teamPlayersList[teamIndex])){
+          //   return teamPlayersList[teamIndex];
+          // }
+          // // if we haven't already clicked on this team, round up the players
+          // else{
+            return playerData.filter(function(d, i, array){
+
+              return teamLookup[d.team] == teamIndex && d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
+            })
+          // }
+        }
+        // showTeamName appends text to the page to show which team is currently selected
+        function showTeamName(teamIndex){
+          var teamName = d3.select("#teamNameDiv")
+                           .attr("class", "teamNameDisplay")
+                           .html(function(d, i){return "Selected team: " + teamNamesList[teamIndex];})
+        }
+
+        // wrangle the data for a specific team to create the bar chart
+        function wrangleTeamData(teamName){
+          // console.log(teamName);
+          var teamData = [0,0,0,0,0,0,0,0];
+          var count = 0;
+          // avgIndex is the list of indices that we want
+          var avgIndex = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"]
+          playerData.map(function(d, i, array){
+            count = 0; 
+            // if this is a player on the team that we want
+            if(d.team == teamName){
+              var seasonData = d.seasons
+              var currentSeasonIndex = seasonData.length -2;
+              for(var field in seasonData[currentSeasonIndex]){
+                if(seasonData[currentSeasonIndex].hasOwnProperty(field)){
+                  // if this field is of interest to us
+                  if(avgIndex.indexOf(field) > -1){
+                    // store the value
+                    teamData[count] += seasonData[currentSeasonIndex][field];
+                    count++;
+                  }
+                }
+              }
+            }
+          })
+          return teamData;
+        }
+          
+        // initVis loads the data
+        function initVis(){
+          // initialize the teamPlayersList
+          teamPlayersList = get2DArray(30);  
+          d3.json('data/nba.json', function(error, data){
+            playerData = data.filter(function(d, i, array){
+
+              return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
+            });
+
+            for(var i in playerData){
+
+                playerNamesList.push(playerData[i].name);  
+            };
+          })
+
+          d3.json('data/shotchart.json', function(error, data){
+            
+            shotChartData = data.filter(function(d, i, array){
+              return playerNamesList.indexOf(d.name) > -1;
+            });
+            
+          })
+
+          loadTeamNavBar();
+
+        }
+        /* 
+        * HELPER FUNCTIONS BELOW
+        */
+        // function to create an empty 2D-array. We'll use this to setup memoization 
+        //for team players so we don't need to iterate too much over the large JSON file that we have
+        // source: http://stackoverflow.com/questions/6495187/best-way-to-generate-empty-2d-array
+        function get2DArray(size) {
+          size = size > 0 ? size : 0;
+          var arr = [];
+          while(size--) {
+              arr.push([]);
+          }
+          return arr;
+        }
+        // isEmpty checks to see if an array is empty
+        // source: http://stackoverflow.com/questions/11743392/check-if-array-is-empty-or-exists
+        function isEmpty(array){
+          return typeof array != "undefined"
+            && array != null
+            && array.length != null
+            && array.length > 0
+        }
+        // used to generate team image links
+        function reverseLookup(value){
+          for (iter in teamLookup){
+            if (teamLookup.hasOwnProperty(iter)){
+              if(teamLookup[iter] == value)
+                return iter;
+
             }
           }
         }
-      }
-    })
-    return teamData;
-  }
-    
-  // initVis loads the data
-  function initVis(){
-    // initialize the teamPlayersList
-    teamPlayersList = get2DArray(30);  
-    d3.json('data/nba.json', function(error, data){
-      playerData = data.filter(function(d, i, array){
 
-        return d.photo != "https://www.cbssports.com/images/players/unknown_player.gif" && d.photo != "https://www.cbssports.com/images/players/unknown-player-170x170.png";
-      });
+        // start the vis!
+        initVis();
+      </script> 
+      </body>
 
-      for(var i in playerData){
-
-          playerNamesList.push(playerData[i].name);  
-      };
-    })
-
-    d3.json('data/shotchart.json', function(error, data){
-      
-      shotChartData = data.filter(function(d, i, array){
-        return playerNamesList.indexOf(d.name) > -1;
-      });
-      
-    })
-
-    loadTeamNavBar();
-
-  }
-  /* 
-  * HELPER FUNCTIONS BELOW
-  */
-  // function to create an empty 2D-array. We'll use this to setup memoization 
-  //for team players so we don't need to iterate too much over the large JSON file that we have
-  // source: http://stackoverflow.com/questions/6495187/best-way-to-generate-empty-2d-array
-  function get2DArray(size) {
-    size = size > 0 ? size : 0;
-    var arr = [];
-    while(size--) {
-        arr.push([]);
-    }
-    return arr;
-  }
-  // isEmpty checks to see if an array is empty
-  // source: http://stackoverflow.com/questions/11743392/check-if-array-is-empty-or-exists
-  function isEmpty(array){
-    return typeof array != "undefined"
-      && array != null
-      && array.length != null
-      && array.length > 0
-  }
-  // used to generate team image links
-  function reverseLookup(value){
-    for (iter in teamLookup){
-      if (teamLookup.hasOwnProperty(iter)){
-        if(teamLookup[iter] == value)
-          return iter;
-      }
-    }
-  }
-
-  // start the vis!
-  initVis();
-</script> 
-</body>
-
-</html>
+      </html>
