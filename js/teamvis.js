@@ -4,9 +4,9 @@
 // brush creates three path svgs that respond to one brush. 
 function brush(team){
     //constants
-   var margin = {top: 10, right: 50, bottom: 10, left: 20},
-    margin2 = {top: 200, right: 50, bottom: 20, left: 20},
-    width = 600, 
+   var margin = {top: 10, right: 20, bottom: 10, left: 80},
+    margin2 = {top: 200, right: 20, bottom: 20, left: 80},
+    width = 500, 
     height = 80,
     height2 = 80;
 
@@ -89,7 +89,9 @@ function brush(team){
 
     //load data
     d3.json("data/nbateams.json", function(error, data) {
+      console.log(data)
       var teamdata = data.filter(function(d){return d.name == team});
+      console.log(teamdata)
       var parseDate = d3.time.format("%Y").parse;
             teamdata[0].years.forEach(function(d,i){
               if(parseDate(d.year.substring(0,4))!= null)
@@ -103,10 +105,46 @@ function brush(team){
       x2.domain(x.domain());
       y2.domain(y.domain());
 
+      //tool tip
+      var tip1 = d3.tip()
+                      .attr('class', 'd3-tip')
+                      .offset([-40, 0])
+                      .html(function(d,i) {
+                          return "Wins"  ;
+                      })
+
+          svg.call(tip1);
+      var tip2 = d3.tip()
+                      .attr('class', 'd3-tip')
+                      .offset([-40, 0])
+                      .html(function(d,i) {
+                          return "Points per game"  ;
+                      })
+
+      svg.call(tip2);
+      var tip3 = d3.tip()
+                      .attr('class', 'd3-tip')
+                      .offset([-40, 0])
+                      .html(function(d,i) {
+                          return "3 Point Percentage"  ;
+                      })
+
+      svg.call(tip3);
+      var tip4 = d3.tip()
+                      .attr('class', 'd3-tip')
+                      .offset([-40, 0])
+                      .html(function(d,i) {
+                          return "Rebounds Per Game"  ;
+                      })
+
+      svg.call(tip4);
+
       rpg.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area5")
           .attr("d", area5)
+          .on('mouseover', tip4.show)
+          .on('mouseout', tip4.hide);
 
       rpg.append("g")
           .attr("class", "x axis")
@@ -121,6 +159,8 @@ function brush(team){
           .datum(teamdata[0].years)
           .attr("class", "area3")
           .attr("d", area3)
+          .on('mouseover', tip2.show)
+          .on('mouseout', tip2.hide);
 
       ppg.append("g")
           .attr("class", "x axis")
@@ -136,6 +176,8 @@ function brush(team){
           .datum(teamdata[0].years)
           .attr("class", "area4")
           .attr("d", area4)
+          .on('mouseover', tip3.show)
+          .on('mouseout', tip3.hide);
 
       fg3perc.append("g")
           .attr("class", "x axis")
@@ -150,7 +192,9 @@ function brush(team){
       context.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area2")
-          .attr("d", area2);
+          .attr("d", area2)
+          .on('mouseover', tip1.show)
+          .on('mouseout', tip1.hide);
 
       context.append("g")
           .attr("class", "x axis")
@@ -184,210 +228,399 @@ function brush(team){
     } 
 }   
     
+    function stacked(team) {
+          var playerDatas;
+          var svg;
+          var color;
+          var margin = {top: 45, right: 5, bottom: 30, left: 5},
+          width = 50,
+          legwidth = 100;
+          height = 400 - margin.top - margin.bottom;
+          // filter the data based on specific team selected 
+
+          var data = playerData.filter(function(d){return d.team==team});
+
+          //load the data
+          function wranglestackedData(value){
+
+            var indPlayerData= data.map(function(d){
+            
+            // format the data into an array that consolidates players stats
+              return {
+                ppg: d.seasons[d.seasons.length-2]["ppg"],
+                assists: d.seasons[d.seasons.length-2]["assists"],
+                blocks: d.seasons[d.seasons.length-2]["blocks"], 
+                fga: d.seasons[d.seasons.length-2]["fga"],
+                rpg: d.seasons[d.seasons.length-2]["rpg"],
+                turnovers: d.seasons[d.seasons.length-2]["turnovers"],
+                minutes: d.seasons[d.seasons.length-2]["minutes"],
+                steals: d.seasons[d.seasons.length-2]["steals"],
+                reb: d.seasons[d.seasons.length-2]["reb"],
+                
+                name:d.name
+                //steals: d.seasons[d.seasons.length-1]["steals"]
+              }
+            });
+
+            var ppg = [];
+            var assists = [];
+            var blocks = [];
+            var names = [];
+            var fga = [];
+            var rpg = [];
+            var turnovers = [];
+            var minutes = [];
+            var steals = [];
+            var reb = [];
+
+            for(var i=0; i< indPlayerData.length; i++)
+            {
+              ppg[i] = indPlayerData[i].ppg;
+              assists[i] = indPlayerData[i].assists;
+              blocks[i] = indPlayerData[i].blocks;
+              names[i] = indPlayerData[i].name;
+              fga[i] = indPlayerData[i].fga;
+              rpg[i] = indPlayerData[i].rpg;
+              turnovers[i] = indPlayerData[i].turnovers;
+              steals[i] = indPlayerData[i].steals;
+              minutes[i] = indPlayerData[i].minutes;
+              reb[i] = indPlayerData[i].reb;
+            }
+
+            var rawr = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
+            //var steals = [];
+            var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
+            var index = list.indexOf(value);
+
+            var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+            total[1] = rawr[index][1]
+            for(var j = 1; j<rawr[index].length; j++)
+            {
+              // console.log(total[j])
+              total[j] = rawr[index][j-1] + total[j-1]
+            }
+
+            var team= {x:value, y:rawr[index], total:total, name:names}
+
+            return team;
+          }  
+
+          function drawBar (array){
+            var x = d3.scale.ordinal()
+                .rangeRoundBands([0, width], .1);
+
+            var y = d3.scale.linear()
+                .range([320,0]);
+
+            color = d3.scale.category20c()
+
+            // instantiate axis
+            var xAxis = d3.svg.axis()
+                .scale(x)
+                .orient("bottom");
+
+            var yAxis = d3.svg.axis()
+                .scale(y)
+                .orient("left")
+                .tickFormat(d3.format(".2s"));
+
+            // create svg
+            svg = d3.select("#stacked").append("svg")
+            .attr("class", "rawr")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var tip = d3.tip()
+                        .attr('class', 'd3-tip')
+                        .offset([-40, 0])
+                        .html(function(d,i) {
+                            return array.name[i] + ": " + d  ;
+                        })
+
+            svg.call(tip)
+
+            x.domain(array.x);
+            y.domain([0, d3.max(array.total, function(d){return d})])
+
+           svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0," + height + ")")
+                // .call(xAxis);
+
+            svg.append("g")
+                .attr("class", "y axis")
+                // .call(yAxis)
+              .append("text")
+              .attr("class", function(d,i){return "bar"+i})
+                .attr("transform", "rotate(-90)")
+                .attr("y", 6)
+                .attr("dy", ".71em")
+                .style("text-anchor", "center")
+                .text(array.x);
+
+            var state = svg.selectAll(".state")
+                .data(array.y)
+              .enter().append("g")
+                .attr("class", "g")
+                // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
+
+           var bar=  state.selectAll("rect")
+               
+                .data(array.y)
+                .enter().append("rect")
+                .attr("width", 30)
+
+                // travis look here
+                .attr("id", function(d,i){return "stackedRect"+i})
+                .attr("y", function(d,i) { return height-y(array.total[i])})
+                .attr("height", function(d,i) { return y(d)})
+                .style("fill", function(d,i) { return color(i); })
+                 .on('mouseover', tip.show)
+                .on('mouseout', tip.hide);
+
+          }
+
+
+          function addLegend(array){
+            var legsvg = d3.select("#stacked").append("svg")
+              .attr("width", 100 + 50+ margin.right)
+              .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+              .attr("transform", "translate(" + 30 + "," + 0+ ")");
+
+            var legend = legsvg.selectAll(".legend")
+                .data(color.domain().slice().reverse())
+              .enter().append("g")
+                .attr("class", "legend")
+                .attr("transform", function(d, i) { return "translate(40," + i * 20 + ")"; });
+
+            legend.append("rect")
+                .attr("class", "rawr")
+                .attr("x", width - 18)
+                .attr("width", 18)
+                .attr("height", 18)
+                .style("fill", function(d,i) {return color(i)});
+
+            legend.append("text")
+                .attr("x", width - 24)
+                .attr("y", 9)
+                .attr("dy", ".35em")
+                .style("text-anchor", "end")
+                .text(function(d,i) { return array.name[i]; });
+            
+          }
+          drawBar(wranglestackedData("minutes"))
+          drawBar(wranglestackedData("ppg"))
+          drawBar(wranglestackedData("reb"))
+          drawBar(wranglestackedData("assists"))
+          drawBar(wranglestackedData("steals"))
+          drawBar(wranglestackedData("blocks"))
+          drawBar(wranglestackedData("turnovers"))
+          addLegend(wranglestackedData("ppg"));
+        }
+
   // this function creates a stacked bar chart
- function stacked(team,playerData) {
-    // filter the data based on specific team selected 
-    var data = playerData.filter(function(d){return d.team==team});
-    drawBar(wranglestackedData("minutes",data))
-    drawBar(wranglestackedData("ppg",data))
-    drawBar(wranglestackedData("reb",data))
-    drawBar(wranglestackedData("assists",data))
-    drawBar(wranglestackedData("steals",data))
-    drawBar(wranglestackedData("blocks",data))
-    drawBar(wranglestackedData("turnovers",data))
-
-    addLegend(wranglestackedData("ppg",data));
-  }
-  function addLegend(array){
-   var playerDatas;
-    var svg;
-    var color = d3.scale.category20c()
-    var margin = {top: 10, right: 5, bottom: 30, left: 5},
-    width = 50,
-    legwidth = 100;
-    height = 400 - margin.top - margin.bottom;
-
-    var legsvg = d3.select("body").append("svg")
-      .attr("width", 100 + 50+ margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + 30 + "," + 0+ ")");
-
-    var legend = legsvg.selectAll(".legend")
-        .data(color.domain().slice().reverse())
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
-
-    legend.append("rect")
-        .attr("class", "rawr")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", function(d,i) {return color(i)});
-
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d,i) { return array.name[i]; });
-    
-  }
-  //wrangles the data to get in correct format
-  function wranglestackedData(value,data){
-    var indPlayerData= data.map(function(d){
-    
-    // format the data into an array that consolidates players stats
-      return {
-        ppg: d.seasons[d.seasons.length-2]["ppg"],
-        assists: d.seasons[d.seasons.length-2]["assists"],
-        blocks: d.seasons[d.seasons.length-2]["blocks"], 
-        fga: d.seasons[d.seasons.length-2]["fga"],
-        rpg: d.seasons[d.seasons.length-2]["rpg"],
-        turnovers: d.seasons[d.seasons.length-2]["turnovers"],
-        minutes: d.seasons[d.seasons.length-2]["minutes"],
-        steals: d.seasons[d.seasons.length-2]["steals"],
-        reb: d.seasons[d.seasons.length-2]["reb"],
-        games:d.seasons[d.seasons.length-2]["gamesplayed"],
-        name:d.name
-      }
-    });
-
-    // these are arrays that will hold each team's stats
-    var ppg = [];
-    var assists = [];
-    var blocks = [];
-    var names = [];
-    var fga = [];
-    var rpg = [];
-    var turnovers = [];
-    var minutes = [];
-    var steals = [];
-    var reb = [];
-    var games=[];
-
-    //populates the arrays
-    for(var i=0; i< indPlayerData.length; i++)
-    {
-      ppg[i] = indPlayerData[i].ppg;
-      assists[i] = indPlayerData[i].assists;
-      blocks[i] = indPlayerData[i].blocks;
-      names[i] = indPlayerData[i].name;
-      fga[i] = indPlayerData[i].fga;
-      rpg[i] = indPlayerData[i].rpg;
-      turnovers[i] = indPlayerData[i].turnovers;
-      steals[i] = indPlayerData[i].steals;
-      minutes[i] = indPlayerData[i].minutes;
-      reb[i] = indPlayerData[i].reb;
-      games[i] = indPlayerData[i].games;
-    }
-
-    // we want total points for all games
-    for(var i=0; i<ppg.length; i++)
-    {
-      ppg[i] = d3.round(ppg[i]*games[i]);
-    }
-
-    var entire = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
-
-    var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
-    var index = list.indexOf(value);
-    var labels = ["points","assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "rebounds"] 
-    var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-    total[1] = entire[index][1]
-    for(var j = 1; j<entire[index].length; j++)
-    {
-      total[j] = entire[index][j-1] + total[j-1]
-    }
-    var team= {x:value, y:entire[index], total:total, name:names, label:labels[index]}
-    return team;
-    }  
-
-   // this function adds legend to the stacked bar chart 
+ // function stacked(team,playerData) {
+ //    // filter the data based on specific team selected 
+ //    var data = playerData.filter(function(d){return d.team==team});
   
-  // this function draws the bars
-  function drawBar (array){
+ //    drawBar(wranglestackedData("minutes",data))
+ //    drawBar(wranglestackedData("ppg",data))
+ //    drawBar(wranglestackedData("reb",data))
+ //    drawBar(wranglestackedData("assists",data))
+ //    drawBar(wranglestackedData("steals",data))
+ //    drawBar(wranglestackedData("blocks",data))
+ //    drawBar(wranglestackedData("turnovers",data))
+ //    addLegend(wranglestackedData("ppg",data));
 
-    var playerDatas;
-    var svg;
-    var color;
-    var margin = {top: 10, right: 5, bottom: 30, left: 5},
-    width = 50,
-    legwidth = 100;
-    height = 400 - margin.top - margin.bottom;
+    
+ //  }
+ //  function addLegend(array){
+ //    var color =  d3.scale.category20c()
+ //      var legsvg = d3.select("#stacked").append("svg")
+ //        .attr("width", 100 )
+ //        .attr("height", 200)
+ //        .append("g")
+ //        .attr("transform", "translate(" + 30 + "," + 0+ ")");
 
-    var x = d3.scale.ordinal()
-        .rangeRoundBands([0, width], .1);
+ //      var legend = legsvg.selectAll(".legend")
+ //          .data(color.domain().slice().reverse())
+ //        .enter().append("g")
+ //          .attr("class", "legend")
+ //          .attr("transform", function(d, i) { return "translate(30," + i * 20 + ")"; });
 
-    var y = d3.scale.linear()
-        .range([320,0]);
+ //      legend.append("rect")
+ //          .attr("class", "rawr")
+ //          .attr("x", 200 - 18)
+ //          .attr("width", 18)
+ //          .attr("height", 18)
+ //          .style("fill", function(d,i) {return color(i)});
 
-    color = d3.scale.category20c()
+ //      legend.append("text")
+ //          .attr("x", 200 - 24)
+ //          .attr("y", 9)
+ //          .attr("dy", ".35em")
+ //          .style("text-anchor", "end")
+ //          .text(function(d,i) { return array.name[i]; });
+      
+ //    }
+  
+ //  //wrangles the data to get in correct format
+ //  function wranglestackedData(value,data){
+ //    var indPlayerData= data.map(function(d){
+    
+ //    // format the data into an array that consolidates players stats
+ //      return {
+ //        ppg: d.seasons[d.seasons.length-2]["ppg"],
+ //        assists: d.seasons[d.seasons.length-2]["assists"],
+ //        blocks: d.seasons[d.seasons.length-2]["blocks"], 
+ //        fga: d.seasons[d.seasons.length-2]["fga"],
+ //        rpg: d.seasons[d.seasons.length-2]["rpg"],
+ //        turnovers: d.seasons[d.seasons.length-2]["turnovers"],
+ //        minutes: d.seasons[d.seasons.length-2]["minutes"],
+ //        steals: d.seasons[d.seasons.length-2]["steals"],
+ //        reb: d.seasons[d.seasons.length-2]["reb"],
+ //        games:d.seasons[d.seasons.length-2]["gamesplayed"],
+ //        name:d.name
+ //      }
+ //    });
 
-    // instantiate axis
-    var xAxis = d3.svg.axis()
-        .scale(x)
-        .orient("bottom");
+ //    // these are arrays that will hold each team's stats
+ //    var ppg = [];
+ //    var assists = [];
+ //    var blocks = [];
+ //    var names = [];
+ //    var fga = [];
+ //    var rpg = [];
+ //    var turnovers = [];
+ //    var minutes = [];
+ //    var steals = [];
+ //    var reb = [];
+ //    var games=[];
 
-    var yAxis = d3.svg.axis()
-        .scale(y)
-        .orient("left")
-        .tickFormat(d3.format(".2s"));
+ //    //populates the arrays
+ //    for(var i=0; i< indPlayerData.length; i++)
+ //    {
+ //      ppg[i] = indPlayerData[i].ppg;
+ //      assists[i] = indPlayerData[i].assists;
+ //      blocks[i] = indPlayerData[i].blocks;
+ //      names[i] = indPlayerData[i].name;
+ //      fga[i] = indPlayerData[i].fga;
+ //      rpg[i] = indPlayerData[i].rpg;
+ //      turnovers[i] = indPlayerData[i].turnovers;
+ //      steals[i] = indPlayerData[i].steals;
+ //      minutes[i] = indPlayerData[i].minutes;
+ //      reb[i] = indPlayerData[i].reb;
+ //      games[i] = indPlayerData[i].games;
+ //    }
 
-    // create svg
-    svg = d3.select("body").append("svg")
-    .attr("class", "rawr")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        var tip = d3.tip()
-        .attr('class', 'd3-tip')
-        .offset([-40, 0])
-        .html(function(d,i) {
-          return array.name[i] + ": " + d  ;
-        })
+ //    // we want total points for all games
+ //    for(var i=0; i<ppg.length; i++)
+ //    {
+ //      ppg[i] = d3.round(ppg[i]*games[i]);
+ //    }
 
-    svg.call(tip)
-    x.domain(array.x);
-    y.domain([0, d3.max(array.total, function(d){return d})])
+ //    var entire = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
 
-   svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + height + ")")
-        // .call(xAxis);
+ //    var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
+ //    var index = list.indexOf(value);
+ //    var labels = ["points","assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "rebounds"] 
+ //    var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+ //    total[1] = entire[index][1]
+ //    for(var j = 1; j<entire[index].length; j++)
+ //    {
+ //      total[j] = entire[index][j-1] + total[j-1]
+ //    }
+ //    var team= {x:value, y:entire[index], total:total, name:names, label:labels[index]}
+ //    return team;
+ //    }  
 
-    svg.append("g")
-        .attr("class", "y axis")
-        // .call(yAxis)
-      .append("text")
-      .attr("class", function(d,i){return "bar"+i})
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .attr("font-style", "italic")
-        .style("text-anchor", "end")
-        .text(array.label);
+ //   // this function adds legend to the stacked bar chart 
+  
+ //  // this function draws the bars
+ //  function drawBar (array){
 
-    var state = svg.selectAll(".state")
-        .data(array.y)
-      .enter().append("g")
-        .attr("class", "g")
-        // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
+ //    var playerDatas;
+ //    var svg;
+ //    var color;
+ //    var margin = {top: 10, right: 5, bottom: 30, left: 5},
+ //    width = 50,
+ //    legwidth = 100;
+ //    height = 400 - margin.top - margin.bottom;
 
-   var bar=  state.selectAll("rect")
+ //    var x = d3.scale.ordinal()
+ //        .rangeRoundBands([0, width], .1);
+
+ //    var y = d3.scale.linear()
+ //        .range([320,0]);
+
+ //    color = d3.scale.category20c()
+
+ //    // instantiate axis
+ //    var xAxis = d3.svg.axis()
+ //        .scale(x)
+ //        .orient("bottom");
+
+ //    var yAxis = d3.svg.axis()
+ //        .scale(y)
+ //        .orient("left")
+ //        .tickFormat(d3.format(".2s"));
+
+ //    // create svg
+ //    svg = d3.select("body").append("svg")
+ //    .attr("class", "rawr")
+ //        .attr("width", width + margin.left + margin.right)
+ //        .attr("height", height + margin.top + margin.bottom)
+ //        .append("g")
+ //        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+ //        var tip = d3.tip()
+ //        .attr('class', 'd3-tip')
+ //        .offset([-40, 0])
+ //        .html(function(d,i) {
+ //          return array.name[i] + ": " + d  ;
+ //        })
+
+ //    svg.call(tip)
+ //    x.domain(array.x);
+ //    y.domain([0, d3.max(array.total, function(d){return d})])
+
+ //   svg.append("g")
+ //        .attr("class", "x axis")
+ //        .attr("transform", "translate(0," + height + ")")
+ //        // .call(xAxis);
+
+ //    svg.append("g")
+ //        .attr("class", "y axis")
+ //        // .call(yAxis)
+ //      .append("text")
+ //      .attr("class", function(d,i){return "bar"+i})
+ //        .attr("transform", "rotate(-90)")
+ //        .attr("y", 6)
+ //        .attr("dy", ".71em")
+ //        .attr("font-style", "italic")
+ //        .style("text-anchor", "end")
+ //        .text(array.label);
+
+ //    var state = svg.selectAll(".state")
+ //        .data(array.y)
+ //      .enter().append("g")
+ //        .attr("class", "g")
+ //        // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
+
+ //   var bar=  state.selectAll("rect")
        
-        .data(array.y)
-        .enter().append("rect")
-        .attr("width", 30)
+ //        .data(array.y)
+ //        .enter().append("rect")
+ //        .attr("width", 30)
 
-        // travis look here
-        .attr("id", function(d,i){return "stackedRect"+i})
-        .attr("y", function(d,i) { return height-y(array.total[i])})
-        .attr("height", function(d,i) { return y(d)})
-        .style("fill", function(d,i) { return color(i); })
-         .on('mouseover', tip.show)
-        .on('mouseout', tip.hide);
+ //        // travis look here
+ //        .attr("id", function(d,i){return "stackedRect"+i})
+ //        .attr("y", function(d,i) { return height-y(array.total[i])})
+ //        .attr("height", function(d,i) { return y(d)})
+ //        .style("fill", function(d,i) { return color(i); })
+ //         .on('mouseover', tip.show)
+ //        .on('mouseout', tip.hide);
 
-    }
+ //    }

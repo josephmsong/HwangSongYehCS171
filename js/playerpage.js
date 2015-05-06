@@ -72,6 +72,7 @@ function showPlayerPage(playerID){
     var indPlayerData
 
     indPlayerData = playerData[playerID];
+    console.log(indPlayerData)
 
     // averageDisplayData is the array with differences between this year and the average
     var averageDisplayData = [];
