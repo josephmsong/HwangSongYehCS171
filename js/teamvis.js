@@ -4,9 +4,9 @@
 // brush creates three path svgs that respond to one brush. 
 function brush(team){
     //constants
-   var margin = {top: 10, right: 20, bottom: 20, left: 0},
-    margin2 = {top: 200, right: 20, bottom: 30, left: 0},
-    width = 800, 
+   var margin = {top: 10, right: 20, bottom: 10, left: 0},
+    margin2 = {top: 200, right: 20, bottom: 20, left: 0},
+    width = 750, 
     height = 80,
     height2 = 80;
 
@@ -141,7 +141,7 @@ function brush(team){
           .attr("class", "y axis")
           .call(yAxis)
           .append("text")
-          .attr("x", 75)
+          .attr("x", 85)
           .attr("y", -5)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
@@ -162,7 +162,7 @@ function brush(team){
           .attr("class", "y axis")
           .call(yAxis4)
           .append("text")
-          .attr("x", 85)
+          .attr("x", 95)
           .attr("y", -4)
           .attr("dy", ".71em")
           .style("text-anchor", "end")
@@ -177,7 +177,13 @@ function brush(team){
       context.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(20," + height2 + ")")
-          .call(xAxis2);
+          .call(xAxis2) 
+          .append("text")
+          .attr("x", 15)
+          .attr("y", -80)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Wins");;;
 
       context.append("g")
           .attr("class", "x brush")

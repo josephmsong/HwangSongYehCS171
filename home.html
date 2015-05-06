@@ -3,11 +3,13 @@
 <head>
   <style>
   .start {
-  font-size:400%;
-  margin-top:20%;
-  margin-left:27%;
-  font-family: "Helvetica", "Arial"
-}
+
+    font-size: 250%;
+    color: #696969;
+    font-family: 'Helvetica', 'Arial';
+    margin-left: 35%;
+    margin-top: 15%;
+  }
   </style>
   <title>Ball Is Life</title>
   
@@ -38,6 +40,7 @@
       <div class="inner">
         <div id = "teamlist"></div>
         <ul id = "playerlist"></ul>
+        <div class = "start">Select a team to get started.</div>
         <br>
         <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
         <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
@@ -126,6 +129,7 @@
 
                                   })
                                   .on("click", function(d, i){
+                                    d3.select(".start").remove()
                                      var teamAbbrev;
                                     // make adjustments for exceptions
                                     switch(i){
@@ -174,7 +178,6 @@
                                         d3.selectAll(".teamListImage").attr("border", "none")
                                         d3.select(this)
                                           .attr("border", "3px solid black");
-                             
                                         showPlayers(i);
                                           // maketablechart(ID);
                                           // window.location.href = "table.html?id=" + ID;
