@@ -215,5 +215,9 @@ svg {
     right: 0;
     bottom: 0;
 }
+
+.legend {
+    margin-top:100px;
+}
 }
 

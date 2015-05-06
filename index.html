@@ -51,6 +51,7 @@
         <br/><br/>
         <div id="teamimg"></div>
         <div id ="averageBarDiv" style="float:left; margin-left:5px"></div>
+        <div id="compareBarDiv" style="float:left; margin-left:105px"></div>
         <div id="shotChartDiv" style="float:right; margin-left:1%;; margin-top:-40px"></div>
         <div id="shotToggleDiv" style="visibility:hidden; float:right; margin-top:-40px">
           <input type = "checkbox" name="shotToggle" id="madeShots" checked>Made shots<br>
@@ -189,7 +190,7 @@
 
                                       .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
                                       .attr("title", function(d,i){return teamPlayersList[teamIndex][i].name;})
-                                      
+                                      .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, i, teamPlayersList[teamIndex].length);})                 
                                       .on("mouseout", function(d, i){
                                         d3.selectAll(".compareBarsDiv").remove();
                                         d3.select("#playerNameDiv").html([""]);

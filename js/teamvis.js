@@ -4,9 +4,9 @@
 // brush creates three path svgs that respond to one brush. 
 function brush(team){
     //constants
-   var margin = {top: 10, right: 20, bottom: 10, left: 80},
-    margin2 = {top: 200, right: 20, bottom: 20, left: 80},
-    width = 500, 
+   var margin = {top: 10, right: 20, bottom: 10, left: 0},
+    margin2 = {top: 200, right: 20, bottom: 20, left: 0},
+    width = 800, 
     height = 80,
     height2 = 80;
 
@@ -391,7 +391,7 @@ function brush(team){
               .attr("width", 100 + 50+ margin.right)
               .attr("height", height + margin.top + margin.bottom)
             .append("g")
-              .attr("transform", "translate(" + 30 + "," + 0+ ")");
+              .attr("transform", "translate(" + 30 + "," + 100+ ")");
 
             var legend = legsvg.selectAll(".legend")
                 .data(color.domain().slice().reverse())

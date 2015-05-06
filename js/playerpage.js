@@ -6,7 +6,6 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
   d3.select("#playerNameDiv")
     .attr("class", "playerNameDisplay")
-    .html(function(d, i){return "Player: " + playerName;}) 
 
   for(var i = 0; i < teamLength; i++){
 
@@ -463,7 +462,12 @@ function initAverageBars(data, compare){
   var nameList = ["apg", "bpg", "fg3perc", "fgperc", "ftperc", "ppg", "rpg", "spg"];
 
   var that = this;
-  var avgDiv = d3.select("#averageBarDiv")
+  if (!compare) {
+    var avgDiv = d3.select("#averageBarDiv")
+  }
+  else {
+    var avgDiv = d3.select("#compareBarDiv")
+  }
   this.svg = avgDiv
     .append("svg")
     .attr("width", this.width + this.margin.left + this.margin.right)
