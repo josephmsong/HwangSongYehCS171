@@ -4,9 +4,9 @@
 // brush creates three path svgs that respond to one brush. 
 function brush(team){
     //constants
-   var margin = {top: 10, right: 50, bottom: 10, left: 20},
-    margin2 = {top: 200, right: 50, bottom: 20, left: 20},
-    width = 600, 
+   var margin = {top: 10, right: 20, bottom: 10, left: 20},
+    margin2 = {top: 200, right: 20, bottom: 20, left: 20},
+    width = 500, 
     height = 80,
     height2 = 80;
 
@@ -89,7 +89,9 @@ function brush(team){
 
     //load data
     d3.json("data/nbateams.json", function(error, data) {
+      console.log(data)
       var teamdata = data.filter(function(d){return d.name == team});
+      console.log(teamdata)
       var parseDate = d3.time.format("%Y").parse;
             teamdata[0].years.forEach(function(d,i){
               if(parseDate(d.year.substring(0,4))!= null)
@@ -188,6 +190,7 @@ function brush(team){
  function stacked(team,playerData) {
     // filter the data based on specific team selected 
     var data = playerData.filter(function(d){return d.team==team});
+  
     drawBar(wranglestackedData("minutes",data))
     drawBar(wranglestackedData("ppg",data))
     drawBar(wranglestackedData("reb",data))
@@ -195,45 +198,40 @@ function brush(team){
     drawBar(wranglestackedData("steals",data))
     drawBar(wranglestackedData("blocks",data))
     drawBar(wranglestackedData("turnovers",data))
-
     addLegend(wranglestackedData("ppg",data));
-  }
-  function addLegend(array){
-   var playerDatas;
-    var svg;
-    var color = d3.scale.category20c()
-    var margin = {top: 10, right: 5, bottom: 30, left: 5},
-    width = 50,
-    legwidth = 100;
-    height = 400 - margin.top - margin.bottom;
 
-    var legsvg = d3.select("body").append("svg")
-      .attr("width", 100 + 50+ margin.right)
-      .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-      .attr("transform", "translate(" + 30 + "," + 0+ ")");
-
-    var legend = legsvg.selectAll(".legend")
-        .data(color.domain().slice().reverse())
-      .enter().append("g")
-        .attr("class", "legend")
-        .attr("transform", function(d, i) { return "translate(60," + i * 20 + ")"; });
-
-    legend.append("rect")
-        .attr("class", "rawr")
-        .attr("x", width - 18)
-        .attr("width", 18)
-        .attr("height", 18)
-        .style("fill", function(d,i) {return color(i)});
-
-    legend.append("text")
-        .attr("x", width - 24)
-        .attr("y", 9)
-        .attr("dy", ".35em")
-        .style("text-anchor", "end")
-        .text(function(d,i) { return array.name[i]; });
     
   }
+  function addLegend(array){
+    var color =  d3.scale.category20c()
+      var legsvg = d3.select("#stacked").append("svg")
+        .attr("width", 100 )
+        .attr("height", 200)
+        .append("g")
+        .attr("transform", "translate(" + 30 + "," + 0+ ")");
+
+      var legend = legsvg.selectAll(".legend")
+          .data(color.domain().slice().reverse())
+        .enter().append("g")
+          .attr("class", "legend")
+          .attr("transform", function(d, i) { return "translate(30," + i * 20 + ")"; });
+
+      legend.append("rect")
+          .attr("class", "rawr")
+          .attr("x", 200 - 18)
+          .attr("width", 18)
+          .attr("height", 18)
+          .style("fill", function(d,i) {return color(i)});
+
+      legend.append("text")
+          .attr("x", 200 - 24)
+          .attr("y", 9)
+          .attr("dy", ".35em")
+          .style("text-anchor", "end")
+          .text(function(d,i) { return array.name[i]; });
+      
+    }
+  
   //wrangles the data to get in correct format
   function wranglestackedData(value,data){
     var indPlayerData= data.map(function(d){

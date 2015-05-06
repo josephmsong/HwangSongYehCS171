@@ -158,199 +158,199 @@
   }
 
 
-  function stacked(team) {
-    var playerDatas;
-    var svg;
-    var color;
-    var margin = {top: 45, right: 5, bottom: 30, left: 5},
-    width = 50,
-    legwidth = 100;
-    height = 400 - margin.top - margin.bottom;
-    // filter the data based on specific team selected 
+  // function stacked(team) {
+  //   var playerDatas;
+  //   var svg;
+  //   var color;
+  //   var margin = {top: 45, right: 5, bottom: 30, left: 5},
+  //   width = 50,
+  //   legwidth = 100;
+  //   height = 400 - margin.top - margin.bottom;
+  //   // filter the data based on specific team selected 
 
-    var data = playerData.filter(function(d){return d.team==team});
+  //   var data = playerData.filter(function(d){return d.team==team});
 
-    //load the data
-    function wranglestackedData(value){
+  //   //load the data
+  //   function wranglestackedData(value){
 
-      var indPlayerData= data.map(function(d){
+  //     var indPlayerData= data.map(function(d){
       
-      // format the data into an array that consolidates players stats
-        return {
-          ppg: d.seasons[d.seasons.length-2]["ppg"],
-          assists: d.seasons[d.seasons.length-2]["assists"],
-          blocks: d.seasons[d.seasons.length-2]["blocks"], 
-          fga: d.seasons[d.seasons.length-2]["fga"],
-          rpg: d.seasons[d.seasons.length-2]["rpg"],
-          turnovers: d.seasons[d.seasons.length-2]["turnovers"],
-          minutes: d.seasons[d.seasons.length-2]["minutes"],
-          steals: d.seasons[d.seasons.length-2]["steals"],
-          reb: d.seasons[d.seasons.length-2]["reb"],
+  //     // format the data into an array that consolidates players stats
+  //       return {
+  //         ppg: d.seasons[d.seasons.length-2]["ppg"],
+  //         assists: d.seasons[d.seasons.length-2]["assists"],
+  //         blocks: d.seasons[d.seasons.length-2]["blocks"], 
+  //         fga: d.seasons[d.seasons.length-2]["fga"],
+  //         rpg: d.seasons[d.seasons.length-2]["rpg"],
+  //         turnovers: d.seasons[d.seasons.length-2]["turnovers"],
+  //         minutes: d.seasons[d.seasons.length-2]["minutes"],
+  //         steals: d.seasons[d.seasons.length-2]["steals"],
+  //         reb: d.seasons[d.seasons.length-2]["reb"],
           
-          name:d.name
-          //steals: d.seasons[d.seasons.length-1]["steals"]
-        }
-      });
+  //         name:d.name
+  //         //steals: d.seasons[d.seasons.length-1]["steals"]
+  //       }
+  //     });
 
-      var ppg = [];
-      var assists = [];
-      var blocks = [];
-      var names = [];
-      var fga = [];
-      var rpg = [];
-      var turnovers = [];
-      var minutes = [];
-      var steals = [];
-      var reb = [];
+  //     var ppg = [];
+  //     var assists = [];
+  //     var blocks = [];
+  //     var names = [];
+  //     var fga = [];
+  //     var rpg = [];
+  //     var turnovers = [];
+  //     var minutes = [];
+  //     var steals = [];
+  //     var reb = [];
 
-      for(var i=0; i< indPlayerData.length; i++)
-      {
-        ppg[i] = indPlayerData[i].ppg;
-        assists[i] = indPlayerData[i].assists;
-        blocks[i] = indPlayerData[i].blocks;
-        names[i] = indPlayerData[i].name;
-        fga[i] = indPlayerData[i].fga;
-        rpg[i] = indPlayerData[i].rpg;
-        turnovers[i] = indPlayerData[i].turnovers;
-        steals[i] = indPlayerData[i].steals;
-        minutes[i] = indPlayerData[i].minutes;
-        reb[i] = indPlayerData[i].reb;
-      }
+  //     for(var i=0; i< indPlayerData.length; i++)
+  //     {
+  //       ppg[i] = indPlayerData[i].ppg;
+  //       assists[i] = indPlayerData[i].assists;
+  //       blocks[i] = indPlayerData[i].blocks;
+  //       names[i] = indPlayerData[i].name;
+  //       fga[i] = indPlayerData[i].fga;
+  //       rpg[i] = indPlayerData[i].rpg;
+  //       turnovers[i] = indPlayerData[i].turnovers;
+  //       steals[i] = indPlayerData[i].steals;
+  //       minutes[i] = indPlayerData[i].minutes;
+  //       reb[i] = indPlayerData[i].reb;
+  //     }
 
-      var rawr = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
+  //     var rawr = [ppg,assists,blocks, fga, rpg, turnovers, steals, minutes, reb];
 
-      //var steals = [];
-      var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
-      var index = list.indexOf(value);
+  //     //var steals = [];
+  //     var list = ["ppg", "assists", "blocks", "fga", "rpg", "turnovers", "steals", "minutes", "reb"]
+  //     var index = list.indexOf(value);
 
-      var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-      total[1] = rawr[index][1]
-      for(var j = 1; j<rawr[index].length; j++)
-      {
-        // console.log(total[j])
-        total[j] = rawr[index][j-1] + total[j-1]
-      }
+  //     var total = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+  //     total[1] = rawr[index][1]
+  //     for(var j = 1; j<rawr[index].length; j++)
+  //     {
+  //       // console.log(total[j])
+  //       total[j] = rawr[index][j-1] + total[j-1]
+  //     }
 
-      var team= {x:value, y:rawr[index], total:total, name:names}
+  //     var team= {x:value, y:rawr[index], total:total, name:names}
 
-      return team;
-    }  
+  //     return team;
+  //   }  
 
-    function drawBar (array){
-      var x = d3.scale.ordinal()
-          .rangeRoundBands([0, width], .1);
+  //   function drawBar (array){
+  //     var x = d3.scale.ordinal()
+  //         .rangeRoundBands([0, width], .1);
 
-      var y = d3.scale.linear()
-          .range([320,0]);
+  //     var y = d3.scale.linear()
+  //         .range([320,0]);
 
-      color = d3.scale.category20c()
+  //     color = d3.scale.category20c()
 
-      // instantiate axis
-      var xAxis = d3.svg.axis()
-          .scale(x)
-          .orient("bottom");
+  //     // instantiate axis
+  //     var xAxis = d3.svg.axis()
+  //         .scale(x)
+  //         .orient("bottom");
 
-      var yAxis = d3.svg.axis()
-          .scale(y)
-          .orient("left")
-          .tickFormat(d3.format(".2s"));
+  //     var yAxis = d3.svg.axis()
+  //         .scale(y)
+  //         .orient("left")
+  //         .tickFormat(d3.format(".2s"));
 
-      // create svg
-      svg = d3.select("#stacked").append("svg")
-      .attr("class", "rawr")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-          .append("g")
-          .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  //     // create svg
+  //     svg = d3.select("#stacked").append("svg")
+  //     .attr("class", "rawr")
+  //         .attr("width", width + margin.left + margin.right)
+  //         .attr("height", height + margin.top + margin.bottom)
+  //         .append("g")
+  //         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-      var tip = d3.tip()
-                  .attr('class', 'd3-tip')
-                  .offset([-40, 0])
-                  .html(function(d,i) {
-                      return array.name[i] + ": " + d  ;
-                  })
+  //     var tip = d3.tip()
+  //                 .attr('class', 'd3-tip')
+  //                 .offset([-40, 0])
+  //                 .html(function(d,i) {
+  //                     return array.name[i] + ": " + d  ;
+  //                 })
 
-      svg.call(tip)
+  //     svg.call(tip)
 
-      x.domain(array.x);
-      y.domain([0, d3.max(array.total, function(d){return d})])
+  //     x.domain(array.x);
+  //     y.domain([0, d3.max(array.total, function(d){return d})])
 
-     svg.append("g")
-          .attr("class", "x axis")
-          .attr("transform", "translate(0," + height + ")")
-          // .call(xAxis);
+  //    svg.append("g")
+  //         .attr("class", "x axis")
+  //         .attr("transform", "translate(0," + height + ")")
+  //         // .call(xAxis);
 
-      svg.append("g")
-          .attr("class", "y axis")
-          // .call(yAxis)
-        .append("text")
-        .attr("class", function(d,i){return "bar"+i})
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
-          .attr("dy", ".71em")
-          .style("text-anchor", "center")
-          .text(array.x);
+  //     svg.append("g")
+  //         .attr("class", "y axis")
+  //         // .call(yAxis)
+  //       .append("text")
+  //       .attr("class", function(d,i){return "bar"+i})
+  //         .attr("transform", "rotate(-90)")
+  //         .attr("y", 6)
+  //         .attr("dy", ".71em")
+  //         .style("text-anchor", "center")
+  //         .text(array.x);
 
-      var state = svg.selectAll(".state")
-          .data(array.y)
-        .enter().append("g")
-          .attr("class", "g")
-          // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
+  //     var state = svg.selectAll(".state")
+  //         .data(array.y)
+  //       .enter().append("g")
+  //         .attr("class", "g")
+  //         // .attr("transform", function(d) { return "translate(" + x(team.x) + ",0)"; });
 
-     var bar=  state.selectAll("rect")
+  //    var bar=  state.selectAll("rect")
          
-          .data(array.y)
-          .enter().append("rect")
-          .attr("width", 30)
+  //         .data(array.y)
+  //         .enter().append("rect")
+  //         .attr("width", 30)
 
-          // travis look here
-          .attr("id", function(d,i){return "stackedRect"+i})
-          .attr("y", function(d,i) { return height-y(array.total[i])})
-          .attr("height", function(d,i) { return y(d)})
-          .style("fill", function(d,i) { return color(i); })
-           .on('mouseover', tip.show)
-          .on('mouseout', tip.hide);
+  //         // travis look here
+  //         .attr("id", function(d,i){return "stackedRect"+i})
+  //         .attr("y", function(d,i) { return height-y(array.total[i])})
+  //         .attr("height", function(d,i) { return y(d)})
+  //         .style("fill", function(d,i) { return color(i); })
+  //          .on('mouseover', tip.show)
+  //         .on('mouseout', tip.hide);
 
-    }
+  //   }
 
 
-    function addLegend(array){
-      var legsvg = d3.select("body").append("svg")
-        .attr("width", 100 + 50+ margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + 30 + "," + 0+ ")");
+  //   function addLegend(array){
+  //     var legsvg = d3.select("#stacked").append("svg")
+  //       .attr("width", 100 + 50+ margin.right)
+  //       .attr("height", 200 + margin.top + margin.bottom)
+  //       .append("g")
+  //       .attr("transform", "translate(" + 30 + "," + 0+ ")");
 
-      var legend = legsvg.selectAll(".legend")
-          .data(color.domain().slice().reverse())
-        .enter().append("g")
-          .attr("class", "legend")
-          .attr("transform", function(d, i) { return "translate(40," + i * 20 + ")"; });
+  //     var legend = legsvg.selectAll(".legend")
+  //         .data(color.domain().slice().reverse())
+  //       .enter().append("g")
+  //         .attr("class", "legend")
+  //         .attr("transform", function(d, i) { return "translate(30," + i * 20 + ")"; });
 
-      legend.append("rect")
-          .attr("class", "rawr")
-          .attr("x", width - 18)
-          .attr("width", 18)
-          .attr("height", 18)
-          .style("fill", function(d,i) {return color(i)});
+  //     legend.append("rect")
+  //         .attr("class", "rawr")
+  //         .attr("x", width - 18)
+  //         .attr("width", 18)
+  //         .attr("height", 18)
+  //         .style("fill", function(d,i) {return color(i)});
 
-      legend.append("text")
-          .attr("x", width - 24)
-          .attr("y", 9)
-          .attr("dy", ".35em")
-          .style("text-anchor", "end")
-          .text(function(d,i) { return array.name[i]; });
+  //     legend.append("text")
+  //         .attr("x", width - 24)
+  //         .attr("y", 9)
+  //         .attr("dy", ".35em")
+  //         .style("text-anchor", "end")
+  //         .text(function(d,i) { return array.name[i]; });
       
-    }
-    drawBar(wranglestackedData("minutes"))
-    drawBar(wranglestackedData("ppg"))
-    drawBar(wranglestackedData("reb"))
-    drawBar(wranglestackedData("assists"))
-    drawBar(wranglestackedData("steals"))
-    drawBar(wranglestackedData("blocks"))
-    drawBar(wranglestackedData("turnovers"))
-    addLegend(wranglestackedData("ppg"));
-  }
+  //   }
+  //   drawBar(wranglestackedData("minutes"))
+  //   drawBar(wranglestackedData("ppg"))
+  //   drawBar(wranglestackedData("reb"))
+  //   drawBar(wranglestackedData("assists"))
+  //   drawBar(wranglestackedData("steals"))
+  //   drawBar(wranglestackedData("blocks"))
+  //   drawBar(wranglestackedData("turnovers"))
+  //   addLegend(wranglestackedData("ppg"));
+  // }
 
 
   // showPlayers takes in the index of the team that was clicked and shows the players of that team
