@@ -90,14 +90,15 @@ function brush(team){
 
     //load data
     d3.json("data/nbateams.json", function(error, data) {
-      console.log(data)
+
       var teamdata = data.filter(function(d){return d.name == team});
-      console.log(teamdata)
+
       var parseDate = d3.time.format("%Y").parse;
             teamdata[0].years.forEach(function(d,i){
               if(parseDate(d.year.substring(0,4))!= null)
                 d.year = parseDate(d.year.substring(0,4))
             })
+
       x.domain(d3.extent(teamdata[0].years.map(function(d) { return d.year; })));
       y.domain([0, d3.max(teamdata[0].years.map(function(d) { return d.win; }))]);
       y3.domain([d3.min(teamdata[0].years.map(function(d) { return d.ppg; })), d3.max(teamdata[0].years.map(function(d) { return d.ppg; }))]);
@@ -106,46 +107,10 @@ function brush(team){
       x2.domain(x.domain());
       y2.domain(y.domain());
 
-      //tool tip
-      var tip1 = d3.tip()
-                      .attr('class', 'd3-tip')
-                      .offset([-40, 0])
-                      .html(function(d,i) {
-                          return "Wins"  ;
-                      })
-
-          svg.call(tip1);
-      var tip2 = d3.tip()
-                      .attr('class', 'd3-tip')
-                      .offset([-40, 0])
-                      .html(function(d,i) {
-                          return "Points per game"  ;
-                      })
-
-      svg.call(tip2);
-      var tip3 = d3.tip()
-                      .attr('class', 'd3-tip')
-                      .offset([-40, 0])
-                      .html(function(d,i) {
-                          return "3 Point Percentage"  ;
-                      })
-
-      svg.call(tip3);
-      var tip4 = d3.tip()
-                      .attr('class', 'd3-tip')
-                      .offset([-40, 0])
-                      .html(function(d,i) {
-                          return "Rebounds Per Game"  ;
-                      })
-
-      svg.call(tip4);
-
       rpg.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area5")
-          .attr("d", area5)
-          .on('mouseover', tip4.show)
-          .on('mouseout', tip4.hide);
+          .attr("d", area5);
 
       rpg.append("g")
           .attr("class", "x axis")
@@ -154,14 +119,18 @@ function brush(team){
 
       rpg.append("g")
           .attr("class", "y axis")
-          .call(yAxis5);
+          .call(yAxis5)
+          .append("text")
+          .attr("x", 90)
+          .attr("y", -5)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Rebounds Per Game");
 
       ppg.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area3")
-          .attr("d", area3)
-          .on('mouseover', tip2.show)
-          .on('mouseout', tip2.hide);
+          .attr("d", area3);
 
       ppg.append("g")
           .attr("class", "x axis")
@@ -170,15 +139,19 @@ function brush(team){
 
       ppg.append("g")
           .attr("class", "y axis")
-          .call(yAxis);
+          .call(yAxis)
+          .append("text")
+          .attr("x", 70)
+          .attr("y", -5)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("Points Per Game");
 
 
       fg3perc.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area4")
-          .attr("d", area4)
-          .on('mouseover', tip3.show)
-          .on('mouseout', tip3.hide);
+          .attr("d", area4);
 
       fg3perc.append("g")
           .attr("class", "x axis")
@@ -187,15 +160,19 @@ function brush(team){
 
       fg3perc.append("g")
           .attr("class", "y axis")
-          .call(yAxis4);
+          .call(yAxis4)
+          .append("text")
+          .attr("x", 80)
+          .attr("y", -4)
+          .attr("dy", ".71em")
+          .style("text-anchor", "end")
+          .text("3 Point Percentage");;
 
 
       context.append("path")
           .datum(teamdata[0].years)
           .attr("class", "area2")
-          .attr("d", area2)
-          .on('mouseover', tip1.show)
-          .on('mouseout', tip1.hide);
+          .attr("d", area2);
 
       context.append("g")
           .attr("class", "x axis")
