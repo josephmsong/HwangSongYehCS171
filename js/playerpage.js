@@ -53,7 +53,7 @@ function maketablechart (data){
 }
 
 function showPlayerPage(playerID){
-    this.margin = {top: 20, right: 40, bottom: 30, left: 100},
+    this.margin = {top: 20, right: 55, bottom: 30, left: 100},
     this.width = 400 - this.margin.left - this.margin.right,
     this.height = 300 - this.margin.top - this.margin.bottom;
     // remove the old images to prepare for the new ones
