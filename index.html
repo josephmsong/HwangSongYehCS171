@@ -36,12 +36,7 @@
         <select id="comparePlayerDropDown" name="comparePlayer" style="visibility:hidden"></select>
         <button type="submit" class="btn" name="submit" value="submit" id ="submitCompare" onclick="comparePlayers()" style="visibility:hidden"> Compare </button>
         <button type="submit" name="back" value="back" id="backButton" style="visibility:hidden"> Back to Individual Page </button>
-        <br>
 
-        <div id = "teamNameDiv"> </div>
-        <br>
-        <div id = "playerNameDiv"></div>
-        <br> 
         <div id = "compareBarsDiv"></div>
         <br> 
 
@@ -143,7 +138,7 @@
                                        d3.selectAll(".averageBars").remove();
                                        d3.select("#playerName").html([""]);
                                        d3.selectAll("svg").remove();
-                                        d3.selectAll(".compareBarsDiv").remove();
+                                        // d3.select("#compareBarsDiv").remove();
                                         d3.select(".teamimg").remove();
                                         d3.select(".playerimg").remove();
                                         d3.select(".table").remove();
@@ -158,15 +153,13 @@
 
                                         d3.select("#submitCompare")
                                           .style("visibility", "hidden")  
-
-                                        stacked(reverseLookup(i), playerData);
                                         brush(teamAbbrev);
+                                        stacked(reverseLookup(i), playerData);
+                                       
 
                                         d3.selectAll(".teamListImage").attr("border", "none")
                                         d3.select(this)
                                           .attr("border", "3px solid black");
-                                          
-                                        showTeamName(i); 
                                         showPlayers(i);
                                           // maketablechart(ID);
                                           // window.location.href = "table.html?id=" + ID;
@@ -192,7 +185,7 @@
 
                                       .attr("src", function(d, i){return teamPlayersList[teamIndex][i].photo;})
                                       .attr("title", function(d,i){return teamPlayersList[teamIndex][i].name;})
-                                      .on("mouseover", function(d,i){showPlayerName(teamPlayersList[teamIndex][i].name, i, teamPlayersList[teamIndex].length);})
+                                      
                                       .on("mouseout", function(d, i){
                                         d3.selectAll(".compareBarsDiv").remove();
                                         d3.select("#playerNameDiv").html([""]);
