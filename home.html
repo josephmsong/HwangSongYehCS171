@@ -238,7 +238,7 @@
           // else{
             return playerData.filter(function(d, i, array){
 
-              return teamLookup[d.team] == teamIndex && d.photo != "www.cbssports.com/images/players/unknown_player.gif" && d.photo != "www.cbssports.com/images/players/unknown-player-170x170.png";
+              return teamLookup[d.team] == teamIndex && d.photo != "http://sports.cbsimg.net//images/players/unknown_player.gif" && d.photo != "http://sports.cbsimg.net//images/players/unknown-player-170x170.png";
             })
           // }
         }
@@ -284,7 +284,7 @@
           d3.json('data/nba.json', function(error, data){
             playerData = data.filter(function(d, i, array){
 
-              return d.photo != "www.cbssports.com/images/players/unknown_player.gif" && d.photo != "www.cbssports.com/images/players/unknown-player-170x170.png";
+              return d.photo != "http://sports.cbsimg.net//images/players/unknown_player.gif" && d.photo != "http://sports.cbsimg.net//images/players/unknown-player-170x170.png";
             });
 
             for(var i in playerData){

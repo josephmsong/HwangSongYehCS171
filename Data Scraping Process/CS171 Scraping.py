@@ -45,7 +45,7 @@ import re
 
 df = pd.read_csv("players.csv")
 
-BASE_URL = "http://www.cbssports.com/nba/players/playerpage/{0}/{1}-{2}"
+BASE_URL = "http://http://sports.cbsimg.net//nba/players/playerpage/{0}/{1}-{2}"
 
 number_of_players = sum(1 for row in df['id'])
 

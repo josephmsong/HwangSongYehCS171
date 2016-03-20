@@ -22,6 +22,9 @@ function showPlayerName(playerName, playerIndex, teamLength){
 
 function maketablechart (data){
   var column= [19,11,12,13,14,15,1,0,17,16,2,3,4,8,9,5,6,7,10,18];
+
+  console.log(data.seasons); 
+  
   console.log(Object.keys(data.seasons[0]));
 	var columns = ["year", "gamesplayed", "minutes", "ppg", "reb", "rpg", "assists", "apg", "steals", "spg", "blocks", "bpg","fg","fga", "fgperc","fg3", "fg3a", "fg3perc", "ftperc", "turnovers"];
   var columnnames = ["SEASON","GP", "MIN", "PPG","REB","RPG","AST","APG","STL","SPG","BLK", "BPG","FG", "FGA", "FG%","3FG", "3FGA", "3FG%","FT%","TO"]
