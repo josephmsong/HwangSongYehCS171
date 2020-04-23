@@ -1,4 +1,4 @@
-<h1> NBA Visualizations - Ball is Life </h1>
+<h1> NBA Visualizations </h1>
 
 <h3>URL</h3>
 <p>http://josephmsong.github.io/HwangSongYehCS171</p>
